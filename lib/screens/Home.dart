@@ -469,56 +469,6 @@ class _HomeState extends State<Home> {
 }
 
 
-class CustomField extends StatelessWidget {
-  final String hintText;
-  final TextEditingController textFieldController;
-
-  final Widget sufix;
-  const CustomField(
-      {Key? key,
-      required this.hintText,
-      required this.textFieldController,
-      required this.sufix})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60,
-      width: Get.width,
-      child: TextFormField(
-        controller: textFieldController,
-        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              fontSize: 14,
-            ),
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(top: 15, left: 16),
-          fillColor: const Color(0xffFAFAFA),
-          filled: true,
-          hintText: hintText,
-          suffixIcon: sufix,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Colors.transparent,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Colors.transparent,
-            ),
-          ),
-          hintStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
-                color: const Color(0xff9E9E9E),
-                fontSize: 14,
-              ),
-        ),
-      ),
-    );
-  }
-}
-
 Widget searchCard(String text, Color bgColor, VoidCallback onTap) {
   return InkWell(
     onTap: () {

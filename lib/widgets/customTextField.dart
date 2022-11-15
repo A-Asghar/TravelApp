@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -9,6 +9,7 @@ class CustomTextField extends StatefulWidget {
   final Widget prefix;
   final Widget sufix;
   final bool hideText;
+  final TextInputType keyboardType;
 
   const CustomTextField(
       {Key? key,
@@ -16,7 +17,8 @@ class CustomTextField extends StatefulWidget {
         required this.textFieldController,
         required this.prefix,
         required this.sufix,
-        this.hideText = false})
+        this.hideText = false,
+        this.keyboardType = TextInputType.text})
       : super(key: key);
 
   @override
@@ -30,6 +32,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       height: 60,
       width: Get.width,
       child: TextFormField(
+        keyboardType: widget.keyboardType,
         obscureText: widget.hideText,
         controller: widget.textFieldController,
         style: GoogleFonts.poppins(
@@ -38,7 +41,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         decoration: InputDecoration(
           // errorText: widget.showError ? 'This field can not be empty' : null,
           contentPadding: const EdgeInsets.only(top: 15),
-          fillColor: const Color(0xffFAFAFA),
+          fillColor: Constants.secondaryColor.withOpacity(0.05),
           filled: true,
           hintText: widget.hintText,
           suffixIcon: widget.sufix,
@@ -64,11 +67,4 @@ class _CustomTextFieldState extends State<CustomTextField> {
     );
   }
 
-  validateTextField(text){
-    if(text.length > 0){
-      return null;
-    }else{
-      return 'This field can not be empty';
-    }
-  }
 }

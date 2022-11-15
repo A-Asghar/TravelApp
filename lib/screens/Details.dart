@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../Constants.dart';
 import 'Gallery.dart';
 import 'Reviews.dart';
+import 'hotel/RoomDetails.dart';
 
 class Details extends StatefulWidget {
   const Details({Key? key, required this.detailsType}) : super(key: key);
@@ -514,16 +515,23 @@ Widget hotelRooms(bool show){
                               poppinsText(text: '\$29',color: Constants.primaryColor,size: 22.0),
                               poppinsText(text: ' /night',color: Constants.secondaryColor,size: 12.0),
                               const Spacer(),
-                              Container(
-                                width:150,
-                                height:40,
-                                margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                                decoration: BoxDecoration(
-                                  color: Constants.primaryColor,
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Center(
-                                  child: poppinsText(text: 'Book Now',color: Colors.white,fontBold: FontWeight.w500),
+                              GestureDetector(
+                                onTap: (){
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => const RoomDetails(),
+                                      ));
+                                },
+                                child: Container(
+                                  width:150,
+                                  height:40,
+                                  margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                                  decoration: BoxDecoration(
+                                    color: Constants.primaryColor,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Center(
+                                    child: poppinsText(text: 'Book Now',color: Colors.white,fontBold: FontWeight.w500),
+                                  ),
                                 ),
                               )
                             ],

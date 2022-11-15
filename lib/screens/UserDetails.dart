@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widgets/customField.dart';
 import '../widgets/customTextField.dart';
 import '../widgets/tealButton.dart';
-import 'Home.dart';
 
 class UserDetails extends StatefulWidget {
   const UserDetails({Key? key}) : super(key: key);

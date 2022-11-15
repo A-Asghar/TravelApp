@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fyp/network.dart';
-import 'package:fyp/screens/Home2.dart';
-import 'package:fyp/screens/SignUp.dart';
+import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../Constants.dart';
-import '../widgets/authErrorDialog.dart';
-import '../widgets/poppinsText.dart';
-import '../widgets/tealButton.dart';
+import '../../Constants.dart';
+import '../../network.dart';
+import '../../widgets/authErrorDialog.dart';
+import '../../widgets/poppinsText.dart';
+import '../../widgets/tealButton.dart';
+import '../Home2.dart';
+import 'FillYourProfile.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _LoginState extends State<Login> {
+class _SignUpState extends State<SignUp> {
   bool isRemember = false;
-  bool isLoading = false;
   final _email = TextEditingController();
   final _password = TextEditingController();
+  final _confirmPassword = TextEditingController();
   bool validateEmail = true;
   bool validatePassword = true;
-
+  bool validateConfirmPassword = true;
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,9 +54,8 @@ class _LoginState extends State<Login> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Heading
                 poppinsText(
-                  text: "Login to your\nAccount",
+                  text: "Create your\nAccount",
                   size: 48.0,
                   fontBold: FontWeight.w700,
                 ),
@@ -76,10 +76,11 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 15),
 
-                // Password
+                //Password
                 CustomTextField(
                   hintText: "Password",
                   textFieldController: _password,
+                  hideText: true,
                   showError: validatePassword,
                   prefix: Padding(
                     padding: const EdgeInsets.all(14.0),
@@ -96,7 +97,28 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 20),
 
-                // Remember me
+                // Confirm Password
+                CustomTextField(
+                  hintText: "Confirm Password",
+                  textFieldController: _confirmPassword,
+                  hideText: true,
+                  showError: validateConfirmPassword,
+                  prefix: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: SvgPicture.asset(
+                      'assets/images/lock.svg',
+                    ),
+                  ),
+                  sufix: Padding(
+                    padding: const EdgeInsets.all(14.0),
+                    child: SvgPicture.asset(
+                      'assets/images/eye.svg',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Remember Me
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -136,7 +158,7 @@ class _LoginState extends State<Login> {
                 ),
                 const SizedBox(height: 20),
 
-                // Signin Button
+                // Signup Button
                 isLoading
                     ? const Center(
                         child: CircularProgressIndicator(
@@ -144,133 +166,65 @@ class _LoginState extends State<Login> {
                         ),
                       )
                     : TealButton(
-                        text: "Sign in",
+                        text: "Sign up",
                         onPressed: () async {
                           if (validateTextFields()) {
                             setState(() => isLoading = true);
 
-                            // await Network.login(
-                            //         email: _email.text,
-                            //         password: _password.text)
-                            //     .catchError((e) {
-                            //   print(e.code);
-                            //   authErrorDialog(e.code, context);
-                            //   setState(() => isLoading = false);
-                            // }).then(() {
-                            //   Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => const Home2(),
-                            //   ));
-                            // });
+                            if ((_password.text.isNotEmpty &&
+                                    _confirmPassword.text.isNotEmpty) &&
+                                (_password.text == _confirmPassword.text)) {
+                              await Network.createNewUser(
+                                      email: _email.text,
+                                      password: _password.text)
+                                  .then((_){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const FillYourProfile(),
+                                ));
+                              }).catchError((e) {
+                                authErrorDialog(e.code, context);
+                                setState(() => isLoading = false);
+                              });
+                            } else {
+                              authErrorDialog("passwords-not-match", context);
+                            }
 
                             setState(() => isLoading = false);
 
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const Home2(),
-                            ));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //   builder: (context) => const FillYourProfile(),
+                            // ));
                           }
                         },
                       ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 40),
 
-                // Forgot password
                 InkWell(
                   onTap: () {
                     // Get.to(
-                    //   const ForgotPasswordScreen(),
+                    //   const LoginScreen(),
                     //   transition: Transition.rightToLeft,
                     // );
-                  },
-                  child: Center(
-                    child: poppinsText(
-                      text: "Forgot the password?",
-                      size: 16.0,
-                      color: Constants.primaryColor,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-
-                // or continue with
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 1.5,
-                        color: const Color(0xffEEEEEE),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    poppinsText(
-                      text: "or continue with",
-                      size: 18.0,
-                      color: const Color(0xff616161),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Container(
-                        height: 1.5,
-                        color: const Color(0xffEEEEEE),
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 20),
-
-                // Signin with google
-                InkWell(
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Constants.secondaryColor.withOpacity(0.1)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Image(
-                            image: AssetImage('assets/images/s2.png'),
-                            height: 20),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        poppinsText(
-                            text: 'Sign in with Google',
-                            color: Constants.primaryColor,
-                            fontBold: FontWeight.w500)
-                      ],
-                    ),
-                  ),
-                  onTap: () async {
-                    // Network.signInWithGoogle();
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Home2(),
-                    ));
-                  },
-                ),
-
-                const SizedBox(height: 20),
-
-                // Dont have an account
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => SignUp()));
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => Login()));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       poppinsText(
-                        text: "Don’t have an account?  ",
+                        text: "Already have an account?  ",
                         size: 14.0,
                         color: const Color(0xff9E9E9E),
                       ),
                       poppinsText(
-                        text: "Sign up",
+                        text: "Sign in",
                         size: 14.0,
                         color: Constants.primaryColor,
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
@@ -290,12 +244,42 @@ class _LoginState extends State<Login> {
     } else {
       setState(() => validatePassword = true);
     }
-    if (validateEmail && validatePassword) {
-      return true;
+    if (_confirmPassword.text.isEmpty) {
+      setState(() => validateConfirmPassword = false);
     } else {
-      return false;
+      setState(() => validateConfirmPassword = true);
     }
+    if (validateEmail && validatePassword && validateConfirmPassword)
+      return true;
+    else
+      return false;
   }
+}
+
+Widget socialButton(String image) {
+  return Container(
+    height: 60,
+    width: 88,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: const Color(0xffEEEEEE),
+      ),
+    ),
+    child: Center(
+      child: Container(
+        height: 24,
+        width: 24,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              image,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class CustomTextField extends StatefulWidget {
@@ -367,30 +351,4 @@ class _CustomTextFieldState extends State<CustomTextField> {
       return 'This field can not be empty';
     }
   }
-}
-
-Widget socialButton(String image) {
-  return Container(
-    height: 60,
-    width: 88,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: const Color(0xffEEEEEE),
-      ),
-    ),
-    child: Center(
-      child: Container(
-        height: 24,
-        width: 24,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              image,
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
 }

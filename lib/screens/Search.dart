@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/SearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
-import 'package:fyp/screens/FlightSearchResult.dart';
 import 'package:fyp/screens/SearchingDestination.dart';
+import 'package:fyp/screens/flight/FlightSearchResult.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -171,59 +171,59 @@ var dropdownvalue = 'All';
                     ? guests_adult_textfield(context, 'Adults', adults)
                     : guests_adult_textfield(context, 'Guests', '1'),
 
-                widget.title == 'flight' ?
-                Padding(
-                  padding: const EdgeInsets.all(25),
-                  child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                      // border: InputBorder.none,
-                      enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent)),
-                      enabled: false,
-                      fillColor: Colors.grey.withOpacity(0.1),
-                      filled: true,
-                      suffixIcon: Icon(Icons.arrow_drop_down,color: Colors.grey,)
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-
-                  // style: GoogleFonts.poppins(color: Colors.black),
-
-                  // dropdownColor: Colors.grey.withOpacity(0.1),
-                  elevation: 0,
-                  focusColor: Constants.secondaryColor.withOpacity(0.1),
-                  iconSize: 0,
-                  // Initial Value
-                  value: dropdownvalue,
-
-                  // Down Arrow Icon
-                  icon: const Icon(Icons.keyboard_arrow_down),
-
-                  // Array list of items
-                  items: items.map((String items) {
-                    return DropdownMenuItem(
-                      value: items,
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          // color: Colors.grey.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10)
-                        ),
-                        // width: MediaQuery.of(context).size.width*0.8,
-                        child: poppinsText(text:items),
-                      ),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownvalue = newValue!;
-                    });
-                  },
-                ),
-                )
-                    : Container(),
+                // widget.title == 'flight' ?
+                // Padding(
+                //   padding: const EdgeInsets.all(25),
+                //   child: DropdownButtonFormField(
+                //   decoration: InputDecoration(
+                //       // border: InputBorder.none,
+                //       enabledBorder: const UnderlineInputBorder(
+                //           borderSide: BorderSide(color: Colors.transparent)),
+                //       enabled: false,
+                //       fillColor: Colors.grey.withOpacity(0.1),
+                //       filled: true,
+                //       suffixIcon: Icon(Icons.arrow_drop_down,color: Colors.grey,)
+                //   ),
+                //   borderRadius: BorderRadius.circular(20),
+                //
+                //   // style: GoogleFonts.poppins(color: Colors.black),
+                //
+                //   // dropdownColor: Colors.grey.withOpacity(0.1),
+                //   elevation: 0,
+                //   focusColor: Constants.secondaryColor.withOpacity(0.1),
+                //   iconSize: 0,
+                //   // Initial Value
+                //   value: dropdownvalue,
+                //
+                //   // Down Arrow Icon
+                //   icon: const Icon(Icons.keyboard_arrow_down),
+                //
+                //   // Array list of items
+                //   items: items.map((String items) {
+                //     return DropdownMenuItem(
+                //       value: items,
+                //       child: Container(
+                //         alignment: Alignment.centerLeft,
+                //         height: 50,
+                //         decoration: BoxDecoration(
+                //           // color: Colors.grey.withOpacity(0.1),
+                //             borderRadius: BorderRadius.circular(10)
+                //         ),
+                //         // width: MediaQuery.of(context).size.width*0.8,
+                //         child: poppinsText(text:items),
+                //       ),
+                //     );
+                //   }).toList(),
+                //   // After selecting the desired option,it will
+                //   // change button value to selected value
+                //   onChanged: (String? newValue) {
+                //     setState(() {
+                //       dropdownvalue = newValue!;
+                //     });
+                //   },
+                // ),
+                // )
+                //     : Container(),
 
                 const Spacer(),
 

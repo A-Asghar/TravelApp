@@ -4,13 +4,12 @@ import 'package:fyp/providers/SearchProvider.dart';
 import 'package:fyp/screens/Details.dart';
 import 'package:fyp/screens/Home.dart';
 import 'package:fyp/screens/Home2.dart';
-import 'package:fyp/screens/HotelDetail.dart';
-import 'package:fyp/screens/HotelSearchRetults.dart';
-import 'package:fyp/screens/Login.dart';
 import 'package:fyp/screens/Profile.dart';
 import 'package:fyp/screens/Search.dart';
-import 'package:fyp/screens/SignUp.dart';
 import 'package:fyp/screens/UserDetails.dart';
+import 'package:fyp/screens/auth/Login.dart';
+import 'package:fyp/screens/auth/SignUp.dart';
+import 'package:fyp/screens/hotel/HotelSearchRetults.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 

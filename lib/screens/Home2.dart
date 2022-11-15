@@ -74,9 +74,16 @@ class _Home2State extends State<Home2> {
               ),
             ),
             heading('Summer Escapes', 25.0),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: poppinsText(text: 'Break the routine and escape to these hand-picked properties for exceptional prices',color: Constants.secondaryColor),
+            ),
+            const SizedBox(height: 10),
             summerEscapes(context),
+            const SizedBox(height: 10),
             heading('Recommended Destinations', 20.0),
             recommendedDestinations(),
+            const SizedBox(height: 10),
             heading('Top Packages', 20.0),
             topPackages()
           ],
@@ -169,7 +176,7 @@ Widget searchBar(context) {
 Widget heading(text, size) {
   return Container(
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
       child: poppinsText(text: text, size: size, fontBold: FontWeight.w600));
 }
 

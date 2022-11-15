@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp/repository/AccessTokenRepository.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 import 'Constants.dart';
 import 'Providers/AccessTokenProvider.dart';
+import 'models/User.dart';
 
 class Network {
   flightOffersSearch(
@@ -165,8 +167,21 @@ class Network {
   }
 
   static createNewUser({required email,required password}) async {
+    CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
     await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password);
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then((user) async{
+          await users.doc(user.user!.uid).set({
+            'uid': user.user!.uid,
+            'email': email,
+            'name': '',
+            'address': '',
+            'dateOfBirth': '',
+            'phoneNumber': '',
+            'gender': ''
+          });
+    });
   }
 
   static login({required email, required password}) async {
@@ -186,6 +201,19 @@ class Network {
     );
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  static createUserProfile({required User signedInUser,required Users user}) async{
+    CollectionReference users =
+    FirebaseFirestore.instance.collection('users');
+
+      users.doc(signedInUser.uid).update({
+      'name': user.name,
+      'address': user.address,
+      'dateOfBirth': user.dateOfBirth,
+      'phoneNumber': user.phoneNumber,
+      'gender': user.gender
+    });
   }
 
 

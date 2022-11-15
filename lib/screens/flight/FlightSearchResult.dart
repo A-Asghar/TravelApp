@@ -6,8 +6,8 @@ import 'package:fyp/widgets/poppinsText.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../Constants.dart';
-import '../models/Flight.dart';
+import '../../Constants.dart';
+import '../../models/Flight.dart';
 import 'FlightDetails.dart';
 
 class FlightSearchResult extends StatefulWidget {

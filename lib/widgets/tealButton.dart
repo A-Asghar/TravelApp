@@ -11,7 +11,7 @@ class TealButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
+      margin: EdgeInsets.symmetric(vertical: 20),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
             fixedSize: Size(MediaQuery.of(context).size.width * 0.85, 50),

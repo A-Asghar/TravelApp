@@ -6,8 +6,8 @@ import 'package:fyp/widgets/poppinsText.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-import '../Constants.dart';
-import '../models/Flight.dart';
+import '../../Constants.dart';
+import '../../models/Flight.dart';
 
 class FlightDetails extends StatefulWidget {
   const FlightDetails({Key? key, required this.trip}) : super(key: key);

@@ -3,9 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
 import 'package:get/get.dart';
 
-import '../widgets/customTextField.dart';
-import '../widgets/filterView.dart';
-import 'HotelDetail.dart';
+import '../../widgets/customTextField.dart';
+import '../../widgets/filterView.dart';
+import '../Details.dart';
+
 
 class HotelSearchResults extends StatefulWidget {
   const HotelSearchResults({Key? key}) : super(key: key);
@@ -100,7 +101,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
                   return InkWell(
                     onTap: () {
                       Get.to(
-                        const HotelDetail(detailsType: 'hotel',),
+                        const Details(detailsType: 'hotel',),
                         transition: Transition.rightToLeft,
                       );
                     },
