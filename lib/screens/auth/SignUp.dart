@@ -168,37 +168,41 @@ class _SignUpState extends State<SignUp> {
                     : TealButton(
                         text: "Sign up",
                         onPressed: () async {
-                          if (validateTextFields()) {
-                            setState(() => isLoading = true);
-
-                            if ((_password.text.isNotEmpty &&
-                                    _confirmPassword.text.isNotEmpty) &&
-                                (_password.text == _confirmPassword.text)) {
-                              await Network.createNewUser(
-                                      email: _email.text,
-                                      password: _password.text)
-                                  .then((_){
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const FillYourProfile(),
-                                ));
-                              }).catchError((e) {
-                                authErrorDialog(e.code, context);
-                                setState(() => isLoading = false);
-                              });
-                            } else {
-                              authErrorDialog("passwords-not-match", context);
-                            }
-
-                            setState(() => isLoading = false);
+                          // if (validateTextFields()) {
+                            // setState(() => isLoading = true);
+                            //
+                            // if ((_password.text.isNotEmpty &&
+                            //         _confirmPassword.text.isNotEmpty) &&
+                            //     (_password.text == _confirmPassword.text)) {
+                            //   await Network.createNewUser(
+                            //           email: _email.text,
+                            //           password: _password.text)
+                            //       .then((_){
+                            //     Navigator.of(context).push(MaterialPageRoute(
+                            //       builder: (context) => const FillYourProfile(),
+                            //     ));
+                            //   }).catchError((e) {
+                            //     authErrorDialog(e.code, context);
+                            //     setState(() => isLoading = false);
+                            //   });
+                            // } else {
+                            //   authErrorDialog("passwords-not-match", context);
+                            // }
+                            //
+                            // setState(() => isLoading = false);
 
                             // Navigator.of(context).push(MaterialPageRoute(
                             //   builder: (context) => const FillYourProfile(),
                             // ));
-                          }
+                          // }
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const FillYourProfile(),
+                          ));
                         },
                       ),
                 const SizedBox(height: 40),
 
+                // Already have an account?
                 InkWell(
                   onTap: () {
                     // Get.to(

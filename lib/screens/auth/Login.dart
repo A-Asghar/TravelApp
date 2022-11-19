@@ -1,12 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/Home2.dart';
+import 'package:fyp/screens/auth/FillYourProfile.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../Constants.dart';
+import '../../network.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
 
@@ -20,6 +25,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool isRemember = false;
   bool isLoading = false;
+  bool isLoadingGoogle = false;
   final _email = TextEditingController();
   final _password = TextEditingController();
   bool validateEmail = true;
@@ -163,7 +169,7 @@ class _LoginState extends State<Login> {
                             setState(() => isLoading = false);
 
                             Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const Home2(),
+                              builder: (context) => const BottomNavBar(),
                             ));
                           }
                         },
@@ -173,6 +179,8 @@ class _LoginState extends State<Login> {
                 // Forgot password
                 InkWell(
                   onTap: () {
+                    // FirebaseAuth.instance.signOut();
+                    // GoogleSignIn().signOut();
                     // Get.to(
                     //   const ForgotPasswordScreen(),
                     //   transition: Transition.rightToLeft,
@@ -215,35 +223,53 @@ class _LoginState extends State<Login> {
                 const SizedBox(height: 20),
 
                 // Signin with google
-                InkWell(
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Constants.secondaryColor.withOpacity(0.1)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Image(
-                            image: AssetImage('assets/images/s2.png'),
-                            height: 20),
-                        const SizedBox(
-                          width: 10,
+                isLoadingGoogle
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Constants.primaryColor,
                         ),
-                        poppinsText(
-                            text: 'Sign in with Google',
-                            color: Constants.primaryColor,
-                            fontBold: FontWeight.w500)
-                      ],
-                    ),
-                  ),
-                  onTap: () async {
-                    // Network.signInWithGoogle();
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Home2(),
-                    ));
-                  },
-                ),
+                      )
+                    : InkWell(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Constants.secondaryColor.withOpacity(0.1)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Image(
+                                  image: AssetImage('assets/images/s2.png'),
+                                  height: 20),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              poppinsText(
+                                  text: 'Sign in with Google',
+                                  color: Constants.primaryColor,
+                                  fontBold: FontWeight.w500)
+                            ],
+                          ),
+                        ),
+                        onTap: () async {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const BottomNavBar(),
+                          ));
+
+                          // setState(() => isLoadingGoogle = true);
+                          //
+                          // var exists = await Network.signInWithGoogle();
+                          //
+                          // exists
+                          //     ? Navigator.of(context).push(MaterialPageRoute(
+                          //         builder: (context) => const Home2(),
+                          //       ))
+                          //     : Navigator.of(context).push(MaterialPageRoute(
+                          //         builder: (context) => const FillYourProfile(),
+                          //       ));
+                          // setState(() => isLoadingGoogle = false);
+                        },
+                      ),
 
                 const SizedBox(height: 20),
 
