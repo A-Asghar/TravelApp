@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:fyp/models/Flight.dart';
-import 'package:fyp/providers/SearchProvider.dart';
 
-import '../network.dart';
 import '../network/FlightNetwork.dart';
 
 class FlightRepository {

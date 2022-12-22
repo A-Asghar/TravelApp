@@ -14,7 +14,7 @@ import 'package:fyp/screens/hotel/HotelSearchRetults.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
-import 'network.dart';
+
 
 
 Future<void> main() async {

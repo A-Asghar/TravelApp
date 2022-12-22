@@ -1,17 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
-import 'package:fyp/screens/Home2.dart';
-import 'package:fyp/screens/auth/FillYourProfile.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../Constants.dart';
-import '../../network.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
 

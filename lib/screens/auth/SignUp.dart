@@ -5,11 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Constants.dart';
-import '../../network.dart';
-import '../../widgets/authErrorDialog.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
-import '../Home2.dart';
 import 'FillYourProfile.dart';
 
 class SignUp extends StatefulWidget {
