@@ -4,9 +4,10 @@ import 'package:fyp/models/Flight.dart';
 import 'package:fyp/providers/SearchProvider.dart';
 
 import '../network.dart';
+import '../network/FlightNetwork.dart';
 
 class FlightRepository {
-  Network network = Network();
+  FlightNetwork network = FlightNetwork();
 
   flightOffersSearch({
     required originLocationCode, // KHI
@@ -16,7 +17,7 @@ class FlightRepository {
     required adults, // 1
     nonStop = 'false', // false
     travelClass =
-    'ECONOMY', // Available values : ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
+        'ECONOMY', // Available values : ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST
     maxPrice = '9999',
   }) async {
     // https://developers.amadeus.com/self-service/category/air/api-doc/flight-offers-search/api-reference
@@ -50,55 +51,29 @@ class FlightRepository {
     List listOfData = response['data'];
 
     Iterable<Flight> listOfFlights = listOfData.map((e) => Flight(
-      oneWay: e['oneWay'],
-      numberOfBookableSeats: e['numberOfBookableSeats'],
-      itineraries: e['itineraries']
-          .map<Itinerary>((i) => Itinerary(
-        duration: i['duration'],
-        segments: i['segments']
-            .map<Segment>((s) => Segment(
-            departure: Arrival.fromJson(s['departure']),
-            arrival: Arrival.fromJson(s['arrival']),
-            carrierCode: s['carrierCode'],
-            aircraft: Aircraft.fromJson(s['aircraft']),
-            duration: s['duration']))
-            .toList(),
-      ))
-          .toList(),
-      price: FlightPrice.fromJson(e['price']),
-      validatingAirlineCodes: e['validatingAirlineCodes'],
-      fareDetailsBySegment: e['travelerPricings'][0]['fareDetailsBySegment']
-          .map<FareDetailsBySegment>(
-              (f) => FareDetailsBySegment(cabin: f['cabin']))
-          .toList(),
-    ));
-
-    // Flight Class
-    // print(listOfFlights.toList()[0].fareDetailsBySegment[0].cabin);
-
-    // Departure City
-    // print(listOfFlights.toList()[0].itineraries[0].segments[0].departure.iataCode);
-
-    // Flight Company
-    // print(listOfFlights.toList()[0].itineraries[0].segments[0].carrierCode);
-
-    // Type of Aircraft
-    // print(listOfFlights.toList()[0].itineraries[0].segments[0].aircraft.code);
+          oneWay: e['oneWay'],
+          numberOfBookableSeats: e['numberOfBookableSeats'],
+          itineraries: e['itineraries']
+              .map<Itinerary>((i) => Itinerary(
+                    duration: i['duration'],
+                    segments: i['segments']
+                        .map<Segment>((s) => Segment(
+                            departure: Arrival.fromJson(s['departure']),
+                            arrival: Arrival.fromJson(s['arrival']),
+                            carrierCode: s['carrierCode'],
+                            aircraft: Aircraft.fromJson(s['aircraft']),
+                            duration: s['duration']))
+                        .toList(),
+                  ))
+              .toList(),
+          price: FlightPrice.fromJson(e['price']),
+          validatingAirlineCodes: e['validatingAirlineCodes'],
+          fareDetailsBySegment: e['travelerPricings'][0]['fareDetailsBySegment']
+              .map<FareDetailsBySegment>(
+                  (f) => FareDetailsBySegment(cabin: f['cabin']))
+              .toList(),
+        ));
 
     return [dictionary, listOfFlights.toList(), count];
-  }
-
-  citySearch({required String keyword}) async {
-    var response = await network.citySearch(keyword: keyword);
-    response = jsonDecode(response);
-
-    List<Destination> cities = response['data']
-        .map<Destination>((c) => Destination(
-        city: c['address']['cityName'] + ', ' + c['address']['countryName'],
-        iata: c['iataCode']))
-        .toList();
-
-    // print(cities[0].iata);
-    return cities;
   }
 }

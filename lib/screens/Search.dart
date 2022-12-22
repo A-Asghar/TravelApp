@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/SearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
-import 'package:fyp/screens/SearchingDestination.dart';
+import 'package:fyp/screens/SearchDestination.dart';
 import 'package:fyp/screens/flight/FlightSearchResult.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
@@ -269,7 +269,7 @@ Widget from_to_textfield(context, topText, bottomText, title) {
   return GestureDetector(
     onTap: () {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SearchingDestination(title: title),
+        builder: (context) => SearchDestination(title: title),
       ));
     },
     child: Align(

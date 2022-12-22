@@ -46,15 +46,6 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
         },
         child: Column(
           children: [
-            // Departure Options
-            // Container(
-            //   margin: const EdgeInsets.only(left: 10),
-            //   alignment: Alignment.centerLeft,
-            //   child: poppinsText(
-            //       text: 'Departure Options',
-            //       size: 20.0,
-            //       fontBold: FontWeight.w600),
-            // ),
 
             // Number of results returned
             Container(
@@ -67,15 +58,13 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
                   color: Constants.secondaryColor,
                 )),
 
+
             Expanded(
               child: (context.watch<SearchProvider>().flights.isEmpty &&
                       context.watch<SearchProvider>().count == null)
-                  ? Center(
-                      child: Lottie.asset('assets/lf30_editor_pdzneexn.json',height: 100),
-                    )
-                  : context.read<SearchProvider>().count! == 0
-                      ? Center(
-                          child: poppinsText(text: 'Not Found', size: 30.0))
+                  ? lottieLoader()
+                  : context.read<SearchProvider>().count == 0
+                      ? Center(child: poppinsText(text: 'Not Found', size: 30.0))
                       : ListView.builder(
                           physics: const ScrollPhysics(),
                           shrinkWrap: true,
@@ -117,6 +106,9 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
                                       child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children:[
+
+
+                                            // Departure Time
                                             poppinsText(text: Constants.convertTime(flight.segments[0].departure.at),
                                                 size: 22.0,fontBold: FontWeight.w400),
                                             const Expanded(
@@ -183,9 +175,6 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
                                           const SizedBox(width: 10,),
                                           // Trip Price
                                           tripPrice(destProvider.flights[index].price.total),
-
-                                          // More Info
-                                          // moreInfoButton(context, destProvider.flights[index])
                                         ],
                                       ),
                                     )
@@ -199,6 +188,12 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget lottieLoader(){
+    return Center(
+      child: Lottie.asset('assets/lf30_editor_pdzneexn.json',height: 100),
     );
   }
 
@@ -225,23 +220,6 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
     );
   }
 
-  Widget locationAndTime(location, time) {
-    return Expanded(
-      child: ListTile(
-        title: poppinsText(
-            text: location,
-            size: 20.0,
-            color: Constants.primaryColor,
-            fontBold: FontWeight.w500),
-        subtitle: poppinsText(
-            text: Constants.convertTime(time),
-            size: 12.0,
-            color: Constants.secondaryColor,
-            fontBold: FontWeight.w500),
-      ),
-    );
-  }
-
   Widget connectingFlightsWidget(connectingFlights) {
     return connectingFlights > 0
         ? Row(
@@ -261,8 +239,8 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
   Widget flightClass(cabin) {
     return Row(
       children: [
-        Icon(Icons.event_seat,color: Constants.secondaryColor,size: 15,),
-        const SizedBox(width: 5,),
+        const Icon(Icons.event_seat,color: Constants.secondaryColor,size: 15,),
+        const SizedBox(width: 5),
         poppinsText(text: cabin, color: Constants.secondaryColor, size: 14.0, fontBold: FontWeight.w500)
       ],
     );
@@ -274,22 +252,5 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
         color: Colors.black,
         fontBold: FontWeight.w600,
         size: 20.0);
-  }
-
-  Widget moreInfoButton(context,trip) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FlightDetails(trip:trip)));
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Constants.primaryColor),
-        ),
-        child: poppinsText(text: 'More Info', color: Constants.primaryColor),
-      ),
-    );
   }
 }

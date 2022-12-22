@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/SearchProvider.dart';
+import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Details.dart';
 import 'package:fyp/screens/Home.dart';
 import 'package:fyp/screens/Home2.dart';
@@ -12,6 +13,9 @@ import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/hotel/HotelSearchRetults.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
+
+import 'network.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -173,6 +177,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Passenger Details')),
+
+              ElevatedButton(
+                  onPressed: () {
+                    HotelRepository n = HotelRepository();
+                    n.getOffers();
+                  },
+                  child: Text('Hotels')),
 
             ],
           ),

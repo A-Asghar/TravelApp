@@ -13,8 +13,8 @@ class SearchProvider extends ChangeNotifier {
 
   Destination _to = Destination(city: '', iata: '');
   Destination get to => _to;
-  set to(Destination f) {
-    _to = Destination(city: f.city, iata: f.iata);
+  set to(Destination t) {
+    _to = Destination(city: t.city, iata: t.iata);
     notifyListeners();
   }
 

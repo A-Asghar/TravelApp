@@ -6,19 +6,19 @@ import 'package:provider/provider.dart';
 
 import '../Constants.dart';
 
-class SearchingDestination extends StatefulWidget {
-  const SearchingDestination({Key? key, required this.title}) : super(key: key);
+class SearchDestination extends StatefulWidget {
+  const SearchDestination({Key? key, required this.title}) : super(key: key);
 
   final String title;
   @override
-  State<SearchingDestination> createState() => _SearchingDestinationState();
+  State<SearchDestination> createState() => _SearchDestinationState();
 }
 
 TextEditingController controller = TextEditingController();
 Future? listCities;
 FlightRepository flightRepository = FlightRepository();
 
-class _SearchingDestinationState extends State<SearchingDestination> {
+class _SearchDestinationState extends State<SearchDestination> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

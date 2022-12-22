@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 
 import '../Providers/AccessTokenProvider.dart';
 import '../models/AccessToken.dart';
-import '../network.dart';
+import '../network/FlightNetwork.dart';
 
 class AccessTokenRepository {
-  Network network = Network();
+  FlightNetwork network = FlightNetwork();
 
   getAccessToken({required bool getNew}) async {
     final controller = Get.put(AccessTokenProvider());
