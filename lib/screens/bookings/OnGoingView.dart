@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../Constants.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
+import '../Profile.dart';
 import 'CancelBookingScreen.dart';
 
 class OnGoingView extends StatefulWidget {
@@ -111,13 +112,11 @@ class _OnGoingViewState extends State<OnGoingView> {
                             onTap: () {
                               Get.bottomSheet(
                                 Container(
-                                  height: 300,
+                                  height: 310,
                                   width: Get.width,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .appBarTheme
-                                        .backgroundColor,
-                                    borderRadius: const BorderRadius.only(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(40),
                                       topRight: Radius.circular(40),
                                     ),
@@ -128,48 +127,70 @@ class _OnGoingViewState extends State<OnGoingView> {
                                     child: Column(
                                       children: [
                                         const SizedBox(height: 20),
-                                        poppinsText(
-                                          text: "Cancel Booking",
-                                          size: 24.0,
-                                          color: const Color(0xffF75555),
+                                        Text(
+                                          "Cancel Booking",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1!
+                                              .copyWith(
+                                                fontSize: 24,
+                                                color: const Color(0xffF75555),
+                                              ),
                                         ),
                                         const SizedBox(height: 10),
                                         const Divider(color: Color(0xffEEEEEE)),
                                         const SizedBox(height: 10),
-                                        poppinsText(
-                                          text:
-                                              "Are you sure you want to cancel your hotel\nbooking?",
-                                          size: 16.0,
+                                        Text(
+                                          "Are you sure you want to cancel your hotel\nbooking?",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1!
+                                              .copyWith(
+                                                fontSize: 16,
+                                                height: 1.6,
+                                              ),
+                                          textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 10),
-                                        poppinsText(
-                                          text:
-                                              "Only 80% of the money you can refund from your payment\naccording to our policy",
-                                          size: 14.0,
+                                        Text(
+                                          "Only 80% of the money you can refund from your payment according to our policy",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption!
+                                              .copyWith(
+                                                fontSize: 14,
+                                                height: 1.6,
+                                              ),
+                                          textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 30),
                                         Row(
                                           children: [
-                                            Expanded(
-                                              child: TealButton(
-                                                text: "Cancel",
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
+                                            CustomButton(
+                                              text: "Cancel",
+                                              bgColor: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1!
+                                                  .color!
+                                                  .withOpacity(0.1),
+                                              textColor: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1!
+                                                  .color,
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
                                             ),
                                             const SizedBox(width: 15),
-                                            Expanded(
-                                              child: TealButton(
-                                                text: "Yes, Continue",
-                                                onPressed: () {
-                                                  Get.to(
-                                                    const CancelBookingScreen(),
-                                                    transition:
-                                                        Transition.rightToLeft,
-                                                  );
-                                                },
-                                              ),
+                                            CustomButton(
+                                              text: "Yes, Continue",
+                                              onTap: () {
+                                                Get.to(
+                                                  const CancelBookingScreen(),
+                                                  transition:
+                                                      Transition.rightToLeft,
+                                                );
+                                              },
                                             ),
                                           ],
                                         ),

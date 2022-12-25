@@ -56,6 +56,7 @@ class _BookingsState extends State<Bookings> {
                   ),
                   const SizedBox(width: 14),
                   tapCard(
+
                     "Canceled",
                     documentController.isDocument.value == 2
                         ? Constants.primaryColor
