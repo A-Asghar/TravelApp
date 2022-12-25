@@ -8,6 +8,7 @@ import '../network/HotelNetwork.dart';
 class HotelRepository {
   // https://rapidapi.com/apidojo/api/hotels4
   HotelNetwork network = HotelNetwork();
+
   hotelSearch({required String city}) async {
     // Gets Hotels List
     // TODO: implement propertiesList params into hotelSearch
@@ -19,10 +20,8 @@ class HotelRepository {
     var regionId = response['sr'][0]['gaiaId'];
     print('regionId : $regionId');
 
-    customHotelDate checkInDate =
-        customHotelDate(day: 10, month: 1, year: 2023);
-    customHotelDate checkOutDate =
-        customHotelDate(day: 15, month: 1, year: 2023);
+    customHotelDate checkInDate = customHotelDate(day: 10, month: 1, year: 2023);
+    customHotelDate checkOutDate = customHotelDate(day: 15, month: 1, year: 2023);
 
     var response2 = await network.propertiesList(
       regionId: regionId,
@@ -70,7 +69,8 @@ class HotelRepository {
 
     var data = response['data']['propertyOffers'];
     PropertyUnits propertyUnits = PropertyUnits.fromJson(data);
-    return propertyUnits;
+    // propertyUnits.units?.forEach((e) {print(e.header!.text);});
+    return propertyUnits.units;
   }
 }
 
