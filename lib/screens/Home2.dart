@@ -96,8 +96,8 @@ class _Home2State extends State<Home2> {
 Widget topBackgroundImage(context) {
   return SizedBox(
     height: MediaQuery.of(context).size.width * 0.85,
-    child: Image.network(
-      'https://images.unsplash.com/photo-1517760444937-f6397edcbbcd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    child: Image.asset(
+      'assets/images/home_main.jpg',
       fit: BoxFit.fill,
     ),
   );

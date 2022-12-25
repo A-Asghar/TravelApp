@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Constants.dart';
-import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
 import '../Profile.dart';
 
@@ -28,30 +27,34 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
           child: Icon(
             Icons.arrow_back,
             color: Theme.of(context).textTheme.bodyText1!.color,
-            size: 25.0,
+            size: 25,
           ),
         ),
-        title: poppinsText(
-          text: "Cancel Hotel Booking",
-          size: 22.0,
+        title: Text(
+          "Cancel Hotel Booking",
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+            fontSize: 22,
+          ),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListView(
-                physics: const ScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ListView(
+                physics: const ClampingScrollPhysics(),
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      poppinsText(
-                        text:
+                      Text(
                         "Please select a payment refund method (only\n80% will be refunded).",
-                        size: 18.0,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 18,
+                          height: 1.6,
+                        ),
                       ),
                       const SizedBox(height: 20),
                       card(
@@ -64,82 +67,95 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  poppinsText(
-                    text: "Paid: \$479.5   ",
-                    size: 18.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Paid: \$479.5   ",
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 18,
                     color: const Color(0xff424242),
                   ),
-                  poppinsText(
-                    text: "Refund: \$383.8",
-                    size: 18.0,
+                ),
+                Text(
+                  "Refund: \$383.8",
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 18,
                     color: const Color(0xff424242),
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              // TealButton(
-              //   text: "Confirm Cancellation",
-              //   onPressed: () {
-              //     Get.dialog(
-              //       AlertDialog(
-              //         buttonPadding: EdgeInsets.zero,
-              //         titlePadding: EdgeInsets.zero,
-              //         actionsPadding: EdgeInsets.zero,
-              //         insetPadding: const EdgeInsets.only(left: 30, right: 30),
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(24),
-              //         ),
-              //         backgroundColor: Colors.white,
-              //         content: Container(
-              //           height: 400,
-              //           width: Get.width,
-              //           decoration: BoxDecoration(
-              //             borderRadius: BorderRadius.circular(24),
-              //             color: Theme.of(context).appBarTheme.backgroundColor,
-              //           ),
-              //           child: Column(
-              //             children: [
-              //               SizedBox(
-              //                 height: 180,
-              //                 width: 185,
-              //                 child: Image.asset(
-              //                   'assets/images/p3.png',
-              //                 ),
-              //               ),
-              //               const SizedBox(height: 15),
-              //               poppinsText(
-              //                 text: "Successfull!",
-              //                 size: 24.0,
-              //                 fontBold: FontWeight.w700,
-              //                 color: Constants.primaryColor,
-              //               ),
-              //               const SizedBox(height: 15),
-              //               poppinsText(
-              //                 text:
-              //                 "You have successfully canceled your\norder. 80% funds will be returned to\nyour account",
-              //                 size: 16.0,
-              //                 color: const Color(0xff09101D),
-              //               ),
-              //               const SizedBox(height: 30),
-              //               CustomButton(
-              //                 text: "OK",
-              //                 onTap: () {
-              //                   Navigator.pop(context);
-              //                 },
-              //               )
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     );
-              //   },
-              // ),
-              // const SizedBox(height: 20),
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            TealButton(
+              text: "Confirm Cancellation",
+              onPressed: () {
+                Get.dialog(
+                  AlertDialog(
+                    buttonPadding: EdgeInsets.zero,
+                    titlePadding: EdgeInsets.zero,
+                    actionsPadding: EdgeInsets.zero,
+                    insetPadding: const EdgeInsets.only(left: 30, right: 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    backgroundColor: Colors.white,
+                    content: Container(
+                      height: 400,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(24),
+                        color: Theme.of(context).appBarTheme.backgroundColor,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 180,
+                            width: 185,
+                            child: Image.asset(
+                              'assets/images/p3.png',
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          Text(
+                            "Successfull!",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: Constants.primaryColor,
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          Text(
+                            "You have successfully canceled your\norder. 80% funds will be returned to\nyour account",
+                            style:
+                            Theme.of(context).textTheme.bodyText1!.copyWith(
+                              fontSize: 16,
+                              height: 1.6,
+                              color: const Color(0xff09101D),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 30),
+                          CustomButton(
+                            text: "OK",
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
     );
@@ -176,9 +192,11 @@ Widget card(String image, String text, Color color) {
             ),
           ),
           const SizedBox(width: 14),
-          poppinsText(
-            text: text,
-            size: 18.0,
+          Text(
+            text,
+            style: Theme.of(Get.context!).textTheme.bodyText1!.copyWith(
+              fontSize: 18,
+            ),
           ),
           const Expanded(child: SizedBox()),
           Container(

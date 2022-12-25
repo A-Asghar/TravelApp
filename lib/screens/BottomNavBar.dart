@@ -4,6 +4,7 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Home2.dart';
 import 'Profile.dart';
+import 'bookings/Bookings.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -17,11 +18,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   late PageController _pageController;
   List<Widget> tabPages = [
     Home2(),
-    Scaffold(
-      body: Center(
-        child: poppinsText(text: 'Bookings Screen'),
-      ),
-    ),
+    Bookings(),
     Profile(),
   ];
   @override

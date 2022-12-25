@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/SearchProvider.dart';
+import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/Details.dart';
 import 'package:fyp/screens/Home.dart';
 import 'package:fyp/screens/Home2.dart';
@@ -185,6 +186,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Bookings')),
+
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => BottomNavBar(),
+                    ));
+                  },
+                  child: Text('Bottom Nav Bar')),
 
             ],
           ),
