@@ -6,6 +6,10 @@ import 'package:fyp/models/PropertyUnits.dart';
 import '../network/HotelNetwork.dart';
 
 class HotelRepository {
+
+  // TODO: v2/detail for images, address
+  // TODO: Reviews
+
   // https://rapidapi.com/apidojo/api/hotels4
   HotelNetwork network = HotelNetwork();
 
@@ -40,9 +44,9 @@ class HotelRepository {
       }
     });
 
-    // for(int i = 0 ; i < 20 ; i++){
-    //   print(hotels[i].id!+ ' ' + hotels[i].name!);
-    // }
+    for(int i = 0 ; i < 6 ; i++){
+      print(hotels[i].id!+ ' ' + hotels[i].name!);
+    }
   }
 
   getOffers(

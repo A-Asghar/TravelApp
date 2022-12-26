@@ -44,18 +44,18 @@ class _SearchDestinationState extends State<SearchDestination> {
             ),
             child: TextField(
               onChanged: (_) async {
-                listCities = Future.delayed(const Duration(milliseconds: 500))
-                    .then((_) {
-                      List<Destination> tempList = [];
-                      Constants.iataList.keys.forEach((k) {
-                        List l = Constants.iataList[k]!;
-                        if(l[1].toLowerCase().contains(controller.text.toLowerCase())){
-                          tempList.add(Destination(city: l[1]+', '+l[2], iata: k));
-                        }
-                      });
-                      return tempList;
+                listCities =
+                    Future.delayed(const Duration(milliseconds: 500)).then((_) {
+                  List<Destination> matchingList = [];
+                  Constants.iataList.keys.forEach((iata) {
+                    List entry = Constants.iataList[iata]!;
+                    if (entry[1].toLowerCase().contains(controller.text.toLowerCase())
+                        || entry[2].toLowerCase().contains(controller.text.toLowerCase())) {
+                      matchingList.add(Destination(city: entry[1] + ', ' + entry[2], iata: iata));
+                    }
+                  });
+                  return matchingList;
                 });
-                    // flightRepository.citySearch(keyword: controller.text);
                 setState(() {});
               },
               controller: controller,
@@ -79,14 +79,15 @@ class _SearchDestinationState extends State<SearchDestination> {
                       ? ListView.builder(
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
-                            Destination destination = snapshot.data[index] as Destination;
+                            Destination destination =
+                                snapshot.data[index] as Destination;
                             return GestureDetector(
                               onTap: () {
                                 widget.title == 'from'
                                     ? context.read<SearchProvider>().from =
-                                    destination
+                                        destination
                                     : context.read<SearchProvider>().to =
-                                    destination;
+                                        destination;
                                 controller.clear();
                                 Navigator.pop(context);
                               },
@@ -104,7 +105,10 @@ class _SearchDestinationState extends State<SearchDestination> {
                                             size: 16,
                                           ),
                                           SizedBox(
-                                              width: MediaQuery.of(context).size.width *0.8,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.8,
                                               child: Text(
                                                 destination.city,
                                                 style: GoogleFonts.poppins(
@@ -117,7 +121,12 @@ class _SearchDestinationState extends State<SearchDestination> {
                                       ),
                                       Container(
                                         alignment: Alignment.centerLeft,
-                                        child: Text(Constants.iataList[destination.iata]![0],style: GoogleFonts.poppins(color: Colors.grey),),
+                                        child: Text(
+                                          Constants
+                                              .iataList[destination.iata]![0],
+                                          style: GoogleFonts.poppins(
+                                              color: Colors.grey),
+                                        ),
                                       )
                                     ],
                                   ),
@@ -126,7 +135,9 @@ class _SearchDestinationState extends State<SearchDestination> {
                             );
                           })
                       : const Center(
-                          child: CircularProgressIndicator(color: Constants.primaryColor,),
+                          child: CircularProgressIndicator(
+                            color: Constants.primaryColor,
+                          ),
                         );
                 })
             : Container(),
