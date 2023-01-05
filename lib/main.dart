@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
+import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/Details.dart';
 import 'package:fyp/screens/Home.dart';
@@ -189,11 +190,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
               ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => BottomNavBar(),
-                    ));
+                    // HotelRepository h = HotelRepository();
+                    // h.detail();
+                    // h.reviews();
                   },
-                  child: Text('Bottom Nav Bar')),
+                  child: Text('API Test')),
 
             ],
           ),

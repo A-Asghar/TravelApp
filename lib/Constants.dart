@@ -14,9 +14,11 @@ class Constants {
   static const String flightSearch = '/v2/shopping/flight-offers';
   static const String citySearch = '/v1/reference-data/locations';
   static const String hotels = 'https://hotels4.p.rapidapi.com';
-  static const String v3search = '/locations/v3/search';
-  static const String v2list = '/properties/v2/list';
-  static const String v2getoffers = '/properties/v2/get-offers';
+  static const String locations_v3_search = '/locations/v3/search';
+  static const String properties_v2_list = '/properties/v2/list';
+  static const String properties_v2_get_offers = '/properties/v2/get-offers';
+  static const String properties_v2_detail = '/properties/v2/detail';
+  static const String reviews_v3_list = '/reviews/v3/list';
 
   // API Keys
   static const String rapidAPIKey = '895f93b42dmsh2a1ef758d35701ep1a897cjsn8d9cab99aec4';

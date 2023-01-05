@@ -4,11 +4,11 @@ import 'package:http/http.dart' as http;
 
 import '../Constants.dart';
 
-class HotelNetwork{
+class HotelNetwork {
   hotelSearch(String city) async {
     // Gets regionId to pass to propertiesList() method
     final url = Uri.parse(
-        '${Constants.hotels}${Constants.v3search}?q=$city&locale=en_US&langid=1033&siteid=300000001');
+        '${Constants.hotels}${Constants.locations_v3_search}?q=$city&locale=en_US&langid=1033&siteid=300000001');
 
     var response = await http.get(
       url,
@@ -23,11 +23,11 @@ class HotelNetwork{
 
   propertiesList(
       {required regionId,
-        required checkInDate,
-        required checkOutDate,
-        required adults}) async {
+      required checkInDate,
+      required checkOutDate,
+      required adults}) async {
     // Returns Hotel List for the regionId
-    final url = Uri.parse('${Constants.hotels}${Constants.v2list}');
+    final url = Uri.parse('${Constants.hotels}${Constants.properties_v2_list}');
 
     final Map<String, dynamic> body = {
       "currency": "USD",
@@ -70,13 +70,14 @@ class HotelNetwork{
 
   getOffers(
       {required String propertyId,
-        required String regionId,
-        required checkInDate,
-        required checkOutDate,
-        required adults}) async{
+      required String regionId,
+      required checkInDate,
+      required checkOutDate,
+      required adults}) async {
     // Gets Hotel Rooms
 
-    final url = Uri.parse('${Constants.hotels}${Constants.v2getoffers}');
+    final url =
+        Uri.parse('${Constants.hotels}${Constants.properties_v2_get_offers}');
 
     Map<String, dynamic> body = {
       "currency": "USD",
@@ -84,8 +85,16 @@ class HotelNetwork{
       "locale": "en_US",
       "siteId": 300000001,
       "propertyId": propertyId,
-      "checkInDate": {"day": checkInDate.day, "month": checkInDate.month, "year": checkInDate.year},
-      "checkOutDate": {"day": checkOutDate.day, "month": checkOutDate.month, "year": checkOutDate.year},
+      "checkInDate": {
+        "day": checkInDate.day,
+        "month": checkInDate.month,
+        "year": checkInDate.year
+      },
+      "checkOutDate": {
+        "day": checkOutDate.day,
+        "month": checkOutDate.month,
+        "year": checkOutDate.year
+      },
       "destination": {"regionId": regionId},
       "rooms": [
         {"adults": 2}
@@ -105,6 +114,60 @@ class HotelNetwork{
     print('network.getOffers().statusCode: ${response.statusCode}');
 
     return response.body;
+  }
 
+  detail({required String propertyId}) async {
+    final url =
+        Uri.parse('${Constants.hotels}${Constants.properties_v2_detail}');
+
+    Map<String, dynamic> body = {
+      "currency": "USD",
+      "eapid": 1,
+      "locale": "en_US",
+      "siteId": 300000001,
+      "propertyId": propertyId
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        "X-RapidAPI-Host": 'hotels4.p.rapidapi.com',
+        "X-RapidAPI-Key": Constants.rapidAPIKey,
+        "content-type": "application/json"
+      },
+      body: json.encode(body),
+    );
+
+    print('network.detail().statusCode: ${response.statusCode}');
+
+    return response.body;
+  }
+
+  reviews({required String propertyId}) async {
+    final url = Uri.parse('${Constants.hotels}${Constants.reviews_v3_list}');
+
+    Map<String, dynamic> body = {
+      "currency": "USD",
+      "eapid": 1,
+      "locale": "en_US",
+      "siteId": 300000001,
+      "propertyId": propertyId,
+      "size": 5,
+      "startingIndex": 0
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        "X-RapidAPI-Host": 'hotels4.p.rapidapi.com',
+        "X-RapidAPI-Key": Constants.rapidAPIKey,
+        "content-type": "application/json"
+      },
+      body: json.encode(body),
+    );
+
+    print('network.reviews().statusCode: ${response.statusCode}');
+
+    return response.body;
   }
 }
