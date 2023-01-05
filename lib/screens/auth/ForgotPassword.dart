@@ -49,8 +49,8 @@ class ForgotPassword extends StatelessWidget {
                       .sendPasswordResetEmail(email: email.text)
                       .then((value) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text("Password reset email sent to: ${email.text}"),
+                      content: Text(
+                          "Password reset email sent to: ${email.text} \nIf you didn't receive the email, be sure to check your Spam folder"),
                     ));
                     Navigator.pop(context);
                   });
