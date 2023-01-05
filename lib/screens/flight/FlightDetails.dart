@@ -179,7 +179,7 @@ class _FlightDetailsState extends State<FlightDetails> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width:120,
+                        width: 130,
                         height: 50,
                         padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                         decoration: BoxDecoration(
@@ -202,7 +202,7 @@ class _FlightDetailsState extends State<FlightDetails> {
                       ),
                       const SizedBox(width: 20,),
                       Container(
-                        width:120,
+                        width: 130,
                         height: 50,
                         padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                         decoration: BoxDecoration(

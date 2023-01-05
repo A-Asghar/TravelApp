@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
+import 'package:fyp/screens/auth/ForgotPassword.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -172,13 +174,9 @@ class _LoginState extends State<Login> {
 
                 // Forgot password
                 InkWell(
-                  onTap: () {
-                    // FirebaseAuth.instance.signOut();
-                    // GoogleSignIn().signOut();
-                    // Get.to(
-                    //   const ForgotPasswordScreen(),
-                    //   transition: Transition.rightToLeft,
-                    // );
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const ForgotPassword()));
                   },
                   child: Center(
                     child: poppinsText(
