@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
 
+import '../../Constants.dart';
 import '../../widgets/customTextField.dart';
 
 class ForgotPassword extends StatelessWidget {
@@ -43,8 +44,13 @@ class ForgotPassword extends StatelessWidget {
               sufix: const SizedBox(),
             ),
             TealButton(
-                text: 'Send reset link',
-                onPressed: () async {
+              text: 'Send reset link',
+              onPressed: () async {
+                if (email.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('Email field can\'t be empty'),
+                  ));
+                } else {
                   await FirebaseAuth.instance
                       .sendPasswordResetEmail(email: email.text)
                       .then((value) {
@@ -53,8 +59,14 @@ class ForgotPassword extends StatelessWidget {
                           "Password reset email sent to: ${email.text} \nIf you didn't receive the email, be sure to check your Spam folder"),
                     ));
                     Navigator.pop(context);
+                  }).catchError((err) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(Constants.authErrors[err.code]!),
+                    ));
                   });
-                })
+                }
+              },
+            ),
           ],
         ),
       ),
