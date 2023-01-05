@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../Constants.dart';
 import '../models/Flight.dart';
 
-class SearchProvider extends ChangeNotifier {
+class FlightSearchProvider extends ChangeNotifier {
   Destination _from = Destination(city: '', iata: '');
   Destination get from => _from;
   set from(Destination f) {

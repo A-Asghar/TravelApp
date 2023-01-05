@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:fyp/providers/SearchProvider.dart';
+import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -21,12 +21,12 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
   @override
   Widget build(BuildContext context) {
     Clear(){
-      context.read<SearchProvider>().clearFlights();
-      context.read<SearchProvider>().dictionary = null;
-      context.read<SearchProvider>().count = null;
+      context.read<FlightSearchProvider>().clearFlights();
+      context.read<FlightSearchProvider>().dictionary = null;
+      context.read<FlightSearchProvider>().count = null;
     }
 
-    var destProvider = context.watch<SearchProvider>();
+    var destProvider = context.watch<FlightSearchProvider>();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -52,18 +52,18 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
                 margin: const EdgeInsets.symmetric(horizontal: 10),
                 alignment: Alignment.centerLeft,
                 child: poppinsText(
-                  text:context.read<SearchProvider>().flights.isNotEmpty
-                      ? '${context.read<SearchProvider>().count} flights available'
+                  text:context.read<FlightSearchProvider>().flights.isNotEmpty
+                      ? '${context.read<FlightSearchProvider>().count} flights available'
                       : '',
                   color: Constants.secondaryColor,
                 )),
 
 
             Expanded(
-              child: (context.watch<SearchProvider>().flights.isEmpty &&
-                      context.watch<SearchProvider>().count == null)
+              child: (context.watch<FlightSearchProvider>().flights.isEmpty &&
+                      context.watch<FlightSearchProvider>().count == null)
                   ? lottieLoader()
-                  : context.read<SearchProvider>().count == 0
+                  : context.read<FlightSearchProvider>().count == 0
                       ? Center(child: poppinsText(text: 'Not Found', size: 30.0))
                       : ListView.builder(
                           physics: const ScrollPhysics(),

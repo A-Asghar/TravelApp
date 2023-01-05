@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp/providers/SearchProvider.dart';
-import 'package:fyp/repository/HotelRepository.dart';
+import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/Details.dart';
 import 'package:fyp/screens/Home.dart';
@@ -26,7 +25,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ChangeNotifierProvider(create: (_) => FlightSearchProvider()),
       ],
       child: const MyApp(),
     ),

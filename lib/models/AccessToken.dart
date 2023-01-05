@@ -1,12 +1,4 @@
-// To parse this JSON data, do
-//
-//     final accessToken = accessTokenFromJson(jsonString);
-
 import 'dart:convert';
-
-AccessToken accessTokenFromJson(String str) => AccessToken.fromJson(json.decode(str));
-
-String accessTokenToJson(AccessToken data) => json.encode(data.toJson());
 
 class AccessToken {
   AccessToken({

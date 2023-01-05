@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/providers/SearchProvider.dart';
+import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
 import 'package:fyp/screens/SearchDestination.dart';
 import 'package:fyp/screens/flight/FlightSearchResult.dart';
@@ -19,53 +19,35 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  List<FlightTrip> flightTrips = [
-    FlightTrip(text: 'OneWay', isSelected: true),
-    FlightTrip(text: 'Round Trip', isSelected: false),
-  ];
-
-  var items = [
-    'All',
-    'ECONOMY',
-    'PREMIUM_ECONOMY',
-    'BUSINESS',
-    'FIRST',
-  ];
-var dropdownvalue = 'All';
   @override
   Widget build(BuildContext context) {
-    Clear(){
-      context.read<SearchProvider>().adults =1 ;
-      context.read<SearchProvider>().departDate = Constants.convertDate(DateTime.now());
-      context.read<SearchProvider>().returnDate = Constants.convertDate(DateTime.now());
-      context.read<SearchProvider>().from = Destination(city: '', iata: '');
-      context.read<SearchProvider>().to = Destination(city: '', iata: '');
-
+    clear() {
+      if (widget.title == 'flight') {
+        context.read<FlightSearchProvider>().adults = 1;
+        context.read<FlightSearchProvider>().departDate =
+            Constants.convertDate(DateTime.now());
+        context.read<FlightSearchProvider>().returnDate =
+            Constants.convertDate(DateTime.now());
+        context.read<FlightSearchProvider>().from =
+            Destination(city: '', iata: '');
+        context.read<FlightSearchProvider>().to =
+            Destination(city: '', iata: '');
+      } else if (widget.title == 'hotel') {}
     }
 
-    String from = context.watch<SearchProvider>().from.city == ''
-        ? 'Select a destination'
-        : context.watch<SearchProvider>().from.city;
-    String to = context.watch<SearchProvider>().to.city == ''
-        ? 'Select a destination'
-        : context.watch<SearchProvider>().to.city;
-    String departDate = context.watch<SearchProvider>().departDate;
-    String returnDate = context.watch<SearchProvider>().returnDate;
-    int adults = context.watch<SearchProvider>().adults;
-
     return WillPopScope(
-        onWillPop: ()async{
-          Clear();
-          return true;
-        },
+      onWillPop: () async {
+        clear();
+        return true;
+      },
       child: SafeArea(
-          child: Scaffold(
+        child: Scaffold(
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 color: Colors.black,
-                onPressed: (){
-                  Clear();
+                onPressed: () {
+                  clear();
                   Navigator.pop(context);
                 },
               ),
@@ -77,199 +59,35 @@ var dropdownvalue = 'All';
               ),
               centerTitle: true,
             ),
-            body: Column(
-              children: [
-                // Round Trip , OneWay Widget
-                widget.title == 'flight'
-                    ? SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: 35,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: flightTrips.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            for (var e in flightTrips) {
-                              e.isSelected = false;
-                            }
-                            flightTrips[index].isSelected = true;
-                            setState(() {});
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                border: Border.all(
-                                    color: flightTrips[index].isSelected
-                                        ? Constants.primaryColor
-                                        : Colors.black)),
-                            child: poppinsText(
-                                text: flightTrips[index].text,
-                                color: flightTrips[index].isSelected
-                                    ? Constants.primaryColor
-                                    : Colors.black,
-                                fontBold: flightTrips[index].isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.w300),
-                          ),
-                        );
-                      }),
-                )
-                    : Container(),
-
-                // From
-                widget.title == 'flight'
-                    ? from_to_textfield(context, 'From', from, 'from')
-                    : from_to_textfield(
-                    context, 'Destination', 'Lahore, Pakistan', 'from'),
-
-                // To
-                widget.title == 'flight'
-                    ? from_to_textfield(context, 'To', to, 'to')
-                    : Container(),
-
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width * 0.85,
-                    child: Row(
-                      children: [
-                        // Depart / Check In
-                        widget.title == 'flight'
-                            ? checkin_checkout_textfield(
-                            context,
-                            'Depart',
-                            '${departDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(departDate.split('-')[1])]!}',
-                            'depart')
-                            : checkin_checkout_textfield(
-                            context, 'Checkin', '20 Oct', 'checkin'),
-                        const Spacer(),
-
-                        // Return Check Out
-                        widget.title == 'flight'
-                            ? flightTrips[1].isSelected
-                            ? checkin_checkout_textfield(
-                            context,
-                            'Return',
-                            '${returnDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(returnDate.split('-')[1])]!}',
-                            'return')
-                            : Container()
-                            : checkin_checkout_textfield(
-                            context, 'Checkout', '23 Oct', 'checkout'),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Adults / Guests
-                widget.title == 'flight'
-                    ? guests_adult_textfield(context, 'Adults', adults)
-                    : guests_adult_textfield(context, 'Guests', '1'),
-
-                // widget.title == 'flight' ?
-                // Padding(
-                //   padding: const EdgeInsets.all(25),
-                //   child: DropdownButtonFormField(
-                //   decoration: InputDecoration(
-                //       // border: InputBorder.none,
-                //       enabledBorder: const UnderlineInputBorder(
-                //           borderSide: BorderSide(color: Colors.transparent)),
-                //       enabled: false,
-                //       fillColor: Colors.grey.withOpacity(0.1),
-                //       filled: true,
-                //       suffixIcon: Icon(Icons.arrow_drop_down,color: Colors.grey,)
-                //   ),
-                //   borderRadius: BorderRadius.circular(20),
-                //
-                //   // style: GoogleFonts.poppins(color: Colors.black),
-                //
-                //   // dropdownColor: Colors.grey.withOpacity(0.1),
-                //   elevation: 0,
-                //   focusColor: Constants.secondaryColor.withOpacity(0.1),
-                //   iconSize: 0,
-                //   // Initial Value
-                //   value: dropdownvalue,
-                //
-                //   // Down Arrow Icon
-                //   icon: const Icon(Icons.keyboard_arrow_down),
-                //
-                //   // Array list of items
-                //   items: items.map((String items) {
-                //     return DropdownMenuItem(
-                //       value: items,
-                //       child: Container(
-                //         alignment: Alignment.centerLeft,
-                //         height: 50,
-                //         decoration: BoxDecoration(
-                //           // color: Colors.grey.withOpacity(0.1),
-                //             borderRadius: BorderRadius.circular(10)
-                //         ),
-                //         // width: MediaQuery.of(context).size.width*0.8,
-                //         child: poppinsText(text:items),
-                //       ),
-                //     );
-                //   }).toList(),
-                //   // After selecting the desired option,it will
-                //   // change button value to selected value
-                //   onChanged: (String? newValue) {
-                //     setState(() {
-                //       dropdownvalue = newValue!;
-                //     });
-                //   },
-                // ),
-                // )
-                //     : Container(),
-
-                const Spacer(),
-
-                // Search Button
-                searchButton(context),
-              ],
-            ),
-          )),
-
+            body: returnLayout()),
+      ),
     );
   }
 
-  Widget searchButton(BuildContext context) {
-    return TealButton(
-        text: 'Search',
-        onPressed: () async {
-          if(context.read<SearchProvider>().from.city!=''
-          && context.read<SearchProvider>().to.city!=''){
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const FlightSearchResult()));
-            FlightRepository flightRepository = FlightRepository();
-            List response = await flightRepository.flightOffersSearch(
-                originLocationCode: context.read<SearchProvider>().from.iata,
-                destinationLocationCode:
-                context.read<SearchProvider>().to.iata,
-                departureDate: context.read<SearchProvider>().departDate,
-                returnDate: flightTrips[1].isSelected
-                    ? context.read<SearchProvider>().returnDate
-                    : '',
-                adults: context.read<SearchProvider>().adults);
-
-            context.read<SearchProvider>().dictionary = response[0];
-            context.read<SearchProvider>().flights = response[1];
-            context.read<SearchProvider>().count = response[2];
-          }else{
-
-          }
-        });
+  Widget returnLayout() {
+    if (widget.title == 'flight') {
+      return const FlightLayout();
+    } else if (widget.title == 'hotel') {
+      return const HotelLayout();
+    } else {
+      return Container();
+    }
   }
 }
 
-Widget from_to_textfield(context, topText, bottomText, title) {
+Widget searchButton(BuildContext context, VoidCallback onPressed) {
+  return TealButton(text: 'Search', onPressed: onPressed);
+}
+
+Widget packageLayout() {
+  return Container();
+}
+
+Widget from_to_textfield(context, topText, bottomText, title, option) {
   return GestureDetector(
     onTap: () {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => SearchDestination(title: title),
+        builder: (context) => SearchDestination(title: title, option: option),
       ));
     },
     child: Align(
@@ -280,13 +98,13 @@ Widget from_to_textfield(context, topText, bottomText, title) {
         width: MediaQuery.of(context).size.width * 0.85,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-          color: Colors.grey.withOpacity(0.1)
-          // border: Border.all(),
-        ),
+            color: Colors.grey.withOpacity(0.1)
+            // border: Border.all(),
+            ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            poppinsText(text: topText,color: Constants.secondaryColor),
+            poppinsText(text: topText, color: Constants.secondaryColor),
             poppinsText(text: bottomText, size: 18.0),
           ],
         ),
@@ -327,10 +145,10 @@ Future<void> _selectDate(BuildContext context, String date) async {
 
   if (selectedDate != null) {
     if (date == 'depart') {
-      context.read<SearchProvider>().departDate =
+      context.read<FlightSearchProvider>().departDate =
           Constants.convertDate(selectedDate);
     } else if (date == 'return') {
-      context.read<SearchProvider>().returnDate =
+      context.read<FlightSearchProvider>().returnDate =
           Constants.convertDate(selectedDate);
     }
   }
@@ -352,7 +170,7 @@ Widget checkin_checkout_textfield(
           borderRadius: BorderRadius.circular(10),
           color: Colors.grey.withOpacity(0.1)
           // border: Border.all()
-      ),
+          ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -366,7 +184,7 @@ Widget checkin_checkout_textfield(
               const SizedBox(
                 width: 5,
               ),
-              poppinsText(text: topText,color: Constants.secondaryColor)
+              poppinsText(text: topText, color: Constants.secondaryColor)
             ],
           ),
           poppinsText(text: bottomText, size: 18.0),
@@ -391,11 +209,11 @@ Widget guests_adult_textfield(context, topText, bottomText) {
             borderRadius: BorderRadius.circular(10),
             color: Colors.grey.withOpacity(0.1)
             // border: Border.all()
-        ),
+            ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            poppinsText(text: topText,color: Constants.secondaryColor),
+            poppinsText(text: topText, color: Constants.secondaryColor),
             poppinsText(text: bottomText.toString(), size: 18.0),
           ],
         ),
@@ -405,7 +223,7 @@ Widget guests_adult_textfield(context, topText, bottomText) {
 }
 
 Future adults_guests_alertbox(BuildContext context) {
-  int adults = context.read<SearchProvider>().adults;
+  int adults = context.read<FlightSearchProvider>().adults;
   return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -451,7 +269,7 @@ Future adults_guests_alertbox(BuildContext context) {
                     ),
                     TextButton(
                         onPressed: () {
-                          context.read<SearchProvider>().adults = adults;
+                          context.read<FlightSearchProvider>().adults = adults;
                           Navigator.of(context).pop();
                         },
                         child: poppinsText(
@@ -467,88 +285,195 @@ Future adults_guests_alertbox(BuildContext context) {
       });
 }
 
+class FlightLayout extends StatefulWidget {
+  const FlightLayout({Key? key}) : super(key: key);
+
+  @override
+  State<FlightLayout> createState() => _FlightLayoutState();
+}
+
+class _FlightLayoutState extends State<FlightLayout> {
+  List<FlightTrip> flightTrips = [
+    FlightTrip(text: 'OneWay', isSelected: true),
+    FlightTrip(text: 'Round Trip', isSelected: false),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    String from = context.watch<FlightSearchProvider>().from.city == ''
+        ? 'Select a destination'
+        : context.watch<FlightSearchProvider>().from.city;
+    String to = context.watch<FlightSearchProvider>().to.city == ''
+        ? 'Select a destination'
+        : context.watch<FlightSearchProvider>().to.city;
+    String departDate = context.watch<FlightSearchProvider>().departDate;
+    String returnDate = context.watch<FlightSearchProvider>().returnDate;
+    int adults = context.watch<FlightSearchProvider>().adults;
+
+    return Column(
+      children: [
+        // One Way / Round Trip
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: 35,
+          child: ListView.builder(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: flightTrips.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    for (var e in flightTrips) {
+                      e.isSelected = false;
+                    }
+                    flightTrips[index].isSelected = true;
+                    setState(() {});
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                            color: flightTrips[index].isSelected
+                                ? Constants.primaryColor
+                                : Colors.black)),
+                    child: poppinsText(
+                        text: flightTrips[index].text,
+                        color: flightTrips[index].isSelected
+                            ? Constants.primaryColor
+                            : Colors.black,
+                        fontBold: flightTrips[index].isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w300),
+                  ),
+                );
+              }),
+        ),
+
+        // From
+        from_to_textfield(context, 'From', from, 'from', 'flight'),
+
+        //To
+        from_to_textfield(context, 'To', to, 'to', 'flight'),
+
+        // Depart / Return
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width * 0.85,
+            child: Row(
+              children: [
+                // Depart / Check In
+                checkin_checkout_textfield(
+                    context,
+                    'Depart',
+                    '${departDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(departDate.split('-')[1])]!}',
+                    'depart'),
+                const Spacer(),
+
+                // Return Check Out
+                flightTrips[1].isSelected
+                    ? checkin_checkout_textfield(
+                        context,
+                        'Return',
+                        '${returnDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(returnDate.split('-')[1])]!}',
+                        'return')
+                    : Container(),
+              ],
+            ),
+          ),
+        ),
+
+        // Adults
+        guests_adult_textfield(context, 'Adults', adults),
+
+        const Spacer(),
+
+        // Search
+        searchButton(
+          context,
+          () async {
+            if (context.read<FlightSearchProvider>().from.city != '' &&
+                context.read<FlightSearchProvider>().to.city != '') {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const FlightSearchResult()));
+              FlightRepository flightRepository = FlightRepository();
+              List response = await flightRepository.flightOffersSearch(
+                  originLocationCode:
+                      context.read<FlightSearchProvider>().from.iata,
+                  destinationLocationCode:
+                      context.read<FlightSearchProvider>().to.iata,
+                  departureDate:
+                      context.read<FlightSearchProvider>().departDate,
+                  returnDate: flightTrips[1].isSelected
+                      ? context.read<FlightSearchProvider>().returnDate
+                      : '',
+                  adults: context.read<FlightSearchProvider>().adults);
+
+              context.read<FlightSearchProvider>().dictionary = response[0];
+              context.read<FlightSearchProvider>().flights = response[1];
+              context.read<FlightSearchProvider>().count = response[2];
+            } else {}
+          },
+        )
+      ],
+    );
+  }
+}
+
+class HotelLayout extends StatefulWidget {
+  const HotelLayout({Key? key}) : super(key: key);
+
+  @override
+  State<HotelLayout> createState() => _HotelLayoutState();
+}
+
+class _HotelLayoutState extends State<HotelLayout> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Destination
+        from_to_textfield(context, 'Destination', 'Lahore, Pakistan', 'from', 'hotel'),
+
+        // Check-in / Check-out
+        Align(
+          alignment: Alignment.center,
+          child: Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width * 0.85,
+            child: Row(
+              children: [
+                // Check In
+                checkin_checkout_textfield(
+                    context, 'Checkin', '20 Oct', 'checkin'),
+                const Spacer(),
+
+                // Check Out
+                checkin_checkout_textfield(
+                    context, 'Checkout', '23 Oct', 'checkout'),
+              ],
+            ),
+          ),
+        ),
+
+        // Guests
+        guests_adult_textfield(context, 'Guests', '1'),
+
+        const Spacer(),
+
+        searchButton(context, () async {})
+      ],
+    );
+  }
+}
+
 class FlightTrip {
   FlightTrip({required this.text, required this.isSelected});
 
   String text;
   bool isSelected;
-}
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter DropDownButton',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const MyHomePage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-// Initial Selected Value
-  String dropdownvalue = 'Item 1';
-
-// List of items in our dropdown menu
-  var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Geeksforgeeks"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DropdownButton(
-
-              // Initial Value
-              value: dropdownvalue,
-
-              // Down Arrow Icon
-              icon: const Icon(Icons.keyboard_arrow_down),
-
-              // Array list of items
-              items: items.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
-                  child: Text(items),
-                );
-              }).toList(),
-              // After selecting the desired option,it will
-              // change button value to selected value
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownvalue = newValue!;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

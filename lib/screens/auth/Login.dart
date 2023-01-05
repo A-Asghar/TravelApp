@@ -182,7 +182,7 @@ class _LoginState extends State<Login> {
                   },
                   child: Center(
                     child: poppinsText(
-                      text: "Forgot the password?",
+                      text: "Forgot password?",
                       size: 16.0,
                       color: Constants.primaryColor,
                     ),

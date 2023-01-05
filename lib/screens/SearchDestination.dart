@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/providers/SearchProvider.dart';
+import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -7,9 +7,11 @@ import 'package:provider/provider.dart';
 import '../Constants.dart';
 
 class SearchDestination extends StatefulWidget {
-  const SearchDestination({Key? key, required this.title}) : super(key: key);
+  const SearchDestination({Key? key, required this.title, required this.option})
+      : super(key: key);
 
   final String title;
+  final String option;
   @override
   State<SearchDestination> createState() => _SearchDestinationState();
 }
@@ -49,9 +51,14 @@ class _SearchDestinationState extends State<SearchDestination> {
                   List<Destination> matchingList = [];
                   Constants.iataList.keys.forEach((iata) {
                     List entry = Constants.iataList[iata]!;
-                    if (entry[1].toLowerCase().contains(controller.text.toLowerCase())
-                        || entry[2].toLowerCase().contains(controller.text.toLowerCase())) {
-                      matchingList.add(Destination(city: entry[1] + ', ' + entry[2], iata: iata));
+                    if (entry[1]
+                            .toLowerCase()
+                            .contains(controller.text.toLowerCase()) ||
+                        entry[2]
+                            .toLowerCase()
+                            .contains(controller.text.toLowerCase())) {
+                      matchingList.add(Destination(
+                          city: entry[1] + ', ' + entry[2], iata: iata));
                     }
                   });
                   return matchingList;
@@ -83,11 +90,16 @@ class _SearchDestinationState extends State<SearchDestination> {
                                 snapshot.data[index] as Destination;
                             return GestureDetector(
                               onTap: () {
-                                widget.title == 'from'
-                                    ? context.read<SearchProvider>().from =
-                                        destination
-                                    : context.read<SearchProvider>().to =
-                                        destination;
+                                if (widget.option == 'flight') {
+                                  widget.title == 'from'
+                                      ? context
+                                          .read<FlightSearchProvider>()
+                                          .from = destination
+                                      : context
+                                          .read<FlightSearchProvider>()
+                                          .to = destination;
+                                } else if (widget.option == 'hotel') {}
+
                                 controller.clear();
                                 Navigator.pop(context);
                               },
@@ -119,15 +131,17 @@ class _SearchDestinationState extends State<SearchDestination> {
                                               ))
                                         ],
                                       ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          Constants
-                                              .iataList[destination.iata]![0],
-                                          style: GoogleFonts.poppins(
-                                              color: Colors.grey),
-                                        ),
-                                      )
+                                      widget.option == 'flight'
+                                          ? Container(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                Constants.iataList[
+                                                    destination.iata]![0],
+                                                style: GoogleFonts.poppins(
+                                                    color: Colors.grey),
+                                              ),
+                                            )
+                                          : Container()
                                     ],
                                   ),
                                 ),
