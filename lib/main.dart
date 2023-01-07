@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
+import 'package:fyp/screens/AddPackage.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/Details.dart';
 import 'package:fyp/screens/Home.dart';
@@ -195,6 +196,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     // h.reviews();
                   },
                   child: Text('API Test')),
+
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddPackage(),
+                    ));
+                  },
+                  child: Text('Package')),
 
             ],
           ),
