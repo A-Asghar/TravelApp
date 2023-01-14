@@ -31,7 +31,7 @@ class FlightNetwork{
       },
     );
 
-    print('Network Response status: ${response.statusCode}');
+    // print('Network Response status: ${response.statusCode}');
     // print('Network Response body: ${response.body}');
 
     if (response.statusCode == 401) {
@@ -48,6 +48,7 @@ class FlightNetwork{
       );
     }
 
+
     return response.body;
   }
 
@@ -57,6 +58,8 @@ class FlightNetwork{
       'grant_type': 'client_credentials',
       'client_id': 'CF9FfomFYGbFUVGG15igLgdiGtapSK1g',
       'client_secret': 'XgukiYQGMPtShAMT',
+      // 'client_id': 'tsqjLha5nk2Vjp0dd46KdrNOItpKyQrN',
+      // 'client_secret': 'CGS1XARCa9TQWvON',
     });
     return response;
   }

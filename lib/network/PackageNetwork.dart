@@ -19,6 +19,7 @@ class PackageNetwork {
       "adults": package.adults,
       "travelAgencyId": package.travelAgencyId,
       "hotelPropertyId": package.hotelPropertyId,
+      "dayWiseDetails":package.dayWiseDetails
     });
   }
 
@@ -45,6 +46,7 @@ class PackageNetwork {
       "adults": package.adults,
       "travelAgencyId": package.travelAgencyId,
       "hotelPropertyId": package.hotelPropertyId,
+      "dayWiseDetails":package.dayWiseDetails
     });
   }
 }
