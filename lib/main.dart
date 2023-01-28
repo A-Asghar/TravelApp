@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
+import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/repository/WeatherRepository.dart';
 import 'package:fyp/screens/AddPackage.dart';
@@ -15,7 +16,7 @@ import 'package:fyp/screens/WeatherScreen.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
-import 'package:fyp/screens/hotel/HotelSearchRetults.dart';
+import 'package:fyp/screens/hotel/HotelSearchResults.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FlightSearchProvider()),
+        ChangeNotifierProvider(create: (_) => HotelSearchProvider()),
       ],
       child: const MyApp(),
     ),
@@ -92,15 +94,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Hotel Search Results')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Details(
-                        detailsType: 'hotel',
-                      ),
-                    ));
-                  },
-                  child: Text('Hotel Detail')),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => Details(
+              //           detailsType: 'hotel',
+              //         ),
+              //       ));
+              //     },
+              //     child: Text('Hotel Detail')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -129,22 +131,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('SignUp')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Details(
-                        detailsType: 'package',
-                      ),
-                    ));
-                  },
-                  child: Text('Details Package')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Details(detailsType: 'hotel'),
-                    ));
-                  },
-                  child: Text('Details hotel room')),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => Details(
+              //           detailsType: 'package',
+              //         ),
+              //       ));
+              //     },
+              //     child: Text('Details Package')),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => Details(detailsType: 'hotel'),
+              //       ));
+              //     },
+              //     child: Text('Details hotel room')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -185,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Text('Bookings')),
               ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     // HotelRepository h = HotelRepository();
                     // h.detail();
                     // h.reviews();

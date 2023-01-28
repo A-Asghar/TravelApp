@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/models/Destination.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
+import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +70,7 @@ class _SearchDestinationState extends State<SearchDestination> {
               controller: controller,
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
-                hintStyle: GoogleFonts.poppins(color: Colors.white),
+                hintStyle: GoogleFonts.poppins(color: Constants.secondaryColor),
                 hintText: 'Search city',
                 // suffixIcon: Icon(Icons.search),
                 border: InputBorder.none,
@@ -98,7 +100,10 @@ class _SearchDestinationState extends State<SearchDestination> {
                                       : context
                                           .read<FlightSearchProvider>()
                                           .to = destination;
-                                } else if (widget.option == 'hotel') {}
+                                } else if (widget.option == 'hotel') {
+                                  context.read<HotelSearchProvider>().to =
+                                      destination;
+                                }
 
                                 controller.clear();
                                 Navigator.pop(context);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/models/Destination.dart';
 
 import '../Constants.dart';
 import '../models/Flight.dart';
@@ -46,8 +47,8 @@ class FlightSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  clearFlights(){
-    _flights = [] ;
+  clearFlights() {
+    _flights = [];
     notifyListeners();
   }
 
@@ -60,15 +61,8 @@ class FlightSearchProvider extends ChangeNotifier {
 
   int? _count;
   int? get count => _count;
-  set count(count){
+  set count(count) {
     _count = count;
     notifyListeners();
   }
-}
-
-class Destination {
-  Destination({required this.city, required this.iata});
-
-  String city;
-  String iata;
 }

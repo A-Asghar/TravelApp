@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/models/Destination.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
+import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
+import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/SearchDestination.dart';
 import 'package:fyp/screens/flight/FlightSearchResult.dart';
+import 'package:fyp/screens/hotel/HotelSearchResults.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,7 +36,15 @@ class _SearchState extends State<Search> {
             Destination(city: '', iata: '');
         context.read<FlightSearchProvider>().to =
             Destination(city: '', iata: '');
-      } else if (widget.title == 'hotel') {}
+      } else if (widget.title == 'hotel') {
+        context.read<HotelSearchProvider>().adults = 1;
+        context.read<HotelSearchProvider>().checkIn =
+            Constants.convertDate(DateTime.now());
+        context.read<HotelSearchProvider>().checkOut =
+            Constants.convertDate(DateTime.now());
+        context.read<HotelSearchProvider>().to =
+            Destination(city: '', iata: '');
+      }
     }
 
     return WillPopScope(
@@ -113,7 +125,7 @@ Widget from_to_textfield(context, topText, bottomText, title, option) {
   );
 }
 
-Future<void> _selectDate(BuildContext context, String date) async {
+Future _selectDate(BuildContext context, String date) async {
   DateTime? selectedDate = DateTime.now();
   selectedDate = await showDatePicker(
       builder: (context, child) {
@@ -149,6 +161,12 @@ Future<void> _selectDate(BuildContext context, String date) async {
           Constants.convertDate(selectedDate);
     } else if (date == 'return') {
       context.read<FlightSearchProvider>().returnDate =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'checkin') {
+      context.read<HotelSearchProvider>().checkIn =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'checkout') {
+      context.read<HotelSearchProvider>().checkOut =
           Constants.convertDate(selectedDate);
     }
   }
@@ -194,10 +212,71 @@ Widget checkin_checkout_textfield(
   );
 }
 
-Widget guests_adult_textfield(context, topText, bottomText) {
+class DateTextfield extends StatefulWidget {
+  DateTextfield(
+      {super.key,
+      required this.topText,
+      required this.bottomText,
+      required this.date});
+  final String topText;
+  final String bottomText;
+  final String date;
+  bool isSelected = false;
+
+  @override
+  State<DateTextfield> createState() => _DateTextfieldState();
+}
+
+class _DateTextfieldState extends State<DateTextfield> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        _selectDate(context, widget.date);
+        setState(() {
+          widget.isSelected = !widget.isSelected;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        margin: const EdgeInsets.symmetric(vertical: 20),
+        width: MediaQuery.of(context).size.width * 0.4,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey.withOpacity(0.1)
+            // border: Border.all()
+            ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  color: widget.isSelected
+                      ? Constants.primaryColor
+                      : Constants.secondaryColor,
+                  size: 18,
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                poppinsText(
+                    text: widget.topText, color: Constants.secondaryColor)
+              ],
+            ),
+            poppinsText(text: widget.bottomText, size: 18.0),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Widget guests_adult_textfield(context, topText, bottomText, title) {
   return GestureDetector(
     onTap: () {
-      adults_guests_alertbox(context);
+      adults_guests_alertbox(context, title);
     },
     child: Align(
       alignment: Alignment.center,
@@ -222,7 +301,7 @@ Widget guests_adult_textfield(context, topText, bottomText) {
   );
 }
 
-Future adults_guests_alertbox(BuildContext context) {
+Future adults_guests_alertbox(BuildContext context, title) {
   int adults = context.read<FlightSearchProvider>().adults;
   return showDialog(
       context: context,
@@ -269,7 +348,12 @@ Future adults_guests_alertbox(BuildContext context) {
                     ),
                     TextButton(
                         onPressed: () {
-                          context.read<FlightSearchProvider>().adults = adults;
+                          if (title == 'flight') {
+                            context.read<FlightSearchProvider>().adults =
+                                adults;
+                          } else {
+                            context.read<HotelSearchProvider>().adults = adults;
+                          }
                           Navigator.of(context).pop();
                         },
                         child: poppinsText(
@@ -388,7 +472,7 @@ class _FlightLayoutState extends State<FlightLayout> {
         ),
 
         // Adults
-        guests_adult_textfield(context, 'Adults', adults),
+        guests_adult_textfield(context, 'Adults', adults, 'flight'),
 
         const Spacer(),
 
@@ -416,7 +500,15 @@ class _FlightLayoutState extends State<FlightLayout> {
               context.read<FlightSearchProvider>().dictionary = response[0];
               context.read<FlightSearchProvider>().flights = response[1];
               context.read<FlightSearchProvider>().count = response[2];
-            } else {}
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Some error message'),
+                  backgroundColor: Colors.red,
+                  duration: Duration(seconds: 5),
+                ),
+              );
+            }
           },
         )
       ],
@@ -434,10 +526,17 @@ class HotelLayout extends StatefulWidget {
 class _HotelLayoutState extends State<HotelLayout> {
   @override
   Widget build(BuildContext context) {
+    String to = context.watch<HotelSearchProvider>().to.city == ''
+        ? 'Select a destination'
+        : context.watch<HotelSearchProvider>().to.city;
+    String checkIn = context.watch<HotelSearchProvider>().checkIn;
+    String checkOut = context.watch<HotelSearchProvider>().checkOut;
+    int adults = context.watch<HotelSearchProvider>().adults;
+
     return Column(
       children: [
         // Destination
-        from_to_textfield(context, 'Destination', 'Lahore, Pakistan', 'from', 'hotel'),
+        from_to_textfield(context, 'Destination', to, 'to', 'hotel'),
 
         // Check-in / Check-out
         Align(
@@ -449,23 +548,45 @@ class _HotelLayoutState extends State<HotelLayout> {
               children: [
                 // Check In
                 checkin_checkout_textfield(
-                    context, 'Checkin', '20 Oct', 'checkin'),
+                    context,
+                    'Checkin',
+                    '${checkIn.split('-')[2]}\t${Constants.integerToMonth[int.parse(checkIn.split('-')[1])]!}',
+                    'checkin'),
                 const Spacer(),
 
                 // Check Out
                 checkin_checkout_textfield(
-                    context, 'Checkout', '23 Oct', 'checkout'),
+                    context,
+                    'Checkout',
+                    '${checkOut.split('-')[2]}\t${Constants.integerToMonth[int.parse(checkOut.split('-')[1])]!}',
+                    'checkout'),
               ],
             ),
           ),
         ),
 
         // Guests
-        guests_adult_textfield(context, 'Guests', '1'),
+        guests_adult_textfield(context, 'Adults', adults, 'hotel'),
 
         const Spacer(),
 
-        searchButton(context, () async {})
+        searchButton(context, () async {
+          if (context.read<HotelSearchProvider>().to.city != '') {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => HotelSearchResults()));
+            HotelRepository hotelRepository = HotelRepository();
+            List response = await hotelRepository.hotelSearch(
+                city: context.read<HotelSearchProvider>().to.city.split(',')[0],
+                checkIn:
+                    DateTime.parse(context.read<HotelSearchProvider>().checkIn),
+                checkOut: DateTime.parse(
+                    context.read<HotelSearchProvider>().checkOut),
+                adults: context.read<HotelSearchProvider>().adults);
+
+            context.read<HotelSearchProvider>().hotels = response[0];
+            context.read<HotelSearchProvider>().regionId = response[1];
+          }
+        })
       ],
     );
   }

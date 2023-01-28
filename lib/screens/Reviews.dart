@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Constants.dart';
+import 'package:fyp/models/Review.dart';
 import 'package:get/get.dart';
 
 import '../widgets/filterView.dart';
 import '../widgets/poppinsText.dart';
 
 class Reviews extends StatefulWidget {
-  const Reviews({Key? key}) : super(key: key);
+  const Reviews({Key? key, required this.hotelReviews}) : super(key: key);
+
+  final List<ReviewElement> hotelReviews;
 
   @override
   State<Reviews> createState() => _ReviewsState();
@@ -28,7 +31,8 @@ class _ReviewsState extends State<Reviews> {
             color: Theme.of(context).textTheme.bodyText1!.color,
           ),
         ),
-        title: poppinsText(text: "Review", size: 18.0),
+        title:
+            poppinsText(text: "Reviews", size: 18.0, fontBold: FontWeight.w600),
       ),
       body: ListView(
         children: [
@@ -37,39 +41,39 @@ class _ReviewsState extends State<Reviews> {
               const SizedBox(height: 20),
 
               // Rating Selection
-              SizedBox(
-                height: 38,
-                width: Get.width,
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(left: 20),
-                  itemCount: 6,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 14),
-                      child: ratingCard(
-                        index == 0
-                            ? "All"
-                            : index == 1
-                                ? "5"
-                                : index == 2
-                                    ? "4"
-                                    : index == 3
-                                        ? "3"
-                                        : index == 4
-                                            ? "2"
-                                            : index == 5
-                                                ? "1"
-                                                : "0.0",
-                        index == 0
-                            ? Constants.primaryColor
-                            : Colors.transparent,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 20),
+              // SizedBox(
+              //   height: 38,
+              //   width: Get.width,
+              //   child: ListView.builder(
+              //     padding: const EdgeInsets.only(left: 20),
+              //     itemCount: 6,
+              //     scrollDirection: Axis.horizontal,
+              //     itemBuilder: (BuildContext context, int index) {
+              //       return Padding(
+              //         padding: const EdgeInsets.only(right: 14),
+              //         child: ratingCard(
+              //           index == 0
+              //               ? "All"
+              //               : index == 1
+              //                   ? "5"
+              //                   : index == 2
+              //                       ? "4"
+              //                       : index == 3
+              //                           ? "3"
+              //                           : index == 4
+              //                               ? "2"
+              //                               : index == 5
+              //                                   ? "1"
+              //                                   : "0.0",
+              //           index == 0
+              //               ? Constants.primaryColor
+              //               : Colors.transparent,
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
+              // const SizedBox(height: 20),
 
               // Rating Row
               Padding(
@@ -89,21 +93,21 @@ class _ReviewsState extends State<Reviews> {
                       color: Constants.primaryColor,
                     ),
                     poppinsText(
-                      text: "(4,981 reviews)",
+                      text:
+                          "(${widget.hotelReviews.length.toString()} reviews)",
                       size: 14.0,
                       color: const Color(0xff757575),
                     ),
                     const Expanded(child: SizedBox()),
-                    poppinsText(
-                      text: "See All",
-                      size: 16.0,
-                      color: Constants.primaryColor,
-                    ),
+                    // poppinsText(
+                    //   text: "See All",
+                    //   size: 16.0,
+                    //   color: Constants.primaryColor,
+                    // ),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
-
 
               // Reviews List
               Padding(
@@ -111,7 +115,7 @@ class _ReviewsState extends State<Reviews> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (var i = 0; i < 5; i++)
+                    for (var i = 0; i < widget.hotelReviews.length; i++)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: Container(
@@ -126,41 +130,40 @@ class _ReviewsState extends State<Reviews> {
                               children: [
                                 Row(
                                   children: [
-                                    Container(
-                                      height: 48,
-                                      width: 48,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                            i == 0
-                                                ? 'assets/images/pr1.png'
-                                                : i == 1
-                                                    ? 'assets/images/pr2.png'
-                                                    : 'assets/images/pr3.png',
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 14),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         poppinsText(
-                                          text: i == 0
-                                              ? "Jenny Wilson"
-                                              : i == 1
-                                                  ? "Guy Hawkins"
-                                                  : "Kristin Watson",
+                                          // text: i == 0
+                                          //     ? "Jenny Wilson"
+                                          //     : i == 1
+                                          //         ? "Guy Hawkins"
+                                          //         : "Kristin Watson",
+                                          text: 'Anonymous',
+                                          color: Constants.primaryColor,
                                           size: 16.0,
                                         ),
                                         const SizedBox(height: 5),
                                         poppinsText(
-                                          text: i == 0
-                                              ? "Dec 10, 2024"
-                                              : i == 1
-                                                  ? "Dec 10, 2024"
-                                                  : "Dec 09, 2024",
+                                          // text: i == 0
+                                          //     ? "Jenny Wilson"
+                                          //     : i == 1
+                                          //         ? "Guy Hawkins"
+                                          //         : "Kristin Watson",
+                                          text: widget.hotelReviews[i].title,
+                                          size: 16.0,
+                                        ),
+                                        const SizedBox(height: 5),
+                                        poppinsText(
+                                          // text: i == 0
+                                          //     ? "Dec 10, 2024"
+                                          //     : i == 1
+                                          //         ? "Dec 10, 2024"
+                                          //         : "Dec 09, 2024",
+                                          text: widget.hotelReviews[i]
+                                              .submissionTimeLocalized
+                                              .toString(),
                                           size: 12.0,
                                         )
                                       ],
@@ -171,11 +174,11 @@ class _ReviewsState extends State<Reviews> {
                                 ),
                                 const SizedBox(height: 15),
                                 poppinsText(
-                                  text: i == 0
-                                      ? "Very nice and comfortable hotel, thank you for accompanying my vacation!"
-                                      : i == 1
-                                          ? "Very beautiful hotel, my family and I are very satisfied with the service!"
-                                          : "The rooms are very comfortable and the natural views are amazing, can't wait to come back again!",
+                                  // text: i == 0
+                                  //     ? "Very nice and comfortable hotel, thank you for accompanying my vacation!"
+                                  //     : i == 1
+                                  //         ? "Very beautiful hotel, my family and I are very satisfied with the service!"
+                                  text: widget.hotelReviews[i].text,
                                   size: 14.0,
                                 )
                               ],
