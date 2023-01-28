@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
+import 'package:fyp/repository/WeatherRepository.dart';
 import 'package:fyp/screens/AddPackage.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/Details.dart';
@@ -10,6 +11,7 @@ import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/Profile.dart';
 import 'package:fyp/screens/Search.dart';
 import 'package:fyp/screens/UserDetails.dart';
+import 'package:fyp/screens/WeatherScreen.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
@@ -17,13 +19,14 @@ import 'package:fyp/screens/hotel/HotelSearchRetults.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
-
-
+import 'Constants.dart';
+import 'models/Weather.dart';
+import 'network/WeatherNetwork.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
+
   runApp(
     MultiProvider(
       providers: [
@@ -82,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -90,15 +92,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Hotel Search Results')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Details(detailsType: 'hotel',),
+                      builder: (context) => Details(
+                        detailsType: 'hotel',
+                      ),
                     ));
                   },
                   child: Text('Hotel Detail')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -106,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Home')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -137,7 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Details Package')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -145,8 +145,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Details hotel room')),
-
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -172,7 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Profile')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -180,7 +177,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Passenger Details')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -188,15 +184,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Bookings')),
-
               ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async{
                     // HotelRepository h = HotelRepository();
                     // h.detail();
                     // h.reviews();
+                    // WeatherRepository w = WeatherRepository();
+                    //
+                    // Weather weather = await w.getWeather(
+                    //     q: 'Karachi',
+                    //     dt: Constants.convertDate(DateTime(DateTime.now().year,
+                    //         DateTime.now().month + 1, DateTime.now().day)));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (context) => WeatherScreen(),
+                    // ));
                   },
                   child: Text('API Test')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -204,7 +207,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Package')),
-
             ],
           ),
         ),

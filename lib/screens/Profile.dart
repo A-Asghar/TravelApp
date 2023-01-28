@@ -57,7 +57,7 @@ class _ProfileState extends State<Profile> {
                         ),
                         const SizedBox(height: 20),
                         Text(
-                          "Daniel Austin",
+                          "Ali Asghar",
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -65,7 +65,7 @@ class _ProfileState extends State<Profile> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "daniel_austin@yourdomain.com",
+                          "ali_asghar@yourdomain.com",
                           style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             fontSize: 14,
                           ),

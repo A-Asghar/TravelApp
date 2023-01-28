@@ -1,13 +1,16 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/screens/Profile.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../models/Flight.dart';
+import '../WeatherScreen.dart';
 
 class FlightDetails extends StatefulWidget {
   const FlightDetails({Key? key, required this.trip}) : super(key: key);
@@ -49,6 +52,26 @@ class _FlightDetailsState extends State<FlightDetails> {
                 ],
               ),
 
+              widget.trip.itineraries[0].segments.last.arrival.at.difference(DateTime.now()).inDays > 14 ?
+              InkWell(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 20),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.sunny_snowing,color: Colors.blue,),
+                      const SizedBox(width: 10),
+                      poppinsText(text: 'Check the weather on your arrival',color: Colors.blue)
+                    ],
+                  ),
+                ),
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => WeatherScreen(q: Constants.iataList[widget.trip.itineraries[0].segments.last.arrival.iataCode]![1],
+                      dt:Constants.convertDate(widget.trip.itineraries[0].segments.last.arrival.at) ,),
+                  ));
+                },
+              )
+              : Container(),
               flightDetailsList(0),
 
               widget.trip.itineraries.length > 1 ?

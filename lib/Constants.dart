@@ -19,9 +19,11 @@ class Constants {
   static const String properties_v2_get_offers = '/properties/v2/get-offers';
   static const String properties_v2_detail = '/properties/v2/detail';
   static const String reviews_v3_list = '/reviews/v3/list';
+  static const String weather_base_uri = 'http://api.weatherapi.com/v1/';
 
   // API Keys
   static const String rapidAPIKey = '895f93b42dmsh2a1ef758d35701ep1a897cjsn8d9cab99aec4';
+  static const String weatherAPIKey = 'c3dd2e6a662447fdb6372507232701';
 
   static convertDate(DateTime? date) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(date!);

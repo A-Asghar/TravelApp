@@ -54,7 +54,7 @@ class _EditProfileState extends State<EditProfile> {
                       CustomField(
                         hintText: "name",
                         textFieldController:
-                            TextEditingController(text: "Daniel Austin"),
+                            TextEditingController(text: "Ali Asghar"),
                         sufix: const SizedBox(),
                       ),
                       const SizedBox(height: 15),
@@ -86,7 +86,7 @@ class _EditProfileState extends State<EditProfile> {
                       CustomField(
                         hintText: "email",
                         textFieldController: TextEditingController(
-                            text: "daniel_austin@yourdomain.com"),
+                            text: "ali_asghar@yourdomain.com"),
                         sufix: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: SvgPicture.asset(
