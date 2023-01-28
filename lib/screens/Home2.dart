@@ -76,7 +76,10 @@ class _Home2State extends State<Home2> {
             heading('Summer Escapes', 25.0),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: poppinsText(text: 'Break the routine and escape to these hand-picked properties for exceptional prices',color: Constants.secondaryColor),
+              child: poppinsText(
+                  text:
+                      'Break the routine and escape to these hand-picked properties for exceptional prices',
+                  color: Constants.secondaryColor),
             ),
             const SizedBox(height: 10),
             summerEscapes(context),
@@ -126,7 +129,7 @@ Widget iconBox(icon, backgroundColor, text, VoidCallback onTap) {
             color: Colors.white,
           ),
         ),
-        poppinsText(text: text,fontBold: FontWeight.w400)
+        poppinsText(text: text, fontBold: FontWeight.w400)
       ],
     ),
   );
@@ -169,7 +172,7 @@ Widget searchBar(context) {
             borderRadius: BorderRadius.circular(10),
             color: Colors.white.withOpacity(0.3)),
         child:
-        poppinsText(text: 'Search Here', color: Colors.white, size: 18.0)),
+            poppinsText(text: 'Search Here', color: Colors.white, size: 18.0)),
   );
 }
 
@@ -200,42 +203,66 @@ Widget summerEscapes(context) {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Details(detailsType: 'hotel',),
-              ));
+            onTap: () {
+              // Navigator.of(context).push(MaterialPageRoute(
+              //   builder: (context) => Details(
+              //     detailsType: 'hotel',
+              //   ),
+              // )
+              // );
             },
             child: Card(
-              shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   roundedImage(160.0, 200.0, images[index]),
                   Container(
                     padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        poppinsText(text: 'Hotel $index', size: 20.0,fontBold: FontWeight.w500),
+                        poppinsText(
+                            text: 'Hotel $index',
+                            size: 20.0,
+                            fontBold: FontWeight.w500),
                         // poppinsText(text: 'Karachi, Pakistan', size: 18.0),
                         Row(
                           children: [
-                            const Icon(Icons.location_on,size: 12.0,color: Constants.primaryColor,),
-                            const SizedBox(width: 2,),
-                            poppinsText(text: 'Karachi, Pakistan', size: 15.0,color: Constants.secondaryColor),
+                            const Icon(
+                              Icons.location_on,
+                              size: 12.0,
+                              color: Constants.primaryColor,
+                            ),
+                            const SizedBox(
+                              width: 2,
+                            ),
+                            poppinsText(
+                                text: 'Karachi, Pakistan',
+                                size: 15.0,
+                                color: Constants.secondaryColor),
                           ],
                         ),
-
 
                         Container(
                           width: 180,
                           alignment: Alignment.bottomRight,
                           child: Row(
                             children: [
-                              const Icon(Icons.star,color: Colors.amber,size: 15,),
-                              const SizedBox(width: 2,),
-                              poppinsText(text: '9.6',color: Colors.black87,fontBold: FontWeight.w400),
+                              const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 15,
+                              ),
+                              const SizedBox(
+                                width: 2,
+                              ),
+                              poppinsText(
+                                  text: '9.6',
+                                  color: Colors.black87,
+                                  fontBold: FontWeight.w400),
                               const Spacer(),
                               // SizedBox(width: 10,)
                             ],
@@ -249,10 +276,12 @@ Widget summerEscapes(context) {
                                 size: 20.0,
                                 color: Constants.primaryColor,
                                 fontBold: FontWeight.w500),
-                            poppinsText(text: ' /night',color: Constants.secondaryColor,size: 12.0)
+                            poppinsText(
+                                text: ' /night',
+                                color: Constants.secondaryColor,
+                                size: 12.0)
                           ],
                         )
-
                       ],
                     ),
                   )
@@ -310,12 +339,11 @@ Widget recommendedDestinations() {
       itemBuilder: (context, index) {
         return Card(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              roundedImage(100.0, 150.0,
-                  images[index]),
+              roundedImage(100.0, 150.0, images[index]),
               Container(
                   padding: const EdgeInsets.all(5),
                   child: poppinsText(text: locations[index], size: 16.0))
@@ -403,14 +431,16 @@ Widget topPackages() {
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => Details(detailsType: 'package',),
-              ));
+            onTap: () {
+              // Navigator.of(context).push(MaterialPageRoute(
+              //   builder: (context) => Details(
+              //     detailsType: 'package',
+              //   ),
+              // ));
             },
             child: Card(
-              shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -418,11 +448,14 @@ Widget topPackages() {
                       'https://media.cntraveler.com/photos/57d87670fd86274a1db91acd/master/pass/most-beautiful-paris-pont-alexandre-iii-GettyImages-574883771.jpg'),
                   Container(
                     padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        poppinsText(text: 'Package Name', size: 20.0,fontBold: FontWeight.w500),
+                        poppinsText(
+                            text: 'Package Name',
+                            size: 20.0,
+                            fontBold: FontWeight.w500),
                         Row(
                           children: [
                             const Icon(
@@ -430,7 +463,10 @@ Widget topPackages() {
                               color: Constants.primaryColor,
                               size: 12,
                             ),
-                            poppinsText(text: ' Paris, France', size: 15.0,color: Constants.secondaryColor),
+                            poppinsText(
+                                text: ' Paris, France',
+                                size: 15.0,
+                                color: Constants.secondaryColor),
                           ],
                         ),
                         Row(
@@ -440,7 +476,10 @@ Widget topPackages() {
                                 size: 20.0,
                                 color: Constants.primaryColor,
                                 fontBold: FontWeight.w500),
-                            poppinsText(text: ' /person',color: Constants.secondaryColor,size: 12.0)
+                            poppinsText(
+                                text: ' /person',
+                                color: Constants.secondaryColor,
+                                size: 12.0)
                           ],
                         )
                       ],

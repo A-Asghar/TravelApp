@@ -20,7 +20,7 @@ class PropertySearchListing {
   PropertyImage? propertyImage;
   MapMarker? mapMarker;
   Price? price;
-  Reviews? reviews;
+  PropertyReviews? reviews;
   String? regionId;
   PriceMetadata? priceMetadata;
 
@@ -39,8 +39,9 @@ class PropertySearchListing {
             ? null
             : MapMarker.fromJson(json["mapMarker"]),
         price: json["price"] == null ? null : Price.fromJson(json["price"]),
-        reviews:
-            json["reviews"] == null ? null : Reviews.fromJson(json["reviews"]),
+        reviews: json["reviews"] == null
+            ? null
+            : PropertyReviews.fromJson(json["reviews"]),
         regionId: json["regionId"] == null ? null : json["regionId"],
         priceMetadata: json["priceMetadata"] == null
             ? null
@@ -254,7 +255,8 @@ class PriceMetadata {
 
   factory PriceMetadata.fromJson(Map<String, dynamic> json) => PriceMetadata(
         typename: json["__typename"] == null ? null : json["__typename"],
-        totalDiscountPercentage: json["totalDiscountPercentage"] == null ? null
+        totalDiscountPercentage: json["totalDiscountPercentage"] == null
+            ? null
             : json["totalDiscountPercentage"],
       );
 
@@ -272,11 +274,11 @@ class PropertyImage {
   });
 
   String? typename;
-  Image? image;
+  ImageUrl? image;
 
   factory PropertyImage.fromJson(Map<String, dynamic> json) => PropertyImage(
         typename: json["__typename"] == null ? null : json["__typename"],
-        image: json["image"] == null ? null : Image.fromJson(json["image"]),
+        image: json["image"] == null ? null : ImageUrl.fromJson(json["image"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -285,8 +287,8 @@ class PropertyImage {
       };
 }
 
-class Image {
-  Image({
+class ImageUrl {
+  ImageUrl({
     this.typename,
     this.url,
   });
@@ -294,7 +296,7 @@ class Image {
   String? typename;
   String? url;
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory ImageUrl.fromJson(Map<String, dynamic> json) => ImageUrl(
         typename: json["__typename"] == null ? null : json["__typename"],
         url: json["url"] == null ? null : json["url"],
       );
@@ -305,8 +307,8 @@ class Image {
       };
 }
 
-class Reviews {
-  Reviews({
+class PropertyReviews {
+  PropertyReviews({
     this.typename,
     this.score,
     this.total,
@@ -316,7 +318,8 @@ class Reviews {
   var score;
   int? total;
 
-  factory Reviews.fromJson(Map<String, dynamic> json) => Reviews(
+  factory PropertyReviews.fromJson(Map<String, dynamic> json) =>
+      PropertyReviews(
         typename: json["__typename"] == null ? null : json["__typename"],
         score: json["score"] == null ? null : json["score"],
         total: json["total"] == null ? null : json["total"],
