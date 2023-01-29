@@ -1,12 +1,10 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/screens/Profile.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 import '../../Constants.dart';
 import '../../models/Flight.dart';

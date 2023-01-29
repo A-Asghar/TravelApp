@@ -90,7 +90,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     child: poppinsText(
                         text: weather.location.name,
                         size: 40.0,
-                        fontBold: FontWeight.w700),
+                        fontBold: FontWeight.w500),
                   ),
 
                   // Local Time

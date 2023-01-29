@@ -2,27 +2,18 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
-import 'package:fyp/repository/HotelRepository.dart';
-import 'package:fyp/repository/WeatherRepository.dart';
 import 'package:fyp/screens/AddPackage.dart';
-import 'package:fyp/screens/BottomNavBar.dart';
-import 'package:fyp/screens/Details.dart';
 import 'package:fyp/screens/Home.dart';
 import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/Profile.dart';
 import 'package:fyp/screens/Search.dart';
 import 'package:fyp/screens/UserDetails.dart';
-import 'package:fyp/screens/WeatherScreen.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-
-import 'Constants.dart';
-import 'models/Weather.dart';
-import 'network/WeatherNetwork.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

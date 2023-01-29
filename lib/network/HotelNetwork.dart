@@ -64,6 +64,7 @@ class HotelNetwork {
     // print(response.request?.url);
 
     print('Network propertiesList().statusCode: ${response.statusCode}');
+    print('Network propertiesList().body: ${response.body}');
 
     return response.body;
   }
@@ -95,7 +96,7 @@ class HotelNetwork {
         "month": checkOutDate.month,
         "year": checkOutDate.year
       },
-      "destination": {"regionId": regionId},
+        "destination": {"regionId": regionId},
       "rooms": [
         {"adults": 2}
       ]
@@ -143,7 +144,7 @@ class HotelNetwork {
     return response.body;
   }
 
-  reviews({required String propertyId}) async {
+  reviews({required String propertyId, startingIndex}) async {
     final url = Uri.parse('${Constants.hotels}${Constants.reviews_v3_list}');
 
     Map<String, dynamic> body = {
@@ -152,8 +153,8 @@ class HotelNetwork {
       "locale": "en_US",
       "siteId": 300000001,
       "propertyId": propertyId,
-      "size": 5,
-      "startingIndex": 0
+      "size": 10,
+      "startingIndex": startingIndex
     };
 
     final response = await http.post(

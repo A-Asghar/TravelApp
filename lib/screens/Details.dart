@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fyp/models/Detail.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
-import 'package:fyp/models/PropertyUnits.dart';
-import 'package:fyp/models/Review.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
+import 'package:fyp/screens/hotel/HotelSearchResults.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:fyp/screens/hotel/HotelSearchResults.dart';
+
 import '../Constants.dart';
 import 'HotelGallery.dart';
 import 'Reviews.dart';
+import 'WeatherScreen.dart';
 import 'hotel/RoomDetails.dart';
 
 class Details extends StatefulWidget {
@@ -60,29 +61,33 @@ class _DetailsState extends State<Details> {
 
   callHotelInfo() async {
     HotelRepository hotelRepository = HotelRepository();
-    print(widget.property!.id);
-    List detailResponse =
-        await hotelRepository.detail(propertyId: widget.property!.id!);
+    List detailResponse = await hotelRepository.detail(propertyId: widget.property.id!);
     context.read<HotelSearchProvider>().hotelImages = detailResponse[0];
     context.read<HotelSearchProvider>().address = detailResponse[1];
     context.read<HotelSearchProvider>().coordinates = detailResponse[2];
+    context.read<HotelSearchProvider>().amenities = detailResponse[3];
+    context.read<HotelSearchProvider>().description = detailResponse[4];
+
     context.read<HotelSearchProvider>().hotelReviews =
-        await hotelRepository.reviews(propertyId: widget.property!.id!);
+        await hotelRepository.reviews(propertyId: widget.property.id!);
     context.read<HotelSearchProvider>().hotelRooms =
         await hotelRepository.getOffers(
             adults: context.read<HotelSearchProvider>().adults,
-            checkIn:
-                DateTime.parse(context.read<HotelSearchProvider>().checkIn),
-            checkOut:
-                DateTime.parse(context.read<HotelSearchProvider>().checkOut),
-            regionId: widget.property!.regionId!,
-            propertyId: widget.property!.id!);
+            checkIn: DateTime.parse(context.read<HotelSearchProvider>().checkIn),
+            checkOut: DateTime.parse(context.read<HotelSearchProvider>().checkOut),
+            regionId: widget.property.regionId!,
+            propertyId: widget.property.id!);
 
-    print(context.read<HotelSearchProvider>().hotelImages);
-    print(context.read<HotelSearchProvider>().address);
-    print(context.read<HotelSearchProvider>().coordinates);
-    print(context.read<HotelSearchProvider>().hotelRooms);
-    print(context.read<HotelSearchProvider>().hotelReviews);
+    // print('PropertyId: ${widget.property!.id!}');
+    // print('RegionId: ${widget.property.regionId}');
+    // print(
+    //     'context.read<HotelSearchProvider>().hotelImages.length: ${context.read<HotelSearchProvider>().hotelImages.length}');
+    // print('context.read<HotelSearchProvider>().address.length: ${context.read<HotelSearchProvider>().address.length}');
+    // print(context.read<HotelSearchProvider>().coordinates);
+    // print(
+    //     'context.read<HotelSearchProvider>().hotelRooms.length: ${context.read<HotelSearchProvider>().hotelRooms.length}');
+    // print(
+    //     'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
   }
 
   @override
@@ -94,42 +99,48 @@ class _DetailsState extends State<Details> {
               hotelProvider.hotelReviews.isEmpty &&
               hotelProvider.hotelRooms.isEmpty
           ? lottieLoader()
-          : CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  elevation: 0,
-                  floating: false,
-                  title: backButton(),
-                  pinned: true,
-                  backgroundColor: Colors.white,
-                  expandedHeight: 300,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: imageSlider(
-                      propertyImages: hotelProvider.hotelImages,
+          : WillPopScope(
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    automaticallyImplyLeading: false,
+                    elevation: 0,
+                    floating: false,
+                    title: const backButton(),
+                    pinned: true,
+                    backgroundColor: Colors.white,
+                    expandedHeight: 300,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: imageSlider(
+                        propertyImages: hotelProvider.hotelImages,
+                      ),
                     ),
                   ),
-                ),
-                SliverToBoxAdapter(
-                    child: Column(
-                  children: [
-                    returnLayout(),
-                  ],
-                )),
-              ],
+                  SliverToBoxAdapter(
+                      child: Column(
+                    children: [
+                      returnLayout(),
+                    ],
+                  )),
+                ],
+              ),
+              onWillPop: () async {
+                hotelProvider.clearHotelDetail();
+                return true;
+              },
             ),
     );
   }
 
   Widget returnLayout() {
     if (widget.detailsType == 'package') {
-      return PackageLayout(
+      return const PackageLayout(
         detailsType: 'package',
       );
     } else if (widget.detailsType == 'hotel') {
       return HotelLayout(
         detailsType: 'hotel',
-        property: widget.property!,
+        property: widget.property,
       );
     } else {
       return Container();
@@ -138,7 +149,7 @@ class _DetailsState extends State<Details> {
 }
 
 class HotelLayout extends StatefulWidget {
-  HotelLayout({super.key, required this.detailsType, required this.property});
+  const HotelLayout({super.key, required this.detailsType, required this.property});
 
   final String detailsType;
   final PropertySearchListing property;
@@ -159,7 +170,7 @@ class _HotelLayoutState extends State<HotelLayout> {
           padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
           child: poppinsText(
               text: /* Shelton's Rezidor*/
-                  widget.property!.name,
+                  widget.property.name,
               size: 30.0),
         ),
         const SizedBox(height: 15),
@@ -184,6 +195,28 @@ class _HotelLayoutState extends State<HotelLayout> {
           ),
         ),
         const SizedBox(height: 15),
+
+
+        DateFormat("yyyy-MM-dd").parse(hotelProvider.checkIn).difference(DateTime.now()).inDays > 14 ?
+        InkWell(
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 20),
+            child: Row(
+              children: [
+                const Icon(Icons.sunny_snowing,color: Colors.blue,),
+                const SizedBox(width: 10),
+                poppinsText(text: 'Check the weather on your arrival',color: Colors.blue)
+              ],
+            ),
+          ),
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => WeatherScreen(q: hotelProvider.to.city.split(',')[0],
+                dt: hotelProvider.checkIn,),
+            ));
+          },
+        )
+            : Container(),
 
         // Gallery Photos
         InkWell(
@@ -247,24 +280,24 @@ class _HotelLayoutState extends State<HotelLayout> {
         const SizedBox(height: 20),
 
         // Details
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: poppinsText(
-            text: "Details",
-            size: 20.0,
-          ),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            detailCard('assets/images/i2.png', "Hotels"),
-            detailCard('assets/images/i3.png', "4 Bedrooms"),
-            detailCard('assets/images/i4.png', "2 Bathrooms"),
-            detailCard('assets/images/i5.png', "4000 sqft"),
-          ],
-        ),
-        const SizedBox(height: 20),
+        // Padding(
+        //   padding: const EdgeInsets.only(left: 20, right: 20),
+        //   child: poppinsText(
+        //     text: "Details",
+        //     size: 20.0,
+        //   ),
+        // ),
+        // const SizedBox(height: 20),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //   children: [
+        //     detailCard('assets/images/i2.png', "Hotels"),
+        //     detailCard('assets/images/i3.png', "4 Bedrooms"),
+        //     detailCard('assets/images/i4.png', "2 Bathrooms"),
+        //     detailCard('assets/images/i5.png', "4000 sqft"),
+        //   ],
+        // ),
+        // const SizedBox(height: 20),
 
         // Description
         Padding(
@@ -274,7 +307,7 @@ class _HotelLayoutState extends State<HotelLayout> {
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: ExpandableText(text: desc),
+          child: ExpandableText(text: hotelProvider.description),
         ),
         const SizedBox(height: 20),
 
@@ -283,27 +316,50 @@ class _HotelLayoutState extends State<HotelLayout> {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: poppinsText(text: "Facilities", size: 20.0),
         ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            detailCard('assets/images/i6.png', "Swimming Pool"),
-            detailCard('assets/images/i7.png', "WiFi"),
-            detailCard('assets/images/i8.png', "Restaurant"),
-            detailCard('assets/images/i9.png', "Parking"),
-          ],
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //   children: [
+        //     detailCard('assets/images/i6.png', "Swimming Pool"),
+        //     detailCard('assets/images/i7.png', "WiFi"),
+        //     detailCard('assets/images/i8.png', "Restaurant"),
+        //     detailCard('assets/images/i9.png', "Parking"),
+        //   ],
+        // ),
+        // const SizedBox(height: 20),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //   children: [
+        //     detailCard('assets/images/i10.png', "Meeting Room"),
+        //     detailCard('assets/images/i11.png', "Elevator"),
+        //     detailCard('assets/images/i12.png', "Fitness Center"),
+        //     detailCard('assets/images/i2.png', "24-hours Open"),
+        //   ],
+        // ),
+
+        // Facilities p2
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          height: 200,
+          child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: hotelProvider.amenities!.length < 6
+                  ? hotelProvider.amenities?.length
+                  : 6,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisExtent: 80,
+                mainAxisSpacing: 2,
+                crossAxisSpacing: 2,
+              ),
+              itemBuilder: (context, index) {
+                return Container(
+                  alignment: Alignment.bottomLeft,
+                  child: poppinsText(
+                      text: hotelProvider.amenities![index].text!
+                          .replaceAll(' ', '\n')),
+                );
+              }),
         ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            detailCard('assets/images/i10.png', "Meeting Room"),
-            detailCard('assets/images/i11.png', "Elevator"),
-            detailCard('assets/images/i12.png', "Fitness Center"),
-            detailCard('assets/images/i2.png', "24-hours Open"),
-          ],
-        ),
-        const SizedBox(height: 20),
 
         // Location Map
         Padding(
@@ -343,12 +399,14 @@ class _HotelLayoutState extends State<HotelLayout> {
         // Reviews
         InkWell(
           onTap: () {
-            Get.to(
-              Reviews(
-                hotelReviews: hotelProvider.hotelReviews,
-              ),
-              transition: Transition.rightToLeft,
-            );
+            if (hotelProvider.hotelReviews.isNotEmpty) {
+              Get.to(
+                Reviews(
+                  property: widget.property,
+                ),
+                transition: Transition.rightToLeft,
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
@@ -362,14 +420,14 @@ class _HotelLayoutState extends State<HotelLayout> {
                   size: 15,
                 ),
                 poppinsText(
-                  text: widget.property!.reviews!.score
+                  text: widget.property.reviews!.score
                       .toString(), // text: ' 4.9 ',
                   size: 14.0,
                   color: Constants.primaryColor,
                 ),
                 poppinsText(
                     text: //'(4,567) reviews',
-                        " (${hotelProvider.hotelReviews.length}) reviews",
+                        " (${widget.property.reviews?.total.toString()}) reviews",
                     size: 14.0),
                 const Expanded(child: SizedBox()),
                 poppinsText(
@@ -383,7 +441,7 @@ class _HotelLayoutState extends State<HotelLayout> {
         ),
         const SizedBox(height: 20),
         hotelProvider.hotelReviews.isEmpty
-            ? const Text('')
+            ? Container()
             : Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 child: Column(
@@ -493,7 +551,7 @@ class _HotelLayoutState extends State<HotelLayout> {
 }
 
 class PackageLayout extends StatefulWidget {
-  PackageLayout({super.key, required this.detailsType});
+  const PackageLayout({super.key, required this.detailsType});
 
   final String detailsType;
 
@@ -689,12 +747,12 @@ class _PackageLayoutState extends State<PackageLayout> {
         // Reviews
         InkWell(
           onTap: () {
-            Get.to(
-              Reviews(
-                hotelReviews: hotelProvider.hotelReviews,
-              ),
-              transition: Transition.rightToLeft,
-            );
+            // Get.to(
+            //   Reviews(
+            //     property: widget.property,
+            //   ),
+            //   transition: Transition.rightToLeft,
+            // );
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
@@ -800,12 +858,12 @@ class _PackageLayoutState extends State<PackageLayout> {
               const SizedBox(height: 20),
               InkWell(
                 onTap: () {
-                  Get.to(
-                    Reviews(
-                      hotelReviews: hotelProvider.hotelReviews,
-                    ),
-                    transition: Transition.rightToLeft,
-                  );
+                  // Get.to(
+                  //   Reviews(
+                  //     property: widget.property,
+                  //   ),
+                  //   transition: Transition.rightToLeft,
+                  // );
                 },
                 child: Container(
                   height: 50,
@@ -875,137 +933,178 @@ Widget hotelRooms(bool show, HotelSearchProvider hotelProvider) {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: poppinsText(text: "Rooms", size: 20.0),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const ScrollPhysics(),
-              itemCount: hotelProvider.hotelRooms.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.only(bottom: 5),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(hotelProvider
-                                  .hotelRooms[index]
-                                  .unitGallery!
-                                  .gallery![0]
-                                  .image!
-                                  .url! //'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aG90ZWwlMjByb29tfGVufDB8fDB8fA%3D%3D&w=1000&q=80'
-                              ),
-                        ),
-                        poppinsText(
-                            text: hotelProvider.hotelRooms[index].header!.text,
-                            size: 18.0,
-                            fontBold: FontWeight.w500),
-                        ExpandableText(
-                            text: hotelProvider.hotelRooms[index].description!),
-                        poppinsText(
-                            text: 'Show details',
-                            color: Constants.primaryColor,
-                            size: 14.0),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                poppinsText(
-                                    text: 'Room Only',
-                                    fontBold: FontWeight.w500,
-                                    size: 18.0),
-                                poppinsText(
-                                    text: 'Double Room, Balcony',
-                                    color: Constants.secondaryColor,
-                                    size: 14.0),
-                                Row(
+            hotelProvider.hotelRooms.isEmpty
+                ? Container(
+                    child: poppinsText(text: 'No Rooms available !'),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ScrollPhysics(),
+                    itemCount: hotelProvider.hotelRooms.length,
+                    itemBuilder: (context, index) {
+                      return hotelProvider
+                              .hotelRooms[index].ratePlans!.isNotEmpty
+                          ? Container(
+                              margin: const EdgeInsets.only(bottom: 5),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Icon(
-                                      Icons.info,
-                                      color: Colors.amber,
-                                    ),
-                                    poppinsText(
-                                        text: ' Non-refundable',
-                                        color: Colors.amber)
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.info,
-                                      color: Constants.primaryColor,
-                                    ),
-                                    poppinsText(
-                                        text: ' Free-cancellation',
-                                        color: Constants.primaryColor)
-                                  ],
-                                ),
-                                Row(
-                                  children: [
+                                    hotelProvider.hotelRooms[index].unitGallery!
+                                            .gallery!.isNotEmpty
+                                        ? SizedBox(
+                                            height: 220,
+                                            child: ListView.builder(
+                                              shrinkWrap: false,
+                                              physics: const BouncingScrollPhysics(),
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: hotelProvider
+                                                  .hotelRooms[index]
+                                                  .unitGallery!
+                                                  .gallery!
+                                                  .length,
+                                              itemBuilder: (context, idx) {
+                                                return Container(
+                                                  padding: const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: Image.network(
+                                                        hotelProvider
+                                                            .hotelRooms[index]
+                                                            .unitGallery!
+                                                            .gallery![idx]
+                                                            .image!
+                                                            .url!),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        : Container(),
                                     poppinsText(
                                         text: hotelProvider
-                                            .hotelRooms[index]
-                                            .ratePlans![0]
-                                            .priceDetails![0]
-                                            .price!
-                                            .lead!
-                                            .amount
-                                            .toString(),
-                                        color: Constants.primaryColor,
-                                        size: 22.0),
+                                            .hotelRooms[index].header!.text,
+                                        size: 18.0,
+                                        fontBold: FontWeight.w500),
                                     poppinsText(
-                                        text: ' /night',
-                                        color: Constants.secondaryColor,
-                                        size: 12.0),
-                                    const Spacer(),
-                                    InkWell(
-                                      onTap: () {
-                                        print(hotelProvider
-                                            .hotelRooms[index].description!);
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(
-                                          builder: (context) => RoomDetails(
-                                              // details: hotelProvider
-                                              //     .hotelRooms[index]
-                                              //     .description!
-                                              ),
-                                        ));
-                                      },
-                                      child: Container(
-                                        width: 150,
-                                        height: 40,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 10),
-                                        decoration: BoxDecoration(
-                                          color: Constants.primaryColor,
+                                        text: 'Show details',
+                                        color: Constants.primaryColor,
+                                        size: 14.0),
+                                    Card(
+                                      shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        child: Center(
-                                          child: poppinsText(
-                                              text: 'Book Now',
-                                              color: Colors.white,
-                                              fontBold: FontWeight.w500),
+                                              BorderRadius.circular(15)),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            poppinsText(
+                                                text: 'Room Only',
+                                                fontBold: FontWeight.w500,
+                                                size: 18.0),
+                                            poppinsText(
+                                                text: 'Double Room, Balcony',
+                                                color: Constants.secondaryColor,
+                                                size: 14.0),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.info,
+                                                  color: Colors.amber,
+                                                ),
+                                                poppinsText(
+                                                    text: ' Non-refundable',
+                                                    color: Colors.amber)
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Icons.info,
+                                                  color: Constants.primaryColor,
+                                                ),
+                                                poppinsText(
+                                                    text: ' Free-cancellation',
+                                                    color:
+                                                        Constants.primaryColor)
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                poppinsText(
+                                                    text: hotelProvider
+                                                        .hotelRooms[index]
+                                                        .ratePlans![0]
+                                                        .priceDetails![0]
+                                                        .price!
+                                                        .lead!
+                                                        .amount
+                                                        .toString(),
+                                                    color:
+                                                        Constants.primaryColor,
+                                                    size: 22.0),
+                                                poppinsText(
+                                                    text: ' /night',
+                                                    color: Constants
+                                                        .secondaryColor,
+                                                    size: 12.0),
+                                                const Spacer(),
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.of(context)
+                                                        .push(MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RoomDetails(
+                                                              details: hotelProvider
+                                                                  .hotelRooms[
+                                                                      index]
+                                                                  .description!),
+                                                    ));
+                                                  },
+                                                  child: Container(
+                                                    width: 150,
+                                                    height: 40,
+                                                    margin: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                    decoration: BoxDecoration(
+                                                      color: Constants
+                                                          .primaryColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                    ),
+                                                    child: Center(
+                                                      child: poppinsText(
+                                                          text: 'Book Now',
+                                                          color: Colors.white,
+                                                          fontBold:
+                                                              FontWeight.w500),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
                                         ),
                                       ),
                                     )
                                   ],
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+                                ),
+                              ),
+                            )
+                          : Container();
+                    },
                   ),
-                );
-              },
-            ),
             const SizedBox(height: 20),
           ],
         )
@@ -1028,7 +1127,10 @@ class _backButtonState extends State<backButton> {
           color: Colors.grey.withOpacity(0.7),
           borderRadius: BorderRadius.circular(50)),
       child: InkWell(
-        onTap: () => Navigator.pop(context),
+        onTap: () {
+          Navigator.pop(context);
+          context.read<HotelSearchProvider>().clearHotelDetail();
+        },
         child: Center(
           child: Icon(
             Icons.keyboard_arrow_left,
@@ -1143,14 +1245,14 @@ class _imageSliderState extends State<imageSlider> {
                   right: 10,
                   bottom: 20,
                   child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Text(
-                        '${pagePosition + 1}/${widget.propertyImages.length}',
-                        style: const TextStyle(color: Colors.white)),
-                  ),
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: poppinsText(
+                          text:
+                              '${pagePosition + 1}/${widget.propertyImages.length}',
+                          color: Colors.white)),
                 )
               ],
             ),

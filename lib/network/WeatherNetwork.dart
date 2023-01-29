@@ -1,5 +1,6 @@
-import '../Constants.dart';
 import 'package:http/http.dart' as http;
+
+import '../Constants.dart';
 
 class WeatherNetwork {
   getWeather({required String q, required String dt}) async {

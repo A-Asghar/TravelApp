@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/models/Detail.dart';
-import 'package:fyp/screens/Details.dart';
 
 class HotelGallery extends StatefulWidget {
   const HotelGallery({Key? key, required this.hotelImages}) : super(key: key);

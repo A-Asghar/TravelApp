@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/widgets/poppinsText.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Home2.dart';

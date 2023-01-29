@@ -70,6 +70,20 @@ class HotelSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String _description = '';
+  String get description => _description;
+  set description(a) {
+    _description = a;
+    notifyListeners();
+  }
+
+  List<TopAmenitiesItem>? _amenities = [];
+  List<TopAmenitiesItem>? get amenities => _amenities;
+  set amenities(hi) {
+    _amenities = hi;
+    notifyListeners();
+  }
+
   List<ImageImage?> _hotelImages = [];
   List<ImageImage?> get hotelImages => _hotelImages;
   set hotelImages(hi) {
@@ -86,6 +100,13 @@ class HotelSearchProvider extends ChangeNotifier {
 
   clearHotels() {
     _hotels = [];
+    notifyListeners();
+  }
+
+  clearHotelDetail(){
+    _hotelRooms = [];
+    _hotelReviews = [];
+    _hotelImages = [];
     notifyListeners();
   }
 }

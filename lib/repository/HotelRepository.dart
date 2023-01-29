@@ -20,12 +20,12 @@ class HotelRepository {
     // TODO: implement propertiesList params into hotelSearch
 
     var response = await network.hotelSearch(city);
-    print('from repo' + response);
+    // print('from repo' + response);
 
     response = jsonDecode(response);
 
     var regionId = response['sr'][0]['gaiaId'];
-    print('regionId : $regionId');
+    // print('regionId : $regionId');
 
     customHotelDate checkInDate = customHotelDate(
         day: checkIn.day, month: checkIn.month, year: checkIn.year);
@@ -110,19 +110,36 @@ class HotelRepository {
     Coordinates? coordinates =
         detail.data?.propertyInfo?.summary?.location?.coordinates;
 
+    List<TopAmenitiesItem>? amenities = detail
+        .data?.propertyInfo?.summary?.amenities?.topAmenities?.items
+        ?.map((e) => TopAmenitiesItem(text: e.text, icon: e.icon))
+        .toList();
+
+    String? description = detail
+        .data
+        ?.propertyInfo
+        ?.propertyContentSectionGroups
+        ?.aboutThisProperty
+        ?.sections![0]
+        .bodySubSections![0]
+        .elements![0]
+        .items![0]
+        .content
+        ?.text;
     // print('Hotel Images:');
     // images.forEach((i) {
     //   print(i!.url);
     // });
     // print(
     //     "Hotel Images: ${images!.length}\n Hotel Address: ${address}, \n Coordinates: ${coordinates}");
-    return [images, address, coordinates];
+    return [images, address, coordinates, amenities, description];
   }
 
-  reviews({required String propertyId}) async {
+  reviews({required String propertyId, startingIndex=0}) async {
     // TODO: implement params into method
 
-    var response = await network.reviews(propertyId: propertyId);
+    var response = await network.reviews(
+        propertyId: propertyId, startingIndex: startingIndex);
 
     response = jsonDecode(response);
 

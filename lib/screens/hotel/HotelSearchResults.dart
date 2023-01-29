@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
-import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/customTextField.dart';
-import '../../widgets/filterView.dart';
+
 import '../Details.dart';
 
 class HotelSearchResults extends StatefulWidget {

@@ -4,7 +4,6 @@ import 'package:fyp/widgets/poppinsText.dart';
 
 import '../Constants.dart';
 import '../repository/FlightRepository.dart';
-import 'Details.dart';
 
 class Home2 extends StatefulWidget {
   const Home2({Key? key}) : super(key: key);

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
+import 'package:html/parser.dart' show parse;
 
 class RoomDetails extends StatelessWidget {
-  const RoomDetails({Key? key}) : super(key: key);
-
+  const RoomDetails({Key? key, required this.details}) : super(key: key);
+  final String details;
   @override
   Widget build(BuildContext context) {
+    List<String>? parsedDetails = parse(details).body?.text.split(' - ');
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -27,25 +29,16 @@ class RoomDetails extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-              child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: poppinsText(
-                    text: 'Twin Room', size: 18.0, fontBold: FontWeight.w500),
-              ),
-              item('Max Occupants: 1'),
-              item('Bed type: Twin Bunk Bed'),
-              item('Number of bedrooms: 1'),
-              item('Number of bathrooms: 1'),
-              item('Free Wifi'),
-              item('Daily Housekeeping'),
-              item('Breakfast available (additional charges)'),
-              item('Payment: Credit Card'),
-              item('Cancellation: Non-refundable'),
-              item('Room size (sqf): 172'),
-            ],
-          )),
+            child: ListView.builder(
+                itemCount: parsedDetails?.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    child: poppinsText(text: '• ${parsedDetails![index]}'),
+                  );
+                }),
+          ),
           Center(
             child: TealButton(
               text: 'Book Now',
