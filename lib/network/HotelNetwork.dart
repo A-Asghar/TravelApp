@@ -98,7 +98,7 @@ class HotelNetwork {
       },
         "destination": {"regionId": regionId},
       "rooms": [
-        {"adults": 2}
+        {"adults": adults}
       ]
     };
 

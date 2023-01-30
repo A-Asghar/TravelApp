@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Constants.dart';
+import 'FullScreenImagePage.dart';
 import 'HotelGallery.dart';
 import 'Reviews.dart';
 import 'WeatherScreen.dart';
@@ -61,7 +62,8 @@ class _DetailsState extends State<Details> {
 
   callHotelInfo() async {
     HotelRepository hotelRepository = HotelRepository();
-    List detailResponse = await hotelRepository.detail(propertyId: widget.property.id!);
+    List detailResponse =
+        await hotelRepository.detail(propertyId: widget.property.id!);
     context.read<HotelSearchProvider>().hotelImages = detailResponse[0];
     context.read<HotelSearchProvider>().address = detailResponse[1];
     context.read<HotelSearchProvider>().coordinates = detailResponse[2];
@@ -73,21 +75,13 @@ class _DetailsState extends State<Details> {
     context.read<HotelSearchProvider>().hotelRooms =
         await hotelRepository.getOffers(
             adults: context.read<HotelSearchProvider>().adults,
-            checkIn: DateTime.parse(context.read<HotelSearchProvider>().checkIn),
-            checkOut: DateTime.parse(context.read<HotelSearchProvider>().checkOut),
+            checkIn:
+                DateTime.parse(context.read<HotelSearchProvider>().checkIn),
+            checkOut:
+                DateTime.parse(context.read<HotelSearchProvider>().checkOut),
             regionId: widget.property.regionId!,
             propertyId: widget.property.id!);
 
-    // print('PropertyId: ${widget.property!.id!}');
-    // print('RegionId: ${widget.property.regionId}');
-    // print(
-    //     'context.read<HotelSearchProvider>().hotelImages.length: ${context.read<HotelSearchProvider>().hotelImages.length}');
-    // print('context.read<HotelSearchProvider>().address.length: ${context.read<HotelSearchProvider>().address.length}');
-    // print(context.read<HotelSearchProvider>().coordinates);
-    // print(
-    //     'context.read<HotelSearchProvider>().hotelRooms.length: ${context.read<HotelSearchProvider>().hotelRooms.length}');
-    // print(
-    //     'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
   }
 
   @override
@@ -95,8 +89,8 @@ class _DetailsState extends State<Details> {
     var hotelProvider = context.watch<HotelSearchProvider>();
     return Scaffold(
       backgroundColor: Colors.white,
-      body: hotelProvider.hotelImages.isEmpty &&
-              hotelProvider.hotelReviews.isEmpty &&
+      body: hotelProvider.hotelImages.isEmpty ||
+              // hotelProvider.hotelReviews.isEmpty &&
               hotelProvider.hotelRooms.isEmpty
           ? lottieLoader()
           : WillPopScope(
@@ -121,7 +115,8 @@ class _DetailsState extends State<Details> {
                     children: [
                       returnLayout(),
                     ],
-                  )),
+                  ),
+                  ),
                 ],
               ),
               onWillPop: () async {
@@ -149,7 +144,8 @@ class _DetailsState extends State<Details> {
 }
 
 class HotelLayout extends StatefulWidget {
-  const HotelLayout({super.key, required this.detailsType, required this.property});
+  const HotelLayout(
+      {super.key, required this.detailsType, required this.property});
 
   final String detailsType;
   final PropertySearchListing property;
@@ -196,26 +192,37 @@ class _HotelLayoutState extends State<HotelLayout> {
         ),
         const SizedBox(height: 15),
 
-
-        DateFormat("yyyy-MM-dd").parse(hotelProvider.checkIn).difference(DateTime.now()).inDays > 14 ?
-        InkWell(
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 20),
-            child: Row(
-              children: [
-                const Icon(Icons.sunny_snowing,color: Colors.blue,),
-                const SizedBox(width: 10),
-                poppinsText(text: 'Check the weather on your arrival',color: Colors.blue)
-              ],
-            ),
-          ),
-          onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => WeatherScreen(q: hotelProvider.to.city.split(',')[0],
-                dt: hotelProvider.checkIn,),
-            ));
-          },
-        )
+        DateFormat("yyyy-MM-dd")
+                    .parse(hotelProvider.checkIn)
+                    .difference(DateTime.now())
+                    .inDays >
+                14
+            ? InkWell(
+                child: Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.sunny_snowing,
+                        color: Colors.blue,
+                      ),
+                      const SizedBox(width: 10),
+                      poppinsText(
+                          text: 'Check the weather on your arrival',
+                          color: Colors.blue)
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => WeatherScreen(
+                      q: hotelProvider.to.city.split(',')[0],
+                      dt: hotelProvider.checkIn,
+                    ),
+                  ));
+                },
+              )
             : Container(),
 
         // Gallery Photos
@@ -258,17 +265,8 @@ class _HotelLayoutState extends State<HotelLayout> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     image: DecorationImage(
-                      image: NetworkImage(hotelProvider.hotelImages[index]!.url!
-                          // index == 0
-                          //     ? 'assets/images/g1.png'
-                          //     : index == 1
-                          //         ? 'assets/images/g2.png'
-                          //         : index == 2
-                          //             ? 'assets/images/g3.png'
-                          //             : index == 3
-                          //                 ? 'assets/images/g4.png'
-                          //                 : 'assets/images/g5.png',
-                          ),
+                      image:
+                          NetworkImage(hotelProvider.hotelImages[index]!.url!),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -278,26 +276,6 @@ class _HotelLayoutState extends State<HotelLayout> {
           ),
         ),
         const SizedBox(height: 20),
-
-        // Details
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 20, right: 20),
-        //   child: poppinsText(
-        //     text: "Details",
-        //     size: 20.0,
-        //   ),
-        // ),
-        // const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //   children: [
-        //     detailCard('assets/images/i2.png', "Hotels"),
-        //     detailCard('assets/images/i3.png', "4 Bedrooms"),
-        //     detailCard('assets/images/i4.png', "2 Bathrooms"),
-        //     detailCard('assets/images/i5.png', "4000 sqft"),
-        //   ],
-        // ),
-        // const SizedBox(height: 20),
 
         // Description
         Padding(
@@ -316,27 +294,7 @@ class _HotelLayoutState extends State<HotelLayout> {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: poppinsText(text: "Facilities", size: 20.0),
         ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //   children: [
-        //     detailCard('assets/images/i6.png', "Swimming Pool"),
-        //     detailCard('assets/images/i7.png', "WiFi"),
-        //     detailCard('assets/images/i8.png', "Restaurant"),
-        //     detailCard('assets/images/i9.png', "Parking"),
-        //   ],
-        // ),
-        // const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //   children: [
-        //     detailCard('assets/images/i10.png', "Meeting Room"),
-        //     detailCard('assets/images/i11.png', "Elevator"),
-        //     detailCard('assets/images/i12.png', "Fitness Center"),
-        //     detailCard('assets/images/i2.png', "24-hours Open"),
-        //   ],
-        // ),
 
-        // Facilities p2
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           height: 200,
@@ -467,25 +425,16 @@ class _HotelLayoutState extends State<HotelLayout> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         poppinsText(
-                                            // text: hotelProvider
-                                            //     .hotelReviews[i].title,
-                                            text: 'Anonymous',
-                                            size: 16.0),
+                                            text: 'Anonymous', size: 16.0),
                                         const SizedBox(height: 5),
                                         poppinsText(
                                             text: hotelProvider.hotelReviews[i]
                                                 .submissionTimeLocalized,
-                                            // text: i == 0
-                                            //     ? "Dec 10, 2024"
-                                            //     : i == 1
-                                            //         ? "Dec 10, 2024"
-                                            //         : "Dec 09, 2024",
                                             size: 12.0)
                                       ],
                                     ),
                                     const Expanded(child: SizedBox()),
                                     ratingCard(
-                                        // ' 4.8 ',
                                         hotelProvider.hotelReviews[i]
                                             .reviewScoreWithDescription!.value!
                                             .split(' ')
@@ -496,52 +445,12 @@ class _HotelLayoutState extends State<HotelLayout> {
                                 const SizedBox(height: 15),
                                 poppinsText(
                                     text: hotelProvider.hotelReviews[i].text,
-                                    // text: i == 0
-                                    //     ? "Very nice and comfortable hotel, thank you for accompanying my vacation!"
-                                    //     : i == 0
-                                    //         ? "Very beautiful hotel, my family and I are very satisfied with the service!"
-                                    //         : "The rooms are very comfortable and the natural views are amazing, can't wait to come back again!",
                                     size: 14.0)
                               ],
                             ),
                           ),
                         ),
                       ),
-                    // const SizedBox(height: 20),
-                    // InkWell(
-                    //   onTap: () {
-                    //     Get.to(
-                    //       Reviews(
-                    //         hotelReviews: hotelProvider.hotelReviews,
-                    //       ),
-                    //       transition: Transition.rightToLeft,
-                    //     );
-                    //   },
-                    //   child: Container(
-                    //     height: 50,
-                    //     width: MediaQuery.of(context).size.width,
-                    //     decoration: BoxDecoration(
-                    //       color: Constants.primaryColor.withOpacity(0.2),
-                    //       borderRadius: BorderRadius.circular(100),
-                    //     ),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         poppinsText(
-                    //           text: "More  ",
-                    //           size: 16.0,
-                    //           color: Constants.primaryColor,
-                    //           fontBold: FontWeight.w700,
-                    //         ),
-                    //         const Icon(
-                    //           Icons.keyboard_arrow_down,
-                    //           color: Constants.primaryColor,
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 20),
                   ],
                 ),
               )
@@ -959,7 +868,8 @@ Widget hotelRooms(bool show, HotelSearchProvider hotelProvider) {
                                             height: 220,
                                             child: ListView.builder(
                                               shrinkWrap: false,
-                                              physics: const BouncingScrollPhysics(),
+                                              physics:
+                                                  const BouncingScrollPhysics(),
                                               scrollDirection: Axis.horizontal,
                                               itemCount: hotelProvider
                                                   .hotelRooms[index]
@@ -968,19 +878,39 @@ Widget hotelRooms(bool show, HotelSearchProvider hotelProvider) {
                                                   .length,
                                               itemBuilder: (context, idx) {
                                                 return Container(
-                                                  padding: const EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
                                                       horizontal: 10),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                        hotelProvider
-                                                            .hotelRooms[index]
-                                                            .unitGallery!
-                                                            .gallery![idx]
-                                                            .image!
-                                                            .url!),
+                                                  child: GestureDetector(
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: Image.network(
+                                                          hotelProvider
+                                                              .hotelRooms[index]
+                                                              .unitGallery!
+                                                              .gallery![idx]
+                                                              .image!
+                                                              .url!),
+                                                    ),
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FullScreenImagePage(
+                                                                  image: hotelProvider
+                                                                      .hotelRooms[
+                                                                          index]
+                                                                      .unitGallery!
+                                                                      .gallery![
+                                                                          idx]
+                                                                      .image!
+                                                                      .url!),
+                                                        ),
+                                                      );
+                                                    },
                                                   ),
                                                 );
                                               },
