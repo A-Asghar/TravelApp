@@ -78,13 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HotelSearchResults(),
-                    ));
-                  },
-                  child: Text('Hotel Search Results')),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => HotelSearchResults(),
+              //       ));
+              //     },
+              //     child: Text('Hotel Search Results')),
               // ElevatedButton(
               //     onPressed: () {
               //       Navigator.of(context).push(MaterialPageRoute(
@@ -94,13 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
               //       ));
               //     },
               //     child: Text('Hotel Detail')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home(),
-                    ));
-                  },
-                  child: Text('Home')),
+              // ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context).push(MaterialPageRoute(
+              //         builder: (context) => Home(),
+              //       ));
+              //     },
+              //     child: Text('Home')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(

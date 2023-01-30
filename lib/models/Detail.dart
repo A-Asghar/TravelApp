@@ -1,13 +1,3 @@
-// To parse this JSON data, do
-//
-//     final detail = detailFromJson(jsonString);
-
-import 'dart:convert';
-
-Detail detailFromJson(String str) => Detail.fromJson(json.decode(str));
-
-String detailToJson(Detail data) => json.encode(data.toJson());
-
 class Detail {
   Detail({
     this.data,
@@ -16,12 +6,8 @@ class Detail {
   Data? data;
 
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "data": data?.toJson(),
-  };
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+      );
 }
 
 class Data {
@@ -32,12 +18,10 @@ class Data {
   PropertyInfo? propertyInfo;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    propertyInfo: json["propertyInfo"] == null ? null : PropertyInfo.fromJson(json["propertyInfo"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "propertyInfo": propertyInfo?.toJson(),
-  };
+        propertyInfo: json["propertyInfo"] == null
+            ? null
+            : PropertyInfo.fromJson(json["propertyInfo"]),
+      );
 }
 
 class PropertyInfo {
@@ -52,16 +36,17 @@ class PropertyInfo {
   PropertyContentSectionGroups? propertyContentSectionGroups;
 
   factory PropertyInfo.fromJson(Map<String, dynamic> json) => PropertyInfo(
-    summary: json["summary"] == null ? null : Summary.fromJson(json["summary"]),
-    propertyGallery: json["propertyGallery"] == null ? null : PropertyGallery.fromJson(json["propertyGallery"]),
-    propertyContentSectionGroups: json["propertyContentSectionGroups"] == null ? null : PropertyContentSectionGroups.fromJson(json["propertyContentSectionGroups"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "summary": summary?.toJson(),
-    "propertyGallery": propertyGallery?.toJson(),
-    "propertyContentSectionGroups": propertyContentSectionGroups?.toJson(),
-  };
+        summary:
+            json["summary"] == null ? null : Summary.fromJson(json["summary"]),
+        propertyGallery: json["propertyGallery"] == null
+            ? null
+            : PropertyGallery.fromJson(json["propertyGallery"]),
+        propertyContentSectionGroups:
+            json["propertyContentSectionGroups"] == null
+                ? null
+                : PropertyContentSectionGroups.fromJson(
+                    json["propertyContentSectionGroups"]),
+      );
 }
 
 class PropertyContentSectionGroups {
@@ -71,13 +56,12 @@ class PropertyContentSectionGroups {
 
   AboutThisProperty? aboutThisProperty;
 
-  factory PropertyContentSectionGroups.fromJson(Map<String, dynamic> json) => PropertyContentSectionGroups(
-    aboutThisProperty: json["aboutThisProperty"] == null ? null : AboutThisProperty.fromJson(json["aboutThisProperty"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "aboutThisProperty": aboutThisProperty?.toJson(),
-  };
+  factory PropertyContentSectionGroups.fromJson(Map<String, dynamic> json) =>
+      PropertyContentSectionGroups(
+        aboutThisProperty: json["aboutThisProperty"] == null
+            ? null
+            : AboutThisProperty.fromJson(json["aboutThisProperty"]),
+      );
 }
 
 class AboutThisProperty {
@@ -87,13 +71,13 @@ class AboutThisProperty {
 
   List<Section>? sections;
 
-  factory AboutThisProperty.fromJson(Map<String, dynamic> json) => AboutThisProperty(
-    sections: json["sections"] == null ? [] : List<Section>.from(json["sections"]!.map((x) => Section.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "sections": sections == null ? [] : List<dynamic>.from(sections!.map((x) => x.toJson())),
-  };
+  factory AboutThisProperty.fromJson(Map<String, dynamic> json) =>
+      AboutThisProperty(
+        sections: json["sections"] == null
+            ? []
+            : List<Section>.from(
+                json["sections"]!.map((x) => Section.fromJson(x))),
+      );
 }
 
 class Section {
@@ -104,12 +88,11 @@ class Section {
   List<BodySubSection>? bodySubSections;
 
   factory Section.fromJson(Map<String, dynamic> json) => Section(
-    bodySubSections: json["bodySubSections"] == null ? [] : List<BodySubSection>.from(json["bodySubSections"]!.map((x) => BodySubSection.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "bodySubSections": bodySubSections == null ? [] : List<dynamic>.from(bodySubSections!.map((x) => x.toJson())),
-  };
+        bodySubSections: json["bodySubSections"] == null
+            ? []
+            : List<BodySubSection>.from(json["bodySubSections"]!
+                .map((x) => BodySubSection.fromJson(x))),
+      );
 }
 
 class BodySubSection {
@@ -120,12 +103,11 @@ class BodySubSection {
   List<Element>? elements;
 
   factory BodySubSection.fromJson(Map<String, dynamic> json) => BodySubSection(
-    elements: json["elements"] == null ? [] : List<Element>.from(json["elements"]!.map((x) => Element.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "elements": elements == null ? [] : List<dynamic>.from(elements!.map((x) => x.toJson())),
-  };
+        elements: json["elements"] == null
+            ? []
+            : List<Element>.from(
+                json["elements"]!.map((x) => Element.fromJson(x))),
+      );
 }
 
 class Element {
@@ -136,12 +118,11 @@ class Element {
   List<ElementItem>? items;
 
   factory Element.fromJson(Map<String, dynamic> json) => Element(
-    items: json["items"] == null ? [] : List<ElementItem>.from(json["items"]!.map((x) => ElementItem.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "items": items == null ? [] : List<dynamic>.from(items!.map((x) => x.toJson())),
-  };
+        items: json["items"] == null
+            ? []
+            : List<ElementItem>.from(
+                json["items"]!.map((x) => ElementItem.fromJson(x))),
+      );
 }
 
 class ElementItem {
@@ -152,12 +133,9 @@ class ElementItem {
   Content? content;
 
   factory ElementItem.fromJson(Map<String, dynamic> json) => ElementItem(
-    content: json["content"] == null ? null : Content.fromJson(json["content"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "content": content?.toJson(),
-  };
+        content:
+            json["content"] == null ? null : Content.fromJson(json["content"]),
+      );
 }
 
 class Content {
@@ -168,12 +146,8 @@ class Content {
   String? text;
 
   factory Content.fromJson(Map<String, dynamic> json) => Content(
-    text: json["text"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "text": text,
-  };
+        text: json["text"],
+      );
 }
 
 class PropertyGallery {
@@ -183,13 +157,13 @@ class PropertyGallery {
 
   List<ImageElement>? images;
 
-  factory PropertyGallery.fromJson(Map<String, dynamic> json) => PropertyGallery(
-    images: json["images"] == null ? [] : List<ImageElement>.from(json["images"]!.map((x) => ImageElement.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x.toJson())),
-  };
+  factory PropertyGallery.fromJson(Map<String, dynamic> json) =>
+      PropertyGallery(
+        images: json["images"] == null
+            ? []
+            : List<ImageElement>.from(
+                json["images"]!.map((x) => ImageElement.fromJson(x))),
+      );
 }
 
 class ImageElement {
@@ -200,12 +174,9 @@ class ImageElement {
   ImageImage? image;
 
   factory ImageElement.fromJson(Map<String, dynamic> json) => ImageElement(
-    image: json["image"] == null ? null : ImageImage.fromJson(json["image"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "image": image?.toJson(),
-  };
+        image:
+            json["image"] == null ? null : ImageImage.fromJson(json["image"]),
+      );
 }
 
 class ImageImage {
@@ -218,14 +189,9 @@ class ImageImage {
   String? description;
 
   factory ImageImage.fromJson(Map<String, dynamic> json) => ImageImage(
-    url: json["url"],
-    description: json["description"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "url": url,
-    "description": description,
-  };
+        url: json["url"],
+        description: json["description"],
+      );
 }
 
 class Summary {
@@ -238,14 +204,13 @@ class Summary {
   Location? location;
 
   factory Summary.fromJson(Map<String, dynamic> json) => Summary(
-    amenities: json["amenities"] == null ? null : Amenities.fromJson(json["amenities"]),
-    location: json["location"] == null ? null : Location.fromJson(json["location"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "amenities": amenities?.toJson(),
-    "location": location?.toJson(),
-  };
+        amenities: json["amenities"] == null
+            ? null
+            : Amenities.fromJson(json["amenities"]),
+        location: json["location"] == null
+            ? null
+            : Location.fromJson(json["location"]),
+      );
 }
 
 class Amenities {
@@ -256,12 +221,10 @@ class Amenities {
   TopAmenities? topAmenities;
 
   factory Amenities.fromJson(Map<String, dynamic> json) => Amenities(
-    topAmenities: json["topAmenities"] == null ? null : TopAmenities.fromJson(json["topAmenities"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "topAmenities": topAmenities?.toJson(),
-  };
+        topAmenities: json["topAmenities"] == null
+            ? null
+            : TopAmenities.fromJson(json["topAmenities"]),
+      );
 }
 
 class TopAmenities {
@@ -272,12 +235,11 @@ class TopAmenities {
   List<TopAmenitiesItem>? items;
 
   factory TopAmenities.fromJson(Map<String, dynamic> json) => TopAmenities(
-    items: json["items"] == null ? [] : List<TopAmenitiesItem>.from(json["items"]!.map((x) => TopAmenitiesItem.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "items": items == null ? [] : List<dynamic>.from(items!.map((x) => x.toJson())),
-  };
+        items: json["items"] == null
+            ? []
+            : List<TopAmenitiesItem>.from(
+                json["items"]!.map((x) => TopAmenitiesItem.fromJson(x))),
+      );
 }
 
 class TopAmenitiesItem {
@@ -289,15 +251,11 @@ class TopAmenitiesItem {
   String? text;
   AmnetyIcon? icon;
 
-  factory TopAmenitiesItem.fromJson(Map<String, dynamic> json) => TopAmenitiesItem(
-    text: json["text"],
-    icon: json["icon"] == null ? null : AmnetyIcon.fromJson(json["icon"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "text": text,
-    "icon": icon?.toJson(),
-  };
+  factory TopAmenitiesItem.fromJson(Map<String, dynamic> json) =>
+      TopAmenitiesItem(
+        text: json["text"],
+        icon: json["icon"] == null ? null : AmnetyIcon.fromJson(json["icon"]),
+      );
 }
 
 class AmnetyIcon {
@@ -308,12 +266,8 @@ class AmnetyIcon {
   String? id;
 
   factory AmnetyIcon.fromJson(Map<String, dynamic> json) => AmnetyIcon(
-    id: json["id"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-  };
+        id: json["id"],
+      );
 }
 
 class Location {
@@ -326,14 +280,12 @@ class Location {
   Coordinates? coordinates;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
-    address: json["address"] == null ? null : Address.fromJson(json["address"]),
-    coordinates: json["coordinates"] == null ? null : Coordinates.fromJson(json["coordinates"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "address": address?.toJson(),
-    "coordinates": coordinates?.toJson(),
-  };
+        address:
+            json["address"] == null ? null : Address.fromJson(json["address"]),
+        coordinates: json["coordinates"] == null
+            ? null
+            : Coordinates.fromJson(json["coordinates"]),
+      );
 }
 
 class Address {
@@ -354,22 +306,13 @@ class Address {
   String? secondAddressLine;
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-    addressLine: json["addressLine"],
-    city: json["city"],
-    province: json["province"],
-    countryCode: json["countryCode"],
-    firstAddressLine: json["firstAddressLine"],
-    secondAddressLine: json["secondAddressLine"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "addressLine": addressLine,
-    "city": city,
-    "province": province,
-    "countryCode": countryCode,
-    "firstAddressLine": firstAddressLine,
-    "secondAddressLine": secondAddressLine,
-  };
+        addressLine: json["addressLine"],
+        city: json["city"],
+        province: json["province"],
+        countryCode: json["countryCode"],
+        firstAddressLine: json["firstAddressLine"],
+        secondAddressLine: json["secondAddressLine"],
+      );
 }
 
 class Coordinates {
@@ -382,12 +325,7 @@ class Coordinates {
   double? longitude;
 
   factory Coordinates.fromJson(Map<String, dynamic> json) => Coordinates(
-    latitude: json["latitude"]?.toDouble(),
-    longitude: json["longitude"]?.toDouble(),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "latitude": latitude,
-    "longitude": longitude,
-  };
+        latitude: json["latitude"]?.toDouble(),
+        longitude: json["longitude"]?.toDouble(),
+      );
 }

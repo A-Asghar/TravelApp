@@ -563,338 +563,339 @@ class _PackageLayoutState extends State<PackageLayout> {
   @override
   Widget build(BuildContext context) {
     var hotelProvider = context.watch<HotelSearchProvider>();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Title
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-          child: poppinsText(
-              text: "Shelton's Rezidor",
-              // widget.property!.name,
-              size: 30.0),
-        ),
-        const SizedBox(height: 15),
-
-        // Location
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Row(
-            children: [
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: SvgPicture.asset(
-                  'assets/images/Location.svg',
-                ),
-              ),
-              const SizedBox(width: 8),
-              poppinsText(text: hotelProvider.address, size: 14.0),
-            ],
-          ),
-        ),
-        const SizedBox(height: 15),
-
-        // Gallery Photos
-        InkWell(
-          onTap: () {
-            Get.to(
-              HotelGallery(
-                hotelImages: hotelProvider.hotelImages,
-              ),
-              transition: Transition.rightToLeft,
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                poppinsText(text: "Gallery Photos", size: 20.0),
-                poppinsText(
-                    text: "See All", size: 16.0, color: Constants.primaryColor),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
-            itemCount: 5,
-            padding: const EdgeInsets.only(left: 20),
-            physics: const ClampingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: Container(
-                  height: 100,
-                  width: 140,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage(hotelProvider.hotelImages[index]!.url!
-                          // index == 0
-                          //     ? 'assets/images/g1.png'
-                          //     : index == 1
-                          //         ? 'assets/images/g2.png'
-                          //         : index == 2
-                          //             ? 'assets/images/g3.png'
-                          //             : index == 3
-                          //                 ? 'assets/images/g4.png'
-                          //                 : 'assets/images/g5.png',
-                          ),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 20),
-
-        // Details
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: poppinsText(
-            text: "Details",
-            size: 20.0,
-          ),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            //Put in ListView
-            detailCard('assets/images/i2.png', "Hotels"),
-          ],
-        ),
-        const SizedBox(height: 20),
-
-        // Description
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: poppinsText(text: "Description", size: 20.0),
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: ExpandableText(text: desc),
-        ),
-        const SizedBox(height: 20),
-
-        // Facilities
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: poppinsText(text: "Facilities", size: 20.0),
-        ),
-        const SizedBox(height: 20),
-
-        //Put in GridView
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            detailCard('assets/images/i6.png', "Swimming Pool"),
-          ],
-        ),
-        //const SizedBox(height: 20),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //   children: [
-        //     detailCard('assets/images/i10.png', "Meeting Room"),
-        //     detailCard('assets/images/i11.png', "Elevator"),
-        //     detailCard('assets/images/i12.png', "Fitness Center"),
-        //     detailCard('assets/images/i2.png', "24-hours Open"),
-        //   ],
-        // ),
-        const SizedBox(height: 20),
-
-        // Day wise Details
-        dayWiseDetail(widget.detailsType == 'package', daywise),
-
-        // Location Map
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: poppinsText(text: "Location", size: 20.0),
-        ),
-        const SizedBox(height: 20),
-        InkWell(
-          onTap: () {
-            // Get.to(
-            //   const HotelLocationScreen(),
-            //   transition: Transition.rightToLeft,
-            // );
-          },
-          child: InkWell(
-            onTap: _launchMap(hotelProvider.coordinates),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: SizedBox(
-                height: 180,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  'assets/images/map.png',
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-
-        // Reviews
-        InkWell(
-          onTap: () {
-            // Get.to(
-            //   Reviews(
-            //     property: widget.property,
-            //   ),
-            //   transition: Transition.rightToLeft,
-            // );
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Row(
-              children: [
-                poppinsText(text: "Reviews", size: 20.0),
-                const SizedBox(width: 14),
-                const Icon(
-                  Icons.star,
-                  color: Color(0xffFFD300),
-                  size: 15,
-                ),
-                poppinsText(
-                  // text: widget.property!.reviews!.score
-                  //     .toString(),
-                  text: ' 4.9 ',
-                  size: 14.0,
-                  color: Constants.primaryColor,
-                ),
-                poppinsText(
-                    text: '(4,567) reviews',
-                    // " (${widget.property!.reviews!.total.toString()}) reviews",
-                    size: 14.0),
-                const Expanded(child: SizedBox()),
-                poppinsText(
-                  text: "See All",
-                  size: 16.0,
-                  color: Constants.primaryColor,
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (var i = 0; i < 3; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const SizedBox(width: 14),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  poppinsText(
-                                      text: hotelProvider.hotelReviews[i].title,
-                                      // text: i == 0
-                                      //     ? "Jenny Wilson"
-                                      //     : i == 1
-                                      //         ? "Guy Hawkins"
-                                      //         : "Kristin Watson",
-                                      size: 16.0),
-                                  const SizedBox(height: 5),
-                                  poppinsText(
-                                      text: hotelProvider.hotelReviews[i]
-                                          .submissionTimeLocalized,
-                                      // text: i == 0
-                                      //     ? "Dec 10, 2024"
-                                      //     : i == 1
-                                      //         ? "Dec 10, 2024"
-                                      //         : "Dec 09, 2024",
-                                      size: 12.0)
-                                ],
-                              ),
-                              const Expanded(child: SizedBox()),
-                              ratingCard(
-                                  // ' 4.8 ',
-                                  hotelProvider.hotelReviews[i]
-                                      .reviewScoreWithDescription!.value!
-                                      .split(' ')[0],
-                                  Constants.primaryColor),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          poppinsText(
-                            text: hotelProvider.hotelReviews[i].text,
-                            // text: i == 0
-                            //     ? "Very nice and comfortable hotel, thank you for accompanying my vacation!"
-                            //     : i == 0
-                            //         ? "Very beautiful hotel, my family and I are very satisfied with the service!"
-                            //         : "The rooms are very comfortable and the natural views are amazing, can't wait to come back again!",
-                            // size: 14.0
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 20),
-              InkWell(
-                onTap: () {
-                  // Get.to(
-                  //   Reviews(
-                  //     property: widget.property,
-                  //   ),
-                  //   transition: Transition.rightToLeft,
-                  // );
-                },
-                child: Container(
-                  height: 50,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(
-                    color: Constants.primaryColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      poppinsText(
-                        text: "More  ",
-                        size: 16.0,
-                        color: Constants.primaryColor,
-                        fontBold: FontWeight.w700,
-                      ),
-                      const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Constants.primaryColor,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        )
-      ],
-    );
+    return Container();
+    // return Column(
+    //   crossAxisAlignment: CrossAxisAlignment.start,
+    //   children: [
+    //     // Title
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+    //       child: poppinsText(
+    //           text: "Shelton's Rezidor",
+    //           // widget.property!.name,
+    //           size: 30.0),
+    //     ),
+    //     const SizedBox(height: 15),
+    //
+    //     // Location
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20),
+    //       child: Row(
+    //         children: [
+    //           SizedBox(
+    //             height: 20,
+    //             width: 20,
+    //             child: SvgPicture.asset(
+    //               'assets/images/Location.svg',
+    //             ),
+    //           ),
+    //           const SizedBox(width: 8),
+    //           poppinsText(text: hotelProvider.address, size: 14.0),
+    //         ],
+    //       ),
+    //     ),
+    //     const SizedBox(height: 15),
+    //
+    //     // Gallery Photos
+    //     InkWell(
+    //       onTap: () {
+    //         Get.to(
+    //           HotelGallery(
+    //             hotelImages: hotelProvider.hotelImages,
+    //           ),
+    //           transition: Transition.rightToLeft,
+    //         );
+    //       },
+    //       child: Padding(
+    //         padding: const EdgeInsets.only(left: 20, right: 20),
+    //         child: Row(
+    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //           children: [
+    //             poppinsText(text: "Gallery Photos", size: 20.0),
+    //             poppinsText(
+    //                 text: "See All", size: 16.0, color: Constants.primaryColor),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //     const SizedBox(height: 10),
+    //     SizedBox(
+    //       height: 100,
+    //       width: MediaQuery.of(context).size.width,
+    //       child: ListView.builder(
+    //         itemCount: 5,
+    //         padding: const EdgeInsets.only(left: 20),
+    //         physics: const ClampingScrollPhysics(),
+    //         scrollDirection: Axis.horizontal,
+    //         itemBuilder: (BuildContext context, int index) {
+    //           return Padding(
+    //             padding: const EdgeInsets.only(right: 20),
+    //             child: Container(
+    //               height: 100,
+    //               width: 140,
+    //               decoration: BoxDecoration(
+    //                 image: DecorationImage(
+    //                   image: NetworkImage(hotelProvider.hotelImages[index]!.url!
+    //                       // index == 0
+    //                       //     ? 'assets/images/g1.png'
+    //                       //     : index == 1
+    //                       //         ? 'assets/images/g2.png'
+    //                       //         : index == 2
+    //                       //             ? 'assets/images/g3.png'
+    //                       //             : index == 3
+    //                       //                 ? 'assets/images/g4.png'
+    //                       //                 : 'assets/images/g5.png',
+    //                       ),
+    //                   fit: BoxFit.fill,
+    //                 ),
+    //               ),
+    //             ),
+    //           );
+    //         },
+    //       ),
+    //     ),
+    //     const SizedBox(height: 20),
+    //
+    //     // Details
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20),
+    //       child: poppinsText(
+    //         text: "Details",
+    //         size: 20.0,
+    //       ),
+    //     ),
+    //     const SizedBox(height: 20),
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //       children: [
+    //         //Put in ListView
+    //         detailCard('assets/images/i2.png', "Hotels"),
+    //       ],
+    //     ),
+    //     const SizedBox(height: 20),
+    //
+    //     // Description
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20),
+    //       child: poppinsText(text: "Description", size: 20.0),
+    //     ),
+    //     const SizedBox(height: 20),
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20),
+    //       child: ExpandableText(text: desc),
+    //     ),
+    //     const SizedBox(height: 20),
+    //
+    //     // Facilities
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20),
+    //       child: poppinsText(text: "Facilities", size: 20.0),
+    //     ),
+    //     const SizedBox(height: 20),
+    //
+    //     //Put in GridView
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //       children: [
+    //         detailCard('assets/images/i6.png', "Swimming Pool"),
+    //       ],
+    //     ),
+    //     //const SizedBox(height: 20),
+    //     // Row(
+    //     //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //     //   children: [
+    //     //     detailCard('assets/images/i10.png', "Meeting Room"),
+    //     //     detailCard('assets/images/i11.png', "Elevator"),
+    //     //     detailCard('assets/images/i12.png', "Fitness Center"),
+    //     //     detailCard('assets/images/i2.png', "24-hours Open"),
+    //     //   ],
+    //     // ),
+    //     const SizedBox(height: 20),
+    //
+    //     // Day wise Details
+    //     dayWiseDetail(widget.detailsType == 'package', daywise),
+    //
+    //     // Location Map
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20),
+    //       child: poppinsText(text: "Location", size: 20.0),
+    //     ),
+    //     const SizedBox(height: 20),
+    //     InkWell(
+    //       onTap: () {
+    //         // Get.to(
+    //         //   const HotelLocationScreen(),
+    //         //   transition: Transition.rightToLeft,
+    //         // );
+    //       },
+    //       child: InkWell(
+    //         onTap: _launchMap(hotelProvider.coordinates),
+    //         child: Padding(
+    //           padding: const EdgeInsets.only(left: 20, right: 20),
+    //           child: SizedBox(
+    //             height: 180,
+    //             width: MediaQuery.of(context).size.width,
+    //             child: Image.asset(
+    //               'assets/images/map.png',
+    //               fit: BoxFit.fill,
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //     const SizedBox(height: 20),
+    //
+    //     // Reviews
+    //     InkWell(
+    //       onTap: () {
+    //         // Get.to(
+    //         //   Reviews(
+    //         //     property: widget.property,
+    //         //   ),
+    //         //   transition: Transition.rightToLeft,
+    //         // );
+    //       },
+    //       child: Padding(
+    //         padding: const EdgeInsets.only(left: 20, right: 20),
+    //         child: Row(
+    //           children: [
+    //             poppinsText(text: "Reviews", size: 20.0),
+    //             const SizedBox(width: 14),
+    //             const Icon(
+    //               Icons.star,
+    //               color: Color(0xffFFD300),
+    //               size: 15,
+    //             ),
+    //             poppinsText(
+    //               // text: widget.property!.reviews!.score
+    //               //     .toString(),
+    //               text: ' 4.9 ',
+    //               size: 14.0,
+    //               color: Constants.primaryColor,
+    //             ),
+    //             poppinsText(
+    //                 text: '(4,567) reviews',
+    //                 // " (${widget.property!.reviews!.total.toString()}) reviews",
+    //                 size: 14.0),
+    //             const Expanded(child: SizedBox()),
+    //             poppinsText(
+    //               text: "See All",
+    //               size: 16.0,
+    //               color: Constants.primaryColor,
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //     const SizedBox(height: 20),
+    //     Padding(
+    //       padding: const EdgeInsets.only(left: 20, right: 20),
+    //       child: Column(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: [
+    //           for (var i = 0; i < 3; i++)
+    //             Padding(
+    //               padding: const EdgeInsets.only(bottom: 20),
+    //               child: Container(
+    //                 decoration: BoxDecoration(
+    //                   color: Colors.grey.withOpacity(0.1),
+    //                   borderRadius: BorderRadius.circular(16),
+    //                 ),
+    //                 child: Padding(
+    //                   padding: const EdgeInsets.all(16.0),
+    //                   child: Column(
+    //                     crossAxisAlignment: CrossAxisAlignment.start,
+    //                     children: [
+    //                       Row(
+    //                         children: [
+    //                           const SizedBox(width: 14),
+    //                           Column(
+    //                             crossAxisAlignment: CrossAxisAlignment.start,
+    //                             children: [
+    //                               poppinsText(
+    //                                   text: hotelProvider.hotelReviews[i].title,
+    //                                   // text: i == 0
+    //                                   //     ? "Jenny Wilson"
+    //                                   //     : i == 1
+    //                                   //         ? "Guy Hawkins"
+    //                                   //         : "Kristin Watson",
+    //                                   size: 16.0),
+    //                               const SizedBox(height: 5),
+    //                               poppinsText(
+    //                                   text: hotelProvider.hotelReviews[i]
+    //                                       .submissionTimeLocalized,
+    //                                   // text: i == 0
+    //                                   //     ? "Dec 10, 2024"
+    //                                   //     : i == 1
+    //                                   //         ? "Dec 10, 2024"
+    //                                   //         : "Dec 09, 2024",
+    //                                   size: 12.0)
+    //                             ],
+    //                           ),
+    //                           const Expanded(child: SizedBox()),
+    //                           ratingCard(
+    //                               // ' 4.8 ',
+    //                               hotelProvider.hotelReviews[i]
+    //                                   .reviewScoreWithDescription!.value!
+    //                                   .split(' ')[0],
+    //                               Constants.primaryColor),
+    //                         ],
+    //                       ),
+    //                       const SizedBox(height: 15),
+    //                       poppinsText(
+    //                         text: hotelProvider.hotelReviews[i].text,
+    //                         // text: i == 0
+    //                         //     ? "Very nice and comfortable hotel, thank you for accompanying my vacation!"
+    //                         //     : i == 0
+    //                         //         ? "Very beautiful hotel, my family and I are very satisfied with the service!"
+    //                         //         : "The rooms are very comfortable and the natural views are amazing, can't wait to come back again!",
+    //                         // size: 14.0
+    //                       ),
+    //                     ],
+    //                   ),
+    //                 ),
+    //               ),
+    //             ),
+    //           const SizedBox(height: 20),
+    //           InkWell(
+    //             onTap: () {
+    //               // Get.to(
+    //               //   Reviews(
+    //               //     property: widget.property,
+    //               //   ),
+    //               //   transition: Transition.rightToLeft,
+    //               // );
+    //             },
+    //             child: Container(
+    //               height: 50,
+    //               width: MediaQuery.of(context).size.width,
+    //               decoration: BoxDecoration(
+    //                 color: Constants.primaryColor.withOpacity(0.2),
+    //                 borderRadius: BorderRadius.circular(100),
+    //               ),
+    //               child: Row(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 children: [
+    //                   poppinsText(
+    //                     text: "More  ",
+    //                     size: 16.0,
+    //                     color: Constants.primaryColor,
+    //                     fontBold: FontWeight.w700,
+    //                   ),
+    //                   const Icon(
+    //                     Icons.keyboard_arrow_down,
+    //                     color: Constants.primaryColor,
+    //                   )
+    //                 ],
+    //               ),
+    //             ),
+    //           ),
+    //           const SizedBox(height: 20),
+    //         ],
+    //       ),
+    //     )
+    //   ],
+    // );
   }
 }
 

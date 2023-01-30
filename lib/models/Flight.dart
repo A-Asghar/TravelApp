@@ -1,5 +1,3 @@
-
-
 class Flight {
   Flight(
       {required this.oneWay,
@@ -28,17 +26,6 @@ class Flight {
             json["fareDetailsBySegment"]
                 .map((x) => FareDetailsBySegment.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "oneWay": oneWay,
-        "numberOfBookableSeats": numberOfBookableSeats,
-        "itineraries": List<dynamic>.from(itineraries.map((x) => x.toJson())),
-        "price": price.toJson(),
-        "validatingAirlineCodes":
-            List<dynamic>.from(validatingAirlineCodes.map((x) => x)),
-        "fareDetailsBySegment":
-            List<dynamic>.from(fareDetailsBySegment.map((x) => x.toJson())),
-      };
 }
 
 class Itinerary {
@@ -55,11 +42,6 @@ class Itinerary {
         segments: List<Segment>.from(
             json["segments"].map((x) => Segment.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "duration": duration,
-        "segments": List<dynamic>.from(segments.map((x) => x.toJson())),
-      };
 }
 
 class Segment {
@@ -83,14 +65,6 @@ class Segment {
         aircraft: Aircraft.fromJson(json["aircraft"]),
         duration: json["duration"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "departure": departure.toJson(),
-        "arrival": arrival.toJson(),
-        "carrierCode": carrierCode,
-        "aircraft": aircraft.toJson(),
-        "duration": duration,
-      };
 }
 
 class Aircraft {
@@ -103,10 +77,6 @@ class Aircraft {
   factory Aircraft.fromJson(Map<String, dynamic> json) => Aircraft(
         code: json["code"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "code": code,
-      };
 }
 
 class Arrival {
@@ -122,11 +92,6 @@ class Arrival {
         iataCode: json["iataCode"],
         at: DateTime.parse(json["at"]),
       );
-
-  Map<String, dynamic> toJson() => {
-        "iataCode": iataCode,
-        "at": at.toIso8601String(),
-      };
 }
 
 class FlightPrice {
@@ -145,12 +110,6 @@ class FlightPrice {
         total: json["total"],
         grandTotal: json["grandTotal"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "currency": currency,
-        "total": total,
-        "grandTotal": grandTotal,
-      };
 }
 
 class FareDetailsBySegment {
@@ -164,8 +123,4 @@ class FareDetailsBySegment {
       FareDetailsBySegment(
         cabin: json["cabin"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "cabin": cabin,
-      };
 }

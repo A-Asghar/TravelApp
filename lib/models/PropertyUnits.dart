@@ -11,12 +11,6 @@ class PropertyUnits {
             ? null
             : List<Unit>.from(json["units"].map((x) => Unit.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "units": units == null
-            ? null
-            : List<dynamic>.from(units!.map((x) => x.toJson())),
-      };
 }
 
 class Unit {
@@ -55,18 +49,6 @@ class Unit {
             ? null
             : RoomAmenities.fromJson(json["roomAmenities"]),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "description": description == null ? null : description,
-        "id": id == null ? null : id,
-        "header": header == null ? null : header?.toJson(),
-        "unitGallery": unitGallery == null ? null : unitGallery?.toJson(),
-        "ratePlans": ratePlans == null
-            ? null
-            : List<dynamic>.from(ratePlans!.map((x) => x.toJson())),
-        "roomAmenities": roomAmenities == null ? null : roomAmenities?.toJson(),
-      };
 }
 
 class Header {
@@ -84,12 +66,6 @@ class Header {
             : headerTypenameValues.map![json["__typename"]],
         text: json["text"] == null ? null : json["text"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename":
-            typename == null ? null : headerTypenameValues.reverse![typename],
-        "text": text == null ? null : text,
-      };
 }
 
 enum HeaderTypename { LODGING_HEADER, MARKUP_TEXT }
@@ -130,20 +106,6 @@ class RatePlan {
             : List<PriceDetail>.from(
                 json["priceDetails"].map((x) => PriceDetail.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "id": id == null ? null : id,
-        "amenities": amenities == null
-            ? null
-            : List<dynamic>.from(amenities!.map((x) => x.toJson())),
-        "highlightedMessages": highlightedMessages == null
-            ? null
-            : List<dynamic>.from(highlightedMessages!.map((x) => x.toJson())),
-        "priceDetails": priceDetails == null
-            ? null
-            : List<dynamic>.from(priceDetails!.map((x) => x.toJson())),
-      };
 }
 
 class Amenity {
@@ -162,12 +124,6 @@ class Amenity {
         category: json["category"] == null ? null : json["category"],
         description: json["description"] == null ? null : json["description"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "category": category == null ? null : category,
-        "description": description == null ? null : description,
-      };
 }
 
 class HighlightedMessage {
@@ -186,12 +142,6 @@ class HighlightedMessage {
             ? null
             : List<String>.from(json["content"].map((x) => x)),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "content":
-            content == null ? null : List<dynamic>.from(content!.map((x) => x)),
-      };
 }
 
 class PriceDetail {
@@ -226,17 +176,6 @@ class PriceDetail {
             ? null
             : json["totalPriceMessage"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "availability": availability == null ? null : availability?.toJson(),
-        "cancellationPolicy":
-            cancellationPolicy == null ? null : cancellationPolicy?.toJson(),
-        "noCreditCard": noCreditCard == null ? null : noCreditCard,
-        "price": price == null ? null : price?.toJson(),
-        "totalPriceMessage":
-            totalPriceMessage == null ? null : totalPriceMessage,
-      };
 }
 
 class Availability {
@@ -260,13 +199,6 @@ class Availability {
         scarcityMessage:
             json["scarcityMessage"] == null ? null : json["scarcityMessage"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "available": available == null ? null : available,
-        "minRoomsLeft": minRoomsLeft == null ? null : minRoomsLeft,
-        "scarcityMessage": scarcityMessage == null ? null : scarcityMessage,
-      };
 }
 
 class CancellationPolicy {
@@ -288,13 +220,6 @@ class CancellationPolicy {
             : CancellationWindow.fromJson(json["cancellationWindow"]),
         type: json["type"] == null ? null : json["type"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "cancellationWindow":
-            cancellationWindow == null ? null : cancellationWindow?.toJson(),
-        "type": type == null ? null : type,
-      };
 }
 
 class CancellationWindow {
@@ -327,16 +252,6 @@ class CancellationWindow {
         fullDateFormat:
             json["fullDateFormat"] == null ? null : json["fullDateFormat"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "day": day == null ? null : day,
-        "hour": hour == null ? null : hour,
-        "minute": minute == null ? null : minute,
-        "month": month == null ? null : month,
-        "year": year == null ? null : year,
-        "fullDateFormat": fullDateFormat == null ? null : fullDateFormat,
-      };
 }
 
 class Price {
@@ -366,15 +281,6 @@ class Price {
         total: json["total"] == null ? null : Total.fromJson(json["total"]),
         priceMessaging: json["priceMessaging"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "lead": lead == null ? null : lead?.toJson(),
-        "roomNightMessage": roomNightMessage == null ? null : roomNightMessage,
-        "strikeOutType": strikeOutType == null ? null : strikeOutType,
-        "total": total == null ? null : total?.toJson(),
-        "priceMessaging": priceMessaging,
-      };
 }
 
 class Lead {
@@ -398,13 +304,6 @@ class Lead {
             : CurrencyInfo.fromJson(json["currencyInfo"]),
         formatted: json["formatted"] == null ? null : json["formatted"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "amount": amount == null ? null : amount,
-        "currencyInfo": currencyInfo == null ? null : currencyInfo?.toJson(),
-        "formatted": formatted == null ? null : formatted,
-      };
 }
 
 class CurrencyInfo {
@@ -423,12 +322,6 @@ class CurrencyInfo {
         code: json["code"] == null ? null : json["code"],
         symbol: json["symbol"] == null ? null : json["symbol"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "code": code == null ? null : code,
-        "symbol": symbol == null ? null : symbol,
-      };
 }
 
 class Total {
@@ -444,11 +337,6 @@ class Total {
         typename: json["__typename"] == null ? null : json["__typename"],
         amount: json["amount"] == null ? null : json["amount"].toDouble(),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "amount": amount == null ? null : amount,
-      };
 }
 
 class RoomAmenities {
@@ -467,13 +355,6 @@ class RoomAmenities {
             : List<BodySubSection>.from(
                 json["bodySubSections"].map((x) => BodySubSection.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "bodySubSections": bodySubSections == null
-            ? null
-            : List<dynamic>.from(bodySubSections!.map((x) => x.toJson())),
-      };
 }
 
 class BodySubSection {
@@ -492,13 +373,6 @@ class BodySubSection {
             : List<Content>.from(
                 json["contents"].map((x) => Content.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "contents": contents == null
-            ? null
-            : List<dynamic>.from(contents!.map((x) => x.toJson())),
-      };
 }
 
 class Content {
@@ -521,15 +395,6 @@ class Content {
             ? null
             : List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename":
-            typename == null ? null : purpleTypenameValues.reverse![typename],
-        "header": header == null ? null : header?.toJson(),
-        "items": items == null
-            ? null
-            : List<dynamic>.from(items!.map((x) => x.toJson())),
-      };
 }
 
 class Item {
@@ -548,12 +413,6 @@ class Item {
         content:
             json["content"] == null ? null : Header.fromJson(json["content"]),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename":
-            typename == null ? null : itemTypenameValues.reverse![typename],
-        "content": content == null ? null : content?.toJson(),
-      };
 }
 
 enum ItemTypename { PROPERTY_CONTENT_ITEM_MARKUP }
@@ -582,13 +441,6 @@ class UnitGallery {
             : List<Gallery>.from(
                 json["gallery"].map((x) => Gallery.fromJson(x))),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "gallery": gallery == null
-            ? null
-            : List<dynamic>.from(gallery!.map((x) => x.toJson())),
-      };
 }
 
 class Gallery {
@@ -604,11 +456,6 @@ class Gallery {
         typename: json["__typename"] == null ? null : json["__typename"],
         image: json["image"] == null ? null : UnitImage.fromJson(json["image"]),
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "image": image == null ? null : image?.toJson(),
-      };
 }
 
 class UnitImage {
@@ -624,11 +471,6 @@ class UnitImage {
         typename: json["__typename"] == null ? null : json["__typename"],
         url: json["url"] == null ? null : json["url"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "__typename": typename == null ? null : typename,
-        "url": url == null ? null : url,
-      };
 }
 
 class EnumValues<T> {

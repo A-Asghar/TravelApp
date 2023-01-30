@@ -1,5 +1,3 @@
-
-
 class AccessToken {
   AccessToken({
     required this.type,
@@ -24,26 +22,14 @@ class AccessToken {
   String scope;
 
   factory AccessToken.fromJson(Map<String, dynamic> json) => AccessToken(
-    type: json["type"],
-    username: json["username"],
-    applicationName: json["application_name"],
-    clientId: json["client_id"],
-    tokenType: json["token_type"],
-    accessToken: json["access_token"],
-    expiresIn: json["expires_in"],
-    state: json["state"],
-    scope: json["scope"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "type": type,
-    "username": username,
-    "application_name": applicationName,
-    "client_id": clientId,
-    "token_type": tokenType,
-    "access_token": accessToken,
-    "expires_in": expiresIn,
-    "state": state,
-    "scope": scope,
-  };
+        type: json["type"],
+        username: json["username"],
+        applicationName: json["application_name"],
+        clientId: json["client_id"],
+        tokenType: json["token_type"],
+        accessToken: json["access_token"],
+        expiresIn: json["expires_in"],
+        state: json["state"],
+        scope: json["scope"],
+      );
 }

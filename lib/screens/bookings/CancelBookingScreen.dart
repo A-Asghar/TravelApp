@@ -57,11 +57,11 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      card(
-                        'assets/images/card.png',
-                        "•••• •••• •••• •••• 4679",
-                        Constants.primaryColor,
-                      ),
+                      // card(
+                      //   'assets/images/card.png',
+                      //   "•••• •••• •••• •••• 4679",
+                      //   Constants.primaryColor,
+                      // ),
                       const SizedBox(height: 60),
                     ],
                   ),
