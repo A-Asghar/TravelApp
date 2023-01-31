@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../Constants.dart';
+import '../widgets/errorSnackBar.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key, required this.title}) : super(key: key);
@@ -480,39 +481,62 @@ class _FlightLayoutState extends State<FlightLayout> {
         searchButton(
           context,
           () async {
-            if (context.read<FlightSearchProvider>().from.city != '' &&
-                context.read<FlightSearchProvider>().to.city != '') {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const FlightSearchResult()));
-              FlightRepository flightRepository = FlightRepository();
-              List response = await flightRepository.flightOffersSearch(
-                  originLocationCode:
-                      context.read<FlightSearchProvider>().from.iata,
-                  destinationLocationCode:
-                      context.read<FlightSearchProvider>().to.iata,
-                  departureDate:
-                      context.read<FlightSearchProvider>().departDate,
-                  returnDate: flightTrips[1].isSelected
-                      ? context.read<FlightSearchProvider>().returnDate
-                      : '',
-                  adults: context.read<FlightSearchProvider>().adults);
-
-              context.read<FlightSearchProvider>().dictionary = response[0];
-              context.read<FlightSearchProvider>().flights = response[1];
-              context.read<FlightSearchProvider>().count = response[2];
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Some error message'),
-                  backgroundColor: Colors.red,
-                  duration: Duration(seconds: 5),
-                ),
-              );
+            bool returnDateSelected = flightTrips[1].isSelected;
+            DateTime departDate =
+                DateTime.parse(context.read<FlightSearchProvider>().departDate);
+            DateTime returnDate =
+                DateTime.parse(context.read<FlightSearchProvider>().returnDate);
+            DateTime now = DateTime.now();
+            if (context.read<FlightSearchProvider>().from.city == '' ||
+                context.read<FlightSearchProvider>().to.city == '') {
+              errorSnackBar(context, 'You haven\'t selected a city');
+              return;
+              // searchFlight(flightTrips);
             }
+
+            if (!returnDateSelected) {
+              if (departDate.isBefore(now) && departDate.day != now.day) {
+                errorSnackBar(context, 'Depart Date can\'t be before Today');
+                return;
+              }
+            }
+
+            if (returnDateSelected) {
+              if (departDate.isBefore(now) && departDate.day != now.day) {
+                errorSnackBar(context, 'Depart Date can\'t be before Today');
+                return;
+              }
+              if (returnDate.isBefore(departDate) &&
+                  returnDate.day != departDate.day) {
+                errorSnackBar(
+                    context, 'Return Date can\'t be before Depart Date');
+                return;
+              }
+            }
+
+            searchFlight(flightTrips);
           },
         )
       ],
     );
+  }
+
+  searchFlight(flightTrips) async {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const FlightSearchResult()));
+    FlightRepository flightRepository = FlightRepository();
+    List response = await flightRepository.flightOffersSearch(
+        originLocationCode: context.read<FlightSearchProvider>().from.iata,
+        destinationLocationCode: context.read<FlightSearchProvider>().to.iata,
+        departureDate: context.read<FlightSearchProvider>().departDate,
+        returnDate: flightTrips[1].isSelected
+            ? context.read<FlightSearchProvider>().returnDate
+            : '',
+        adults: context.read<FlightSearchProvider>().adults);
+
+    context.read<FlightSearchProvider>().dictionary = response[0];
+    context.read<FlightSearchProvider>().flights = response[1];
+    context.read<FlightSearchProvider>().count = response[2];
   }
 }
 
@@ -571,24 +595,47 @@ class _HotelLayoutState extends State<HotelLayout> {
         const Spacer(),
 
         searchButton(context, () async {
-          if (context.read<HotelSearchProvider>().to.city != '') {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => HotelSearchResults()));
-            HotelRepository hotelRepository = HotelRepository();
-            List response = await hotelRepository.hotelSearch(
-                city: context.read<HotelSearchProvider>().to.city.split(',')[0],
-                checkIn:
-                    DateTime.parse(context.read<HotelSearchProvider>().checkIn),
-                checkOut: DateTime.parse(
-                    context.read<HotelSearchProvider>().checkOut),
-                adults: context.read<HotelSearchProvider>().adults);
-
-            context.read<HotelSearchProvider>().hotels = response[0];
-            context.read<HotelSearchProvider>().regionId = response[1];
+          if (context.read<HotelSearchProvider>().to.city == '') {
+            errorSnackBar(context, 'You haven\'t selected a city');
+            return;
           }
+
+          DateTime checkOut =
+              DateTime.parse(context.read<HotelSearchProvider>().checkOut);
+          DateTime checkIn =
+              DateTime.parse(context.read<HotelSearchProvider>().checkIn);
+          DateTime now = DateTime.now();
+
+          if (checkOut.isBefore(checkIn)) {
+            errorSnackBar(
+                context, 'CheckOut date can\'t be before CheckIn Date');
+            return;
+          }
+
+          if ((checkOut.isBefore(now) && checkOut.day != now.day) ||
+              (checkIn.isBefore(now) && checkIn.day != now.day)) {
+            errorSnackBar(context,
+                'CheckIn date or CheckOut date can\'t be before Today');
+            return;
+          }
+          searchHotel();
         })
       ],
     );
+  }
+
+  searchHotel() async {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const HotelSearchResults()));
+    HotelRepository hotelRepository = HotelRepository();
+    List response = await hotelRepository.hotelSearch(
+        city: context.read<HotelSearchProvider>().to.city.split(',')[0],
+        checkIn: DateTime.parse(context.read<HotelSearchProvider>().checkIn),
+        checkOut: DateTime.parse(context.read<HotelSearchProvider>().checkOut),
+        adults: context.read<HotelSearchProvider>().adults);
+
+    context.read<HotelSearchProvider>().hotels = response[0];
+    context.read<HotelSearchProvider>().regionId = response[1];
   }
 }
 

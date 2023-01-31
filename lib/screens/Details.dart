@@ -60,7 +60,9 @@ class _DetailsState extends State<Details> {
     callHotelInfo();
   }
 
+  bool isLoading = false;
   callHotelInfo() async {
+    setState(() => isLoading = true);
     HotelRepository hotelRepository = HotelRepository();
     List detailResponse =
         await hotelRepository.detail(propertyId: widget.property.id!);
@@ -81,7 +83,7 @@ class _DetailsState extends State<Details> {
                 DateTime.parse(context.read<HotelSearchProvider>().checkOut),
             regionId: widget.property.regionId!,
             propertyId: widget.property.id!);
-
+    setState(() => isLoading = false);
   }
 
   @override
@@ -89,9 +91,7 @@ class _DetailsState extends State<Details> {
     var hotelProvider = context.watch<HotelSearchProvider>();
     return Scaffold(
       backgroundColor: Colors.white,
-      body: hotelProvider.hotelImages.isEmpty ||
-              // hotelProvider.hotelReviews.isEmpty &&
-              hotelProvider.hotelRooms.isEmpty
+      body: isLoading
           ? lottieLoader()
           : WillPopScope(
               child: CustomScrollView(
@@ -111,11 +111,11 @@ class _DetailsState extends State<Details> {
                     ),
                   ),
                   SliverToBoxAdapter(
-                      child: Column(
-                    children: [
-                      returnLayout(),
-                    ],
-                  ),
+                    child: Column(
+                      children: [
+                        returnLayout(),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -845,6 +845,7 @@ Widget hotelRooms(bool show, HotelSearchProvider hotelProvider) {
             ),
             hotelProvider.hotelRooms.isEmpty
                 ? Container(
+                    margin: const EdgeInsets.only(left: 20),
                     child: poppinsText(text: 'No Rooms available !'),
                   )
                 : ListView.builder(
