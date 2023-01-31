@@ -1,10 +1,17 @@
 import 'dart:convert';
-
+import 'dart:math';
 import 'package:http/http.dart' as http;
 
 import '../Constants.dart';
 
 class HotelNetwork {
+
+  hotelsAPIKey(){
+    String k = Constants.rapidAPIKey[Random().nextInt(Constants.rapidAPIKey.length)];
+    print(k);
+    return k;
+  }
+
   hotelSearch(String city) async {
     // Gets regionId to pass to propertiesList() method
     final url = Uri.parse(
@@ -14,7 +21,7 @@ class HotelNetwork {
       url,
       headers: {
         "X-RapidAPI-Host": 'hotels4.p.rapidapi.com',
-        "X-RapidAPI-Key": Constants.rapidAPIKey,
+        "X-RapidAPI-Key": hotelsAPIKey(),
       },
     );
     print('Network hotelSearch().statusCode: ${response.statusCode}');
@@ -54,7 +61,7 @@ class HotelNetwork {
       url,
       headers: {
         "X-RapidAPI-Host": 'hotels4.p.rapidapi.com',
-        "X-RapidAPI-Key": Constants.rapidAPIKey,
+        "X-RapidAPI-Key": hotelsAPIKey(),
         "content-type": "application/json"
       },
       body: json.encode(body),
@@ -96,7 +103,7 @@ class HotelNetwork {
         "month": checkOutDate.month,
         "year": checkOutDate.year
       },
-        "destination": {"regionId": regionId},
+      "destination": {"regionId": regionId},
       "rooms": [
         {"adults": adults}
       ]
@@ -106,7 +113,7 @@ class HotelNetwork {
       url,
       headers: {
         "X-RapidAPI-Host": 'hotels4.p.rapidapi.com',
-        "X-RapidAPI-Key": Constants.rapidAPIKey,
+        "X-RapidAPI-Key": hotelsAPIKey(),
         "content-type": "application/json"
       },
       body: json.encode(body),
@@ -133,7 +140,7 @@ class HotelNetwork {
       url,
       headers: {
         "X-RapidAPI-Host": 'hotels4.p.rapidapi.com',
-        "X-RapidAPI-Key": Constants.rapidAPIKey,
+        "X-RapidAPI-Key": hotelsAPIKey(),
         "content-type": "application/json"
       },
       body: json.encode(body),
@@ -161,7 +168,7 @@ class HotelNetwork {
       url,
       headers: {
         "X-RapidAPI-Host": 'hotels4.p.rapidapi.com',
-        "X-RapidAPI-Key": Constants.rapidAPIKey,
+        "X-RapidAPI-Key": hotelsAPIKey(),
         "content-type": "application/json"
       },
       body: json.encode(body),

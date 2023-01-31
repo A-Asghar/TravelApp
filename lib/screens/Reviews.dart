@@ -36,7 +36,7 @@ class _ReviewsState extends State<Reviews> {
   }
 
   void _scrollListener() async {
-    print(controller.position.extentAfter);
+    // print(controller.position.extentAfter);
     HotelRepository hotelRepository = HotelRepository();
 
     if (!isLoading && controller.position.extentAfter == 0) {

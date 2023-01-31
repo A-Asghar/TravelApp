@@ -978,7 +978,7 @@ Widget hotelRooms(bool show, HotelSearchProvider hotelProvider) {
                                                         .price!
                                                         .lead!
                                                         .amount
-                                                        .toString(),
+                                                        .toStringAsFixed(2),
                                                     color:
                                                         Constants.primaryColor,
                                                     size: 22.0),
