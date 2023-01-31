@@ -4,8 +4,6 @@ import 'package:fyp/Constants.dart';
 import 'package:get/get.dart';
 
 import '../../widgets/customTextField.dart';
-import '../../widgets/filterView.dart';
-import '../Details.dart';
 
 
 class VacationSearchResults extends StatefulWidget {

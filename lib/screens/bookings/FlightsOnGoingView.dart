@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../Constants.dart';
 import '../../widgets/poppinsText.dart';
-import '../../widgets/tealButton.dart';
 import '../Profile.dart';
 import 'CancelBookingScreen.dart';
 

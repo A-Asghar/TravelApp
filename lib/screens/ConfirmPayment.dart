@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import 'package:fyp/widgets/card_view.dart';
 import 'package:fyp/widgets/tealButton.dart';
+import 'package:get/get.dart';
 
 class ConfirmPaymentScreen extends StatefulWidget {
   const ConfirmPaymentScreen({Key? key}) : super(key: key);

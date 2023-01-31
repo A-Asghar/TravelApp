@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:fyp/screens/bookings/FlightsOnGoingView.dart';
-import 'package:fyp/screens/bookings/VacationsOnGoingView.dart';
-import 'package:fyp/screens/bookings/VacationsCompletedView.dart';
 import 'package:fyp/screens/bookings/VacationsCanceledView.dart';
-
-import 'package:fyp/screens/bookings/FlightsCompletedView.dart';
-import 'package:fyp/screens/bookings/FlightsCanceledView.dart';
+import 'package:fyp/screens/bookings/VacationsCompletedView.dart';
+import 'package:fyp/screens/bookings/VacationsOnGoingView.dart';
+import 'package:get/get.dart';
 
 import '../../Constants.dart';
 import '../../widgets/poppinsText.dart';
-import 'CanceledView.dart';
-import 'CompletedView.dart';
-import 'OnGoingView.dart';
 
 class VacationsBookings extends StatefulWidget {
   const VacationsBookings({Key? key}) : super(key: key);

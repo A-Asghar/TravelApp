@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:http/http.dart' as http;
 
 import '../Constants.dart';
 
 class HotelNetwork {
-
-  hotelsAPIKey(){
-    String k = Constants.rapidAPIKey[Random().nextInt(Constants.rapidAPIKey.length)];
-    print(k);
-    return k;
+  hotelsAPIKey() {
+    return Constants
+        .rapidAPIKey[Random().nextInt(Constants.rapidAPIKey.length)];
   }
 
   hotelSearch(String city) async {
