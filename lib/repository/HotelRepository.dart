@@ -39,22 +39,34 @@ class HotelRepository {
       adults: adults,
     );
 
+    String errorMessage = '';
     response2 = jsonDecode(response2);
-    var data = response2['data']['propertySearch']['propertySearchListings'];
-
+    if (response2.containsKey('errors')) {
+      // print('HotelRepository response2.containsKey(errors): ${response2.containsKey('errors')}');
+      errorMessage = response2['errors'][0]['extensions']['event']['message'];
+    }
+    // print('response2.runtimeType: ${response2.runtimeType}');
+    // print('response2.containsKey: ${response2.containsKey('errors')}');
+    // print('response2.errorMessage: ${response2['errors'][0]['extensions']['event']['message']}');
+    var data;
     List<PropertySearchListing> hotels = [];
-    data.forEach((d) {
-      if (d['__typename'] == 'Property') {
-        hotels.add(PropertySearchListing.fromJson(d));
-      }
-    });
 
+    try {
+      data = response2['data']['propertySearch']['propertySearchListings'];
+      data.forEach((d) {
+        if (d['__typename'] == 'Property') {
+          hotels.add(PropertySearchListing.fromJson(d));
+        }
+      });
+    } catch (e) {}
+
+    // print('HotelRepository errorMessage: $errorMessage}');
     // for (int i = 0; i < 6; i++) {
     //   print(hotels[i].id! + ' ' + hotels[i].name!);
     // }
     // print("Hotels: ${hotels.length}");
     // print("Hotels: ${regionId}");
-    return [hotels, regionId];
+    return [hotels, regionId, errorMessage];
   }
 
   getOffers(
@@ -135,7 +147,7 @@ class HotelRepository {
     return [images, address, coordinates, amenities, description];
   }
 
-  reviews({required String propertyId, startingIndex=0}) async {
+  reviews({required String propertyId, startingIndex = 0}) async {
     // TODO: implement params into method
 
     var response = await network.reviews(

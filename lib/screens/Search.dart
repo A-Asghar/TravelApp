@@ -636,6 +636,7 @@ class _HotelLayoutState extends State<HotelLayout> {
 
     context.read<HotelSearchProvider>().hotels = response[0];
     context.read<HotelSearchProvider>().regionId = response[1];
+    context.read<HotelSearchProvider>().errorMessage = response[2];
   }
 }
 

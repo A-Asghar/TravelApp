@@ -103,10 +103,17 @@ class HotelSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  clearHotelDetail(){
+  clearHotelDetail() {
     _hotelRooms = [];
     _hotelReviews = [];
     _hotelImages = [];
+    notifyListeners();
+  }
+
+  String _errorMessage = '';
+  String get errorMessage => _errorMessage;
+  set errorMessage(e) {
+    _errorMessage = e;
     notifyListeners();
   }
 }

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/repository/PackageRepository.dart';
 import 'package:fyp/screens/AddPackage.dart';
 import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/Profile.dart';
@@ -189,6 +190,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     // Navigator.of(context).push(MaterialPageRoute(
                     //   builder: (context) => WeatherScreen(),
                     // ));
+                    // PackageRepository p = PackageRepository();
+                    // p.makePackageBooking(
+                    //     travelerId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
+                    //     travelAgencyId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
+                    //     packageId: '024201636');
                   },
                   child: Text('API Test')),
               ElevatedButton(

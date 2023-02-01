@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fyp/models/PackageBooking.dart';
 
 import '../models/Package.dart';
 
 class PackageNetwork {
   CollectionReference packages =
       FirebaseFirestore.instance.collection('packages');
+  CollectionReference packageBookings =
+      FirebaseFirestore.instance.collection('packageBookings');
   addPackage({required Package package}) async {
     await packages.doc(package.packageId).set({
       "packageId": package.packageId,
@@ -19,7 +22,7 @@ class PackageNetwork {
       "adults": package.adults,
       "travelAgencyId": package.travelAgencyId,
       "hotelPropertyId": package.hotelPropertyId,
-      "dayWiseDetails":package.dayWiseDetails
+      "dayWiseDetails": package.dayWiseDetails
     });
   }
 
@@ -46,7 +49,23 @@ class PackageNetwork {
       "adults": package.adults,
       "travelAgencyId": package.travelAgencyId,
       "hotelPropertyId": package.hotelPropertyId,
-      "dayWiseDetails":package.dayWiseDetails
+      "dayWiseDetails": package.dayWiseDetails
     });
+  }
+
+  makePackageBooking({required PackageBooking packageBooking}) async {
+    await packageBookings.doc(packageBooking.bookingId).set({
+      "bookingId": packageBooking.bookingId,
+      "bookingDate": packageBooking.bookingDate,
+      "travelerId": packageBooking.travelerId,
+      "travelAgencyId": packageBooking.travelAgencyId,
+      "packageId": packageBooking.packageId
+    });
+  }
+
+  getTravelerBooking({required travelerId}) async {
+    return await packageBookings
+        .where('travelerId', isEqualTo: travelerId)
+        .get();
   }
 }

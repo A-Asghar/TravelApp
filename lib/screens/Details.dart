@@ -5,6 +5,7 @@ import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';
+import 'package:fyp/widgets/errorSnackBar.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -62,6 +63,7 @@ class _DetailsState extends State<Details> {
 
   bool isLoading = false;
   callHotelInfo() async {
+    var s = DateTime.now();
     setState(() => isLoading = true);
     HotelRepository hotelRepository = HotelRepository();
     List detailResponse =
@@ -84,6 +86,10 @@ class _DetailsState extends State<Details> {
             regionId: widget.property.regionId!,
             propertyId: widget.property.id!);
     setState(() => isLoading = false);
+    var e = DateTime.now();
+    print(e.difference(s).inSeconds);
+    print(
+        'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
   }
 
   @override
@@ -157,6 +163,8 @@ class HotelLayout extends StatefulWidget {
 class _HotelLayoutState extends State<HotelLayout> {
   @override
   Widget build(BuildContext context) {
+    // print(widget.property.id);
+    // print(context.read<HotelSearchProvider>().regionId);
     var hotelProvider = context.read<HotelSearchProvider>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,7 +192,7 @@ class _HotelLayoutState extends State<HotelLayout> {
                 ),
               ),
               const SizedBox(width: 8),
-              Container(
+              SizedBox(
                   width: MediaQuery.of(context).size.width * 0.82,
                   child: poppinsText(text: hotelProvider.address, size: 16.0)),
             ],
@@ -424,8 +432,18 @@ class _HotelLayoutState extends State<HotelLayout> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        poppinsText(
-                                            text: 'Anonymous', size: 16.0),
+                                        SizedBox(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.5,
+                                          child: poppinsText(
+                                              text: hotelProvider
+                                                      .hotelReviews[i]
+                                                      .stayDuration ??
+                                                  'Anonymous',
+                                              size: 16.0),
+                                        ),
                                         const SizedBox(height: 5),
                                         poppinsText(
                                             text: hotelProvider.hotelReviews[i]
@@ -918,15 +936,19 @@ Widget hotelRooms(bool show, HotelSearchProvider hotelProvider) {
                                             ),
                                           )
                                         : Container(),
-                                    poppinsText(
-                                        text: hotelProvider
-                                            .hotelRooms[index].header!.text,
-                                        size: 18.0,
-                                        fontBold: FontWeight.w500),
-                                    poppinsText(
-                                        text: 'Show details',
-                                        color: Constants.primaryColor,
-                                        size: 14.0),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10, horizontal: 10),
+                                      child: poppinsText(
+                                          text: hotelProvider
+                                              .hotelRooms[index].header!.text,
+                                          size: 18.0,
+                                          fontBold: FontWeight.w500),
+                                    ),
+                                    // poppinsText(
+                                    //     text: 'Show details',
+                                    //     color: Constants.primaryColor,
+                                    //     size: 14.0),
                                     Card(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -938,37 +960,80 @@ Widget hotelRooms(bool show, HotelSearchProvider hotelProvider) {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            poppinsText(
-                                                text: 'Room Only',
-                                                fontBold: FontWeight.w500,
-                                                size: 18.0),
-                                            poppinsText(
-                                                text: 'Double Room, Balcony',
-                                                color: Constants.secondaryColor,
-                                                size: 14.0),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.arrow_right,
+                                                  color: Colors.red,
+                                                ),
+                                                poppinsText(
+                                                    text: hotelProvider
+                                                            .hotelRooms[index]
+                                                            .ratePlans![0]
+                                                            .priceDetails![0]
+                                                            .availability
+                                                            ?.scarcityMessage ??
+                                                        'Sold Out',
+                                                    fontBold: FontWeight.w400,
+                                                    color: Colors.red,
+                                                    size: 18.0),
+                                              ],
+                                            ),
+                                            // poppinsText(
+                                            //     text: 'Double Room, Balcony',
+                                            //     color: Constants.secondaryColor,
+                                            //     size: 14.0),
                                             Row(
                                               children: [
                                                 const Icon(
                                                   Icons.info,
                                                   color: Colors.amber,
                                                 ),
-                                                poppinsText(
-                                                    text: ' Non-refundable',
-                                                    color: Colors.amber)
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 5),
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.8,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      errorSnackBar(
+                                                          context,
+                                                          hotelProvider
+                                                                  .hotelRooms[
+                                                                      index]
+                                                                  .ratePlans![0]
+                                                                  .highlightedMessages![
+                                                                      0]
+                                                                  .content!
+                                                                  .join(' ') ??
+                                                              '');
+                                                    },
+                                                    child: poppinsText(
+                                                        text: hotelProvider
+                                                            .hotelRooms[index]
+                                                            .ratePlans![0]
+                                                            .priceDetails![0]
+                                                            .cancellationPolicy
+                                                            ?.type,
+                                                        color: Colors.amber),
+                                                  ),
+                                                )
                                               ],
                                             ),
-                                            Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.info,
-                                                  color: Constants.primaryColor,
-                                                ),
-                                                poppinsText(
-                                                    text: ' Free-cancellation',
-                                                    color:
-                                                        Constants.primaryColor)
-                                              ],
-                                            ),
+                                            // Row(
+                                            //   children: [
+                                            //     const Icon(
+                                            //       Icons.info,
+                                            //       color: Constants.primaryColor,
+                                            //     ),
+                                            //     poppinsText(
+                                            //         text: ' Free-cancellation',
+                                            //         color:
+                                            //             Constants.primaryColor)
+                                            //   ],
+                                            // ),
                                             Row(
                                               children: [
                                                 poppinsText(

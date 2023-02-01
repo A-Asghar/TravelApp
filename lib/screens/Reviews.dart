@@ -48,10 +48,9 @@ class _ReviewsState extends State<Reviews> {
       setState(() {
         context.read<HotelSearchProvider>().hotelReviews.addAll(reviews);
       });
-      // if (controller.position.extentAfter == 0) {
-      //
-      // }
+
     }
+    // print('Reviews.hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
   }
 
   @override
@@ -108,69 +107,57 @@ class _ReviewsState extends State<Reviews> {
               itemCount: hotelProvider.hotelReviews.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    child: Row(
-                                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        poppinsText(
-                                          text: 'Anonymous',
-                                          color: Constants.primaryColor,
-                                          size: 16.0,
-                                        ),
-                                        const Spacer(),
-                                        ratingCard(
-                                            hotelProvider
-                                                .hotelReviews[index]
-                                                .reviewScoreWithDescription!
-                                                .value!
-                                                .split(' ')
-                                                .first,
-                                            Constants.primaryColor),
-                                      ],
+                  padding:
+                      const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: poppinsText(
+                                          text: hotelProvider
+                                                  .hotelReviews[index]
+                                                  .stayDuration ??
+                                              'Anonymous',
+                                          size: 16.0),
                                     ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  poppinsText(
-                                    text:
-                                        hotelProvider.hotelReviews[index].title,
-                                    size: 16.0,
-                                  ),
-                                  const SizedBox(height: 5),
-                                  poppinsText(
-                                    text: hotelProvider.hotelReviews[index]
-                                        .submissionTimeLocalized
-                                        .toString(),
-                                    size: 12.0,
-                                  )
-                                ],
-                              ),
-                              const Expanded(child: SizedBox()),
-                            ],
-                          ),
-                          const SizedBox(height: 15),
-                          poppinsText(
-                            text: hotelProvider.hotelReviews[index].text,
-                            size: 14.0,
-                          )
-                        ],
+                                    const SizedBox(height: 5),
+                                    poppinsText(
+                                        text: hotelProvider.hotelReviews[index]
+                                            .submissionTimeLocalized,
+                                        size: 12.0)
+                                  ],
+                                ),
+                                const Expanded(child: SizedBox()),
+                                ratingCard(
+                                    hotelProvider.hotelReviews[index]
+                                        .reviewScoreWithDescription!.value!
+                                        .split(' ')
+                                        .first,
+                                    Constants.primaryColor),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            poppinsText(
+                                text: hotelProvider.hotelReviews[index].text,
+                                size: 14.0)
+                          ],
+                        ),
                       ),
                     ),
                   ),
