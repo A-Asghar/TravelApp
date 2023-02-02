@@ -13,12 +13,12 @@ class CustomTextField extends StatefulWidget {
 
   const CustomTextField(
       {Key? key,
-        required this.hintText,
-        required this.textFieldController,
-        required this.prefix,
-        required this.sufix,
-        this.hideText = false,
-        this.keyboardType = TextInputType.text})
+      required this.hintText,
+      required this.textFieldController,
+      required this.prefix,
+      required this.sufix,
+      this.hideText = false,
+      this.keyboardType = TextInputType.text})
       : super(key: key);
 
   @override
@@ -66,5 +66,4 @@ class _CustomTextFieldState extends State<CustomTextField> {
       ),
     );
   }
-
 }

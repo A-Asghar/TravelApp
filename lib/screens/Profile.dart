@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/screens/EditProfile.dart';
+import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
 
 import '../Constants.dart';
+import '../providers/UserProvider.dart';
+import '../widgets/customButton.dart';
+import '../widgets/poppinsText.dart';
+import 'Home2.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -11,6 +17,8 @@ class Profile extends StatefulWidget {
   @override
   State<Profile> createState() => _ProfileState();
 }
+
+final UserProvider controller = Get.put(UserProvider());
 
 class _ProfileState extends State<Profile> {
   @override
@@ -29,11 +37,10 @@ class _ProfileState extends State<Profile> {
                   Text(
                     "Profile",
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                    ),
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                        ),
                   ),
-
                 ],
               ),
               Expanded(
@@ -56,40 +63,47 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Text(
-                          "Ali Asghar",
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                          ),
+
+                        // Name
+                        poppinsText(
+                          text: controller.user?.name ?? "Ali Asghar",
+                          size: 24.0,
+                          fontBold: FontWeight.w700,
                         ),
                         const SizedBox(height: 10),
-                        Text(
-                          "ali_asghar@yourdomain.com",
-                          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 14,
-                          ),
-                        ),
-                        const Divider(color: Color(0xffEEEEEE)),
+
+                        // Email
+                        poppinsText(
+                            text: controller.user?.email ??
+                                "ali_asghar@yourdomain.com",
+                            size: 14.0),
+                        const Divider(color: Constants.secondaryColor),
                         const SizedBox(height: 20),
+
+                        // Edit Profile
                         rowData(
                           'assets/images/profile.svg',
                           "Edit Profile",
-                              () {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context)=> EditProfile()));
+                          () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const EditProfile()));
                           },
                         ),
                         const SizedBox(height: 30),
+
+                        // Payment
                         rowData(
                           'assets/images/Wallet.svg',
                           "Payment",
-                              () {},
+                          () {},
                         ),
                         const SizedBox(height: 30),
+
+                        // Notification
                         rowData(
                           'assets/images/Notification.svg',
                           "Notifications",
-                              () {
+                          () {
                             // Get.to(
                             //   const NotificationScreen(),
                             //   transition: Transition.rightToLeft,
@@ -97,10 +111,12 @@ class _ProfileState extends State<Profile> {
                           },
                         ),
                         const SizedBox(height: 30),
+
+                        // Security
                         rowData(
                           'assets/images/sheildDone.svg',
                           "Security",
-                              () {
+                          () {
                             // Get.to(
                             //   const SecurityScreen(),
                             //   transition: Transition.rightToLeft,
@@ -108,17 +124,20 @@ class _ProfileState extends State<Profile> {
                           },
                         ),
                         const SizedBox(height: 30),
+
+                        // Help
                         rowData(
                           'assets/images/infoSquare.svg',
                           "Help",
-                              () {},
+                          () {},
                         ),
                         const SizedBox(height: 30),
 
+                        // Logout
                         rowData(
                           'assets/images/Logout.svg',
                           "Logout",
-                              () {
+                          () {
                             Get.bottomSheet(
                               Container(
                                 height: 300,
@@ -131,51 +150,45 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                                 child: Padding(
-                                  padding:
-                                  const EdgeInsets.only(left: 20, right: 20),
+                                  padding: const EdgeInsets.only(
+                                      left: 20, right: 20),
                                   child: Column(
                                     children: [
                                       const SizedBox(height: 20),
-                                      Text(
-                                        "Logout",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1!
-                                            .copyWith(
-                                          fontSize: 24,
+                                      poppinsText(
+                                          text: "Logout",
+                                          size: 24.0,
                                           color: const Color(0xffF75555),
-                                        ),
-                                      ),
+                                          fontBold: FontWeight.w500),
                                       const SizedBox(height: 20),
-                                      const Divider(color: Color(0xffEEEEEE)),
+                                      const Divider(
+                                          color: Constants.secondaryColor),
                                       const SizedBox(height: 20),
-                                      Text(
-                                        "Are you sure you want to log out?",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1!
-                                            .copyWith(
-                                          fontSize: 20,
-                                        ),
+                                      poppinsText(
+                                        text:
+                                            "Are you sure you want to log out?",
+                                        size: 20.0,
                                       ),
                                       const SizedBox(height: 30),
                                       CustomButton(
                                         text: "Yes, Logout",
                                         onTap: () {
-                                          // Get.offAll(
-                                          //   const WelcomeScreen(),
-                                          //   transition: Transition.rightToLeft,
-                                          // );
-                                          // Get.offAll(
-                                          //   const LoginScreen(),
-                                          //   transition: Transition.rightToLeft,
-                                          // );
+                                          Get.offAll(
+                                            const Home2(),
+                                            transition: Transition.rightToLeft,
+                                          );
+                                          Get.offAll(
+                                            const Login(),
+                                            transition: Transition.rightToLeft,
+                                          );
+                                          FirebaseAuth.instance.signOut();
                                         },
                                       ),
                                       const SizedBox(height: 15),
                                       CustomButton(
                                         text: "Cancel",
-                                        bgColor: Constants.primaryColor.withOpacity(0.1),
+                                        bgColor: Constants.primaryColor
+                                            .withOpacity(0.1),
                                         textColor: Constants.primaryColor,
                                         onTap: () {
                                           Navigator.pop(context);
@@ -221,79 +234,16 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           const SizedBox(width: 16),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              fontSize: 18,
-              color: text == "Logout"
-                  ? const Color(0xffF75555)
-                  : Theme.of(context).textTheme.bodyText1!.color,
-            ),
-          ),
+          poppinsText(
+              text: text,
+              size: 18.0,
+              color: text == "Logout" ? Colors.redAccent : Colors.black87,
+              fontBold: FontWeight.w400),
           const Expanded(child: SizedBox()),
-          // text == "Dark Theme"
-          //     ? SizedBox(
-          //   height: 5,
-          //   child: CupertinoSwitch(
-          //     onChanged: (bool value) {
-          //       setState(() {
-          //         profileController.isDark.value = value;
-          //
-          //         if (value == true) {
-          //           changeColor(dark);
-          //         } else {
-          //           changeColor(light);
-          //         }
-          //       });
-          //     },
-          //     value: profileController.isDark.value,
-          //   ),
-          // )
-          //     : const SizedBox(),
         ],
       ),
     );
   }
 }
-class CustomButton extends StatelessWidget {
-  final String text;
-  final Color? bgColor;
-  final Color? textColor;
-  final VoidCallback onTap;
-  const CustomButton(
-      {Key? key,
-        required this.text,
-        this.bgColor,
-        this.textColor,
-        required this.onTap})
-      : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          height: 50,
-          // width: Get.width,
-          decoration: BoxDecoration(
-            color: bgColor ?? Constants.primaryColor,
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: Center(
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: textColor ?? Colors.white,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+

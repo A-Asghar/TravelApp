@@ -11,13 +11,14 @@ class TealButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
+      margin: const EdgeInsets.symmetric(vertical: 20),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
             fixedSize: Size(MediaQuery.of(context).size.width * 0.85, 50),
             backgroundColor: Constants.primaryColor),
         onPressed: onPressed,
-        child: poppinsText(text: text, color: Colors.white,fontBold: FontWeight.w500),
+        child: poppinsText(
+            text: text, color: Colors.white, fontBold: FontWeight.w500),
       ),
     );
   }

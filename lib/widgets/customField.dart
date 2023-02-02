@@ -10,10 +10,10 @@ class CustomField extends StatelessWidget {
   final TextInputType keyboardType;
   const CustomField(
       {Key? key,
-        required this.hintText,
-        required this.textFieldController,
-        required this.sufix,
-        this.keyboardType = TextInputType.text})
+      required this.hintText,
+      required this.textFieldController,
+      required this.sufix,
+      this.keyboardType = TextInputType.text})
       : super(key: key);
 
   @override
@@ -25,8 +25,8 @@ class CustomField extends StatelessWidget {
         keyboardType: keyboardType,
         controller: textFieldController,
         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-          fontSize: 14,
-        ),
+              fontSize: 14,
+            ),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.only(top: 15, left: 16),
           fillColor: Constants.secondaryColor.withOpacity(0.05),
@@ -46,9 +46,9 @@ class CustomField extends StatelessWidget {
             ),
           ),
           hintStyle: Theme.of(context).textTheme.bodyText1!.copyWith(
-            color: const Color(0xff9E9E9E),
-            fontSize: 14,
-          ),
+                color: const Color(0xff9E9E9E),
+                fontSize: 14,
+              ),
         ),
       ),
     );

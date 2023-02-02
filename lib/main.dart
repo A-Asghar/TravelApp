@@ -3,16 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/PackageRepository.dart';
+import 'package:fyp/repository/WeatherRepository.dart';
+import 'package:fyp/screens/AddNewCard.dart';
 import 'package:fyp/screens/AddPackage.dart';
+import 'package:fyp/screens/BoardingPass.dart';
+import 'package:fyp/screens/BottomNavBar.dart';
+import 'package:fyp/screens/ConfirmPayment.dart';
+import 'package:fyp/screens/EditProfile.dart';
 import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/Profile.dart';
 import 'package:fyp/screens/Search.dart';
-import 'package:fyp/screens/UserDetails.dart';
+import 'package:fyp/screens/TicketScreen.dart';
+import 'package:fyp/screens/WeatherScreen.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
+
+import 'Constants.dart';
+import 'models/Weather.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -162,13 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Profile')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => UserDetails(),
-                    ));
-                  },
-                  child: Text('Passenger Details')),
+
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -178,17 +182,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('Bookings')),
               ElevatedButton(
                   onPressed: () async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => TicketScreen(),
+                    ));
                     // HotelRepository h = HotelRepository();
                     // h.detail();
                     // h.reviews();
                     // WeatherRepository w = WeatherRepository();
-                    //
+
                     // Weather weather = await w.getWeather(
                     //     q: 'Karachi',
                     //     dt: Constants.convertDate(DateTime(DateTime.now().year,
                     //         DateTime.now().month + 1, DateTime.now().day)));
                     // Navigator.of(context).push(MaterialPageRoute(
-                    //   builder: (context) => WeatherScreen(),
+                    //   builder: (context) => WeatherScreen(
+                    //       q: 'Karachi',
+                    //       dt: Constants.convertDate(DateTime(
+                    //           DateTime.now().year,
+                    //           DateTime.now().month + 1,
+                    //           DateTime.now().day))),
                     // ));
                     // PackageRepository p = PackageRepository();
                     // p.makePackageBooking(

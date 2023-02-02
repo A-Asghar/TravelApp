@@ -8,6 +8,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../Constants.dart';
 import '../../models/Flight.dart';
+import '../../widgets/customButton.dart';
 import '../WeatherScreen.dart';
 
 class FlightDetails extends StatefulWidget {

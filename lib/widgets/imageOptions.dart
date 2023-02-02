@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fyp/widgets/reusableSelectPhotoButton.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class SelectPhotoOptionsScreen extends StatelessWidget {
   final Function(ImageSource source) onTap;
   const SelectPhotoOptionsScreen({
@@ -13,7 +12,6 @@ class SelectPhotoOptionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.grey.shade300,
       padding: const EdgeInsets.all(20),
       child: Stack(
         alignment: AlignmentDirectional.topCenter,

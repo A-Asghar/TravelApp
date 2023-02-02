@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget signInTextField({labelText, keyboardType = TextInputType.text, obscureText = false}) {
+Widget signInTextField(
+    {labelText, keyboardType = TextInputType.text, obscureText = false}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 10),
     child: TextField(

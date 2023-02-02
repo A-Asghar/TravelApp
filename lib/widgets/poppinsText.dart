@@ -8,6 +8,7 @@ Widget poppinsText(
     Color color = Colors.black}) {
   return Text(
     text,
-    style: GoogleFonts.poppins(fontSize: size, fontWeight: fontBold, color: color),
+    style:
+        GoogleFonts.poppins(fontSize: size, fontWeight: fontBold, color: color),
   );
 }

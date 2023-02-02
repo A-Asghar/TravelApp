@@ -171,8 +171,6 @@ Future _selectDate(BuildContext context, String date) async {
           Constants.convertDate(selectedDate);
     }
   }
-
-  // return selectedDate;
 }
 
 Widget checkin_checkout_textfield(
@@ -491,7 +489,6 @@ class _FlightLayoutState extends State<FlightLayout> {
                 context.read<FlightSearchProvider>().to.city == '') {
               errorSnackBar(context, 'You haven\'t selected a city');
               return;
-              // searchFlight(flightTrips);
             }
 
             if (!returnDateSelected) {

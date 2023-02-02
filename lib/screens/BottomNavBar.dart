@@ -16,20 +16,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
   var _currentIndex = 0;
   late PageController _pageController;
   List<Widget> tabPages = [
-    Home2(),
-    Bookings(),
-    Profile(),
+    const Home2(),
+    const Bookings(),
+    const Profile(),
   ];
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
   }
+
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,35 +40,37 @@ class _BottomNavBarState extends State<BottomNavBar> {
           onTap: onTabTapped,
           items: [
             SalomonBottomBarItem(
-              icon: Icon(Icons.home),
-              title: Text("Home"),
+              icon: const Icon(Icons.home),
+              title: const Text("Home"),
               selectedColor: Colors.teal,
             ),
             SalomonBottomBarItem(
-              icon: Icon(Icons.library_books),
-              title: Text("Bookings"),
+              icon: const Icon(Icons.library_books),
+              title: const Text("Bookings"),
               selectedColor: Colors.teal,
             ),
             SalomonBottomBarItem(
-              icon: Icon(Icons.person),
-              title: Text("Profile"),
+              icon: const Icon(Icons.person),
+              title: const Text("Profile"),
               selectedColor: Colors.teal,
             ),
           ]),
       body: PageView(
-        children: tabPages,
         onPageChanged: onPageChanged,
         controller: _pageController,
+        children: tabPages,
       ),
     );
   }
 
   void onPageChanged(int page) {
     setState(() {
-      this._currentIndex = page;
+      _currentIndex = page;
     });
   }
+
   void onTabTapped(int index) {
-    this._pageController.animateToPage(index,duration: const Duration(milliseconds: 500),curve: Curves.easeInOut);
+    _pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 }

@@ -1,6 +1,5 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:fyp/screens/Home2.dart';
 
 import '../Constants.dart';
 import '../widgets/poppinsText.dart';
@@ -26,7 +25,7 @@ class _BoardingPassState extends State<BoardingPass> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: Theme.of(context).textTheme.bodyText1!.color!,
           ),
         ),
@@ -40,42 +39,40 @@ class _BoardingPassState extends State<BoardingPass> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: ListView(
+            Expanded(
+                child: ListView(
               children: [
                 Row(
                   children: <Widget>[
                     Container(
                       height: 100.0,
                       width: 100.0,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.fill,
-                          image: AssetImage("assets/images/d7.png"),
+                          image: AssetImage("assets/images/user.png"),
                         ),
                       ),
                     ),
-
-                       Column(
-                        children: [
-                          poppinsText(
-                              text: 'Abdullah \n Amin ',
-                              size: 16.0,
-                              fontBold: FontWeight.w500),
-                          poppinsText(
-                            text: 'passenger',
-                            color: Constants.secondaryColor,
-                          )
-
-                        ],
-                      ),
-                    SizedBox(height: 100,),
+                    Column(
+                      children: [
+                        poppinsText(
+                            text: 'Abdullah \nAmin ',
+                            size: 16.0,
+                            fontBold: FontWeight.w500),
+                      ],
+                    ),
+                    const SizedBox(height: 100),
                   ],
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 const Divider(color: Colors.black),
                 Card(
-                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15)),
@@ -84,9 +81,8 @@ class _BoardingPassState extends State<BoardingPass> {
                       Container(
                         margin: const EdgeInsets.only(left: 10),
                         child: Row(
-                          mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-
                             // Flight Carrier
                             Container(
                               margin: const EdgeInsets.only(top: 10),
@@ -100,7 +96,8 @@ class _BoardingPassState extends State<BoardingPass> {
                             // Trip Duration
                             Container(
                               alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
                               child: poppinsText(
                                 text: '2 hrs',
                                 // text: '${Constants.minutesToDuration(flight.segments.last.arrival.at.difference(flight.segments[0].departure.at).inMinutes)}',
@@ -111,17 +108,19 @@ class _BoardingPassState extends State<BoardingPass> {
                         ),
                       ),
 
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal:10),
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children:[
-
-
+                            children: [
                               // Departure Time
-                              poppinsText(text: '15:00',
-                                  size: 22.0,fontBold: FontWeight.w400),
+                              poppinsText(
+                                  text: '15:00',
+                                  size: 22.0,
+                                  fontBold: FontWeight.w400),
                               const Expanded(
                                 child: Divider(
                                   color: Constants.secondaryColor,
@@ -133,83 +132,92 @@ class _BoardingPassState extends State<BoardingPass> {
                               // Airplane Icon
                               Transform.rotate(
                                 angle: 90 * 3.1415 / 180,
-                                child: const Icon(Icons.flight,color: Constants.primaryColor,size: 25,),
+                                child: const Icon(
+                                  Icons.flight,
+                                  color: Constants.primaryColor,
+                                  size: 25,
+                                ),
                               ),
 
                               const Expanded(
                                   child: Divider(
-                                    color: Constants.secondaryColor,
-                                    indent: 10,
-                                    endIndent: 20,
-                                  )),
+                                color: Constants.secondaryColor,
+                                indent: 10,
+                                endIndent: 20,
+                              )),
 
                               // Arrival Time
-                              poppinsText(text: '17:00',
-                                  size: 22.0,fontBold: FontWeight.w400),
-                            ]
-                        ),
+                              poppinsText(
+                                  text: '17:00',
+                                  size: 22.0,
+                                  fontBold: FontWeight.w400),
+                            ]),
                       ),
 
-
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal:10),
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
-                          mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            poppinsText(text:'Khi',
-                                color: Constants.secondaryColor),
-                            poppinsText(text:'Dubai',
-                                color: Constants.secondaryColor),
+                            poppinsText(
+                                text: 'Khi', color: Constants.secondaryColor),
+                            poppinsText(
+                                text: 'Dubai', color: Constants.secondaryColor),
                           ],
                         ),
                       ),
 
-
-                      // Number of connecting Flights
-                      //connectingFlightsWidget(connectingFlights),
                       const SizedBox(height: 10),
-
 
                       Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         child: Row(
                           children: [
-
                             // Flight Class
                             Row(
                               children: [
-                                const Icon(Icons.event_seat,color: Constants.secondaryColor,size: 15,),
+                                const Icon(
+                                  Icons.event_seat,
+                                  color: Constants.secondaryColor,
+                                  size: 15,
+                                ),
                                 const SizedBox(width: 5),
-                                poppinsText(text: 'cabin', color: Constants.secondaryColor, size: 14.0, fontBold: FontWeight.w500)
+                                poppinsText(
+                                    text: 'ECONOMY',
+                                    color: Constants.secondaryColor,
+                                    size: 14.0,
+                                    fontBold: FontWeight.w500)
                               ],
                             ),
 
                             const Spacer(),
 
-                            poppinsText(text: 'Date',color: Constants.secondaryColor),
-                            const SizedBox(width: 10,),
+                            poppinsText(
+                                text: 'Date', color: Constants.secondaryColor),
+                            const SizedBox(
+                              width: 10,
+                            ),
                             // Trip Price
                             poppinsText(
-                                text: '17/07/2022 ',
-                                color: Colors.black,
-                                fontBold: FontWeight.w600,
-                                size: 20.0),
+                              text: '17/07/2022 ',
+                              color: Constants.secondaryColor,
+                              fontBold: FontWeight.w500,
+                            ),
                           ],
                         ),
                       )
                     ],
                   ),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(height: 10),
                 const Divider(color: Colors.black),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(height: 10,),
+                    const SizedBox(height: 10),
                     Column(
                       children: [
-
                         poppinsText(
                           text: 'Flight',
                           color: Constants.secondaryColor,
@@ -218,40 +226,30 @@ class _BoardingPassState extends State<BoardingPass> {
                             text: 'IN 230 ',
                             size: 16.0,
                             fontBold: FontWeight.w500),
-
                       ],
                     ),
                     Column(
                       children: [
-
                         poppinsText(
                           text: 'Gate',
                           color: Constants.secondaryColor,
                         ),
                         poppinsText(
-                            text: '22',
-                            size: 16.0,
-                            fontBold: FontWeight.w500),
-
+                            text: '22', size: 16.0, fontBold: FontWeight.w500),
                       ],
                     ),
                     Column(
                       children: [
-
                         poppinsText(
                           text: 'Seat',
                           color: Constants.secondaryColor,
                         ),
                         poppinsText(
-                            text: '2B',
-                            size: 16.0,
-                            fontBold: FontWeight.w500),
-
+                            text: '2B', size: 16.0, fontBold: FontWeight.w500),
                       ],
                     ),
                     Column(
                       children: [
-
                         poppinsText(
                           text: 'Class',
                           color: Constants.secondaryColor,
@@ -260,19 +258,24 @@ class _BoardingPassState extends State<BoardingPass> {
                             text: 'Economy',
                             size: 16.0,
                             fontBold: FontWeight.w500),
-
                       ],
                     ),
-                    const SizedBox(height: 10,),
+                    const SizedBox(height: 10),
                   ],
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(height: 10),
                 const Divider(color: Colors.black),
               ],
             )),
-            TealButton(
-              text: "Back to home",
-              onPressed: () {},
+            Center(
+              child: TealButton(
+                text: "Back to home",
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Home2(),
+                  ));
+                },
+              ),
             ),
             const SizedBox(height: 20),
           ],
@@ -289,15 +292,15 @@ class _BoardingPassState extends State<BoardingPass> {
           Text(
             text1,
             style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              fontSize: 16,
-              color: const Color(0xff757575),
-            ),
+                  fontSize: 16,
+                  color: const Color(0xff757575),
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             text2,
             style:
-            Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16),
+                Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16),
           ),
         ],
       ),

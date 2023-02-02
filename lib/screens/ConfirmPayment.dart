@@ -23,7 +23,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: Theme.of(context).textTheme.bodyText1!.color,
           ),
         ),
@@ -47,11 +47,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                       const SizedBox(height: 20),
                       Container(
                         decoration: BoxDecoration(
-                          color:
-                          // AppTheme.isLightTheme == true
-                          //     ? Colors.white
-                          //     :
-                          Colors.white,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -70,7 +66,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Start day",
@@ -78,8 +74,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 16,
-                                          ),
+                                                fontSize: 16,
+                                              ),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
@@ -88,8 +84,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 16,
-                                          ),
+                                                fontSize: 16,
+                                              ),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
@@ -98,8 +94,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 16,
-                                          ),
+                                                fontSize: 16,
+                                              ),
                                         ),
                                         const SizedBox(height: 20),
                                       ],
@@ -108,7 +104,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "December 16, 2024",
@@ -146,12 +142,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                       const SizedBox(height: 20),
                       Container(
                         decoration: BoxDecoration(
-                          color:
-
-                          // AppTheme.isLightTheme == true
-                          //     ? Colors.white
-                          //     :
-                          Colors.white,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -170,7 +161,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Flight charges",
@@ -178,8 +169,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 16,
-                                          ),
+                                                fontSize: 16,
+                                              ),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
@@ -188,8 +179,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 16,
-                                          ),
+                                                fontSize: 16,
+                                              ),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
@@ -198,8 +189,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 16,
-                                          ),
+                                                fontSize: 16,
+                                              ),
                                         ),
                                         const SizedBox(height: 20),
                                         Text(
@@ -208,8 +199,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 16,
-                                          ),
+                                                fontSize: 16,
+                                              ),
                                         ),
                                         const SizedBox(height: 20),
                                       ],
@@ -218,7 +209,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "\$435.00",
@@ -266,11 +257,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                         height: 80,
                         width: Get.width,
                         decoration: BoxDecoration(
-                          color:
-                          // AppTheme.isLightTheme == true
-                          //     ? Colors.white
-                          //     :
-                          Colors.white,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -302,8 +289,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                     .textTheme
                                     .bodyText1!
                                     .copyWith(
-                                  fontSize: 18,
-                                ),
+                                      fontSize: 18,
+                                    ),
                               ),
                               const Expanded(child: SizedBox()),
                               Text(
@@ -312,9 +299,9 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                     .textTheme
                                     .bodyText1!
                                     .copyWith(
-                                  fontSize: 16,
-                                  color: Colors.teal,
-                                ),
+                                      fontSize: 16,
+                                      color: Colors.teal,
+                                    ),
                               ),
                               const SizedBox(height: 20),
                             ],
@@ -327,90 +314,85 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                 ],
               ),
             ),
-            TealButton(
-              text: "Confirm Payment",
-              onPressed: () {
-                Get.dialog(
-                  AlertDialog(
-                    backgroundColor:
-                    // AppTheme.isLightTheme == true
-                    //     ? Colors.white
-                    //     :
-                    Colors.white,
-                    buttonPadding: EdgeInsets.zero,
-                    titlePadding: EdgeInsets.zero,
-                    actionsPadding: EdgeInsets.zero,
-                    insetPadding: const EdgeInsets.only(left: 30, right: 30),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    content: Container(
-                      height: 520,
-                      width: Get.width,
-                      decoration: BoxDecoration(
+            Center(
+              child: TealButton(
+                text: "Confirm Payment",
+                onPressed: () {
+                  Get.dialog(
+                    AlertDialog(
+                      backgroundColor: Colors.white,
+                      buttonPadding: EdgeInsets.zero,
+                      titlePadding: EdgeInsets.zero,
+                      actionsPadding: EdgeInsets.zero,
+                      insetPadding: const EdgeInsets.only(left: 30, right: 30),
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
-                        color:
-                        // AppTheme.isLightTheme == true
-                        //     ? Colors.white
-                        //     :
-                        Colors.white,
                       ),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 15),
-                          SizedBox(
-                            height: 180,
-                            width: 185,
-                            child: Image.asset(
-                              "assets/images/p3.png",
+                      content: Container(
+                        height: 520,
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24),
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 15),
+                            SizedBox(
+                              height: 180,
+                              width: 185,
+                              child: Image.asset(
+                                "assets/images/p3.png",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 15),
-                          Text(
-                            "Payment Successfull!",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.teal,
+                            const SizedBox(height: 15),
+                            Text(
+                              "Payment Successfull!",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.teal,
+                                  ),
                             ),
-                          ),
-                          const SizedBox(height: 15),
-                          Text(
-                            "Successfully made payment and\nhotel booking",
-                            style:
-                            Theme.of(context).textTheme.bodyText1!.copyWith(
-                              fontSize: 14,
-                              height: 1.6,
+                            const SizedBox(height: 15),
+                            Text(
+                              "Successfully made payment and\nhotel booking",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    fontSize: 14,
+                                    height: 1.6,
+                                  ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 20),
-                          TealButton(
-                            text: "View Ticket",
-                            onPressed: () {
-                              // Get.to(
-                              //   const TicketScreen(),
-                              //   transition: Transition.rightToLeft,
-                              // );
-                            },
-                          ),
-                          //const SizedBox(height: 12),
-                          TealButton(
-                            text: "Cancel",
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                            const SizedBox(height: 20),
+                            TealButton(
+                              text: "View Ticket",
+                              onPressed: () {
+                                // Get.to(
+                                //   const TicketScreen(),
+                                //   transition: Transition.rightToLeft,
+                                // );
+                              },
+                            ),
 
-                          )
-                        ],
+                            TealButton(
+                              text: "Cancel",
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 20),
           ],

@@ -6,8 +6,9 @@ import 'package:provider/provider.dart';
 
 import '../models/PropertySearchListings.dart';
 import '../providers/HotelSearchProvider.dart';
-import '../widgets/filterView.dart';
+import '../widgets/BookingFilterView.dart';
 import '../widgets/poppinsText.dart';
+import '../widgets/ratingCard.dart';
 
 class Reviews extends StatefulWidget {
   const Reviews({Key? key, required this.property}) : super(key: key);
@@ -19,6 +20,7 @@ class Reviews extends StatefulWidget {
 
 int startingIndex = 0;
 bool isLoading = false;
+HotelRepository hotelRepository = HotelRepository();
 
 class _ReviewsState extends State<Reviews> {
   ScrollController controller = ScrollController();
@@ -36,9 +38,6 @@ class _ReviewsState extends State<Reviews> {
   }
 
   void _scrollListener() async {
-    // print(controller.position.extentAfter);
-    HotelRepository hotelRepository = HotelRepository();
-
     if (!isLoading && controller.position.extentAfter == 0) {
       setState(() => isLoading = true);
       setState(() => startingIndex += 10);
@@ -48,9 +47,7 @@ class _ReviewsState extends State<Reviews> {
       setState(() {
         context.read<HotelSearchProvider>().hotelReviews.addAll(reviews);
       });
-
     }
-    // print('Reviews.hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
   }
 
   @override
@@ -106,6 +103,7 @@ class _ReviewsState extends State<Reviews> {
               physics: const BouncingScrollPhysics(),
               itemCount: hotelProvider.hotelReviews.length,
               itemBuilder: (context, index) {
+                var review = hotelProvider.hotelReviews[index];
                 return Padding(
                   padding:
                       const EdgeInsets.only(bottom: 20, left: 20, right: 20),
@@ -126,36 +124,37 @@ class _ReviewsState extends State<Reviews> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // stayDuration ( name + stayDuration )
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.5,
                                       child: poppinsText(
-                                          text: hotelProvider
-                                                  .hotelReviews[index]
-                                                  .stayDuration ??
+                                          text: review.stayDuration ??
                                               'Anonymous',
                                           size: 16.0),
                                     ),
                                     const SizedBox(height: 5),
+
+                                    // review time
                                     poppinsText(
-                                        text: hotelProvider.hotelReviews[index]
-                                            .submissionTimeLocalized,
+                                        text: review.submissionTimeLocalized,
                                         size: 12.0)
                                   ],
                                 ),
                                 const Expanded(child: SizedBox()),
+
+                                // review rating
                                 ratingCard(
-                                    hotelProvider.hotelReviews[index]
-                                        .reviewScoreWithDescription!.value!
+                                    review.reviewScoreWithDescription!.value!
                                         .split(' ')
                                         .first,
                                     Constants.primaryColor),
                               ],
                             ),
                             const SizedBox(height: 15),
-                            poppinsText(
-                                text: hotelProvider.hotelReviews[index].text,
-                                size: 14.0)
+
+                            // review text
+                            poppinsText(text: review.text, size: 14.0)
                           ],
                         ),
                       ),
@@ -170,7 +169,9 @@ class _ReviewsState extends State<Reviews> {
               ? Container(
                   margin: const EdgeInsets.symmetric(vertical: 5),
                   child: const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: Colors.teal,
+                    ),
                   ),
                 )
               : Container()

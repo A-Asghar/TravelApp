@@ -30,7 +30,6 @@ class SelectPhoto extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Icon(
               icon,
@@ -39,10 +38,7 @@ class SelectPhoto extends StatelessWidget {
             const SizedBox(
               width: 14,
             ),
-            poppinsText(
-              text:textLabel,
-              size: 18.0
-            )
+            poppinsText(text: textLabel, size: 18.0)
           ],
         ),
       ),

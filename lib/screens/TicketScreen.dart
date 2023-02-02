@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../providers/UserProvider.dart';
+import '../widgets/poppinsText.dart';
 import '../widgets/tealButton.dart';
 
 class TicketScreen extends StatefulWidget {
@@ -10,6 +11,8 @@ class TicketScreen extends StatefulWidget {
   @override
   State<TicketScreen> createState() => _TicketScreenState();
 }
+
+final UserProvider controller = Get.put(UserProvider());
 
 class _TicketScreenState extends State<TicketScreen> {
   @override
@@ -24,14 +27,11 @@ class _TicketScreenState extends State<TicketScreen> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: Theme.of(context).textTheme.bodyText1!.color!,
           ),
         ),
-        title: Text(
-          "Ticket",
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18),
-        ),
+        title: poppinsText(text: "Ticket", size: 18.0),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -43,17 +43,9 @@ class _TicketScreenState extends State<TicketScreen> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      color:
-                      // AppTheme.isLightTheme == true
-                      //     ? const Color(0xffFAFAFA)
-                      //     :
-                      Colors.white,
+                      color: Colors.white,
                       border: Border.all(
-                        color:
-                        // AppTheme.isLightTheme == true
-                        //     ? const Color(0xffEEEEEE)
-                        //     :
-                        Colors.white.withOpacity(0.1),
+                        color: Colors.white.withOpacity(0.1),
                       ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
@@ -69,13 +61,8 @@ class _TicketScreenState extends State<TicketScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Center(
-                            child: Text(
-                              "Royale President Hotel",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(fontSize: 20),
-                            ),
+                            child: poppinsText(
+                                text: "Royale President Hotel", size: 20.0),
                           ),
                           const SizedBox(height: 10),
                           Center(
@@ -94,10 +81,13 @@ class _TicketScreenState extends State<TicketScreen> {
                           const SizedBox(height: 30),
                           Row(
                             children: [
-                              customColumn("Name", "Abdullah Amin"),
+                              customColumn("Name",
+                                  controller.user?.name ?? "Abdullah Amin"),
                               const SizedBox(width: 14),
                               customColumn(
-                                  "Phone Number", "+1 111 467 378 399"),
+                                  "Phone Number",
+                                  controller.user?.phoneNumber ??
+                                      "+1 111 467 378 399"),
                             ],
                           ),
                           const SizedBox(height: 30),
@@ -124,9 +114,11 @@ class _TicketScreenState extends State<TicketScreen> {
                 ],
               ),
             ),
-            TealButton(
-              text: "Download Ticket",
-              onPressed: () {},
+            Center(
+              child: TealButton(
+                text: "Download Ticket",
+                onPressed: () {},
+              ),
             ),
             const SizedBox(height: 20),
           ],
@@ -140,19 +132,13 @@ class _TicketScreenState extends State<TicketScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            text1,
-            style: Theme.of(context).textTheme.bodyText1!.copyWith(
-              fontSize: 16,
-              color: const Color(0xff757575),
-            ),
+          poppinsText(
+            text: text1,
+            size: 16.0,
+            color: const Color(0xff757575),
           ),
           const SizedBox(height: 8),
-          Text(
-            text2,
-            style:
-            Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 16),
-          ),
+          poppinsText(text: text2, size: 16.0, fontBold: FontWeight.w400),
         ],
       ),
     );

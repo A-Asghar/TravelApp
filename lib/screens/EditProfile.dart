@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
+import '../providers/UserProvider.dart';
 import '../widgets/customField.dart';
 import '../widgets/customTextField.dart';
 import '../widgets/poppinsText.dart';
@@ -12,6 +15,23 @@ class EditProfile extends StatefulWidget {
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
+
+final UserProvider controller = Get.put(UserProvider());
+
+TextEditingController name =
+    TextEditingController(text: controller.user?.name ?? '');
+TextEditingController email =
+    TextEditingController(text: controller.user?.email ?? '');
+TextEditingController phoneNumber =
+    TextEditingController(text: controller.user?.phoneNumber ?? '');
+TextEditingController profilePhotoUrl =
+    TextEditingController(text: controller.user?.profilePhotoUrl ?? '');
+TextEditingController dateOfBirth =
+    TextEditingController(text: controller.user?.dateOfBirth ?? '');
+TextEditingController gender =
+    TextEditingController(text: controller.user?.gender ?? '');
+TextEditingController address =
+    TextEditingController(text: controller.user?.address ?? '');
 
 class _EditProfileState extends State<EditProfile> {
   @override
@@ -27,7 +47,7 @@ class _EditProfileState extends State<EditProfile> {
           },
           child: Icon(
             Icons.arrow_back_ios,
-            color: Theme.of(context).textTheme.bodyText1!.color,
+            color: Theme.of(context).textTheme.bodyText1?.color,
             size: 25,
           ),
         ),
@@ -53,8 +73,8 @@ class _EditProfileState extends State<EditProfile> {
                       // Name
                       CustomField(
                         hintText: "name",
-                        textFieldController:
-                            TextEditingController(text: "Ali Asghar"),
+                        textFieldController: name,
+                        // TextEditingController(text: "Ali Asghar"),
                         sufix: const SizedBox(),
                       ),
                       const SizedBox(height: 15),
@@ -62,8 +82,8 @@ class _EditProfileState extends State<EditProfile> {
                       // Address
                       CustomField(
                         hintText: "address",
-                        textFieldController:
-                            TextEditingController(text: "315 Oakwood Lane"),
+                        textFieldController: address,
+                        // TextEditingController(text: "315 Oakwood Lane"),
                         sufix: const SizedBox(),
                       ),
                       const SizedBox(height: 15),
@@ -71,8 +91,8 @@ class _EditProfileState extends State<EditProfile> {
                       // Date of birth
                       CustomField(
                         hintText: "date of birth",
-                        textFieldController:
-                            TextEditingController(text: "12/27/1995"),
+                        textFieldController: dateOfBirth,
+                        // TextEditingController(text: "12/27/1995"),
                         sufix: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: SvgPicture.asset(
@@ -85,8 +105,8 @@ class _EditProfileState extends State<EditProfile> {
                       // Email
                       CustomField(
                         hintText: "email",
-                        textFieldController: TextEditingController(
-                            text: "ali_asghar@yourdomain.com"),
+                        textFieldController: email,
+                        // TextEditingController(text: "ali_asghar@yourdomain.com"),
                         sufix: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: SvgPicture.asset(
@@ -97,15 +117,14 @@ class _EditProfileState extends State<EditProfile> {
                       const SizedBox(height: 20),
 
                       // Phone Number
-                      CustomTextField(
-                        hintText: "name",
-                        textFieldController:
-                            TextEditingController(text: "+1 111 467 378 399"),
-                        sufix: const SizedBox(),
-                        prefix: Padding(
+                      CustomField(
+                        hintText: "phoneNumber",
+                        textFieldController: phoneNumber,
+                        // TextEditingController(text: "ali_asghar@yourdomain.com"),
+                        sufix: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: SvgPicture.asset(
-                            'assets/images/p2.svg',
+                            'assets/images/phone.svg',
                           ),
                         ),
                       ),
@@ -114,8 +133,8 @@ class _EditProfileState extends State<EditProfile> {
                       // Gender
                       CustomField(
                         hintText: "gender",
-                        textFieldController:
-                            TextEditingController(text: "Male"),
+                        textFieldController: gender,
+                        // TextEditingController(text: "Male"),
                         sufix: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: SvgPicture.asset(
@@ -129,14 +148,16 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               ),
             ),
-            TealButton(
-              text: "Update",
-              onPressed: () {
-                // Get.offAll(
-                //   const TabScreen(),
-                //   transition: Transition.rightToLeft,
-                // );
-              },
+            Center(
+              child: TealButton(
+                text: "Update",
+                onPressed: () {
+                  // Get.offAll(
+                  //   const TabScreen(),
+                  //   transition: Transition.rightToLeft,
+                  // );
+                },
+              ),
             ),
             const SizedBox(height: 20),
           ],

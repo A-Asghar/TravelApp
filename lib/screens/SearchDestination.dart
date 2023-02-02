@@ -34,14 +34,13 @@ class _SearchDestinationState extends State<SearchDestination> {
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios,
-              color: Colors.grey,
+              color: Colors.black,
             ),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
           title: Container(
-            // height: 45,
             decoration: BoxDecoration(
               color: Constants.secondaryColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(10),
@@ -72,7 +71,6 @@ class _SearchDestinationState extends State<SearchDestination> {
               decoration: InputDecoration(
                 hintStyle: GoogleFonts.poppins(color: Constants.secondaryColor),
                 hintText: 'Search city',
-                // suffixIcon: Icon(Icons.search),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.only(left: 20),
               ),
@@ -80,7 +78,7 @@ class _SearchDestinationState extends State<SearchDestination> {
           ),
           centerTitle: true,
         ),
-        body: controller.text.length > 0
+        body: controller.text.isNotEmpty
             ? FutureBuilder(
                 future: listCities,
                 builder: (context, AsyncSnapshot snapshot) {
@@ -111,41 +109,16 @@ class _SearchDestinationState extends State<SearchDestination> {
                               child: Card(
                                 child: Container(
                                   margin: const EdgeInsets.all(10),
-                                  // padding: const EdgeInsets.all(10),
                                   child: Column(
                                     children: [
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.location_on,
-                                            color: Constants.primaryColor,
-                                            size: 16,
-                                          ),
-                                          SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.8,
-                                              child: Text(
-                                                destination.city,
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 17,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ))
+                                          locationIcon(),
+                                          destinationCity(destination),
                                         ],
                                       ),
                                       widget.option == 'flight'
-                                          ? Container(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                Constants.iataList[
-                                                    destination.iata]![0],
-                                                style: GoogleFonts.poppins(
-                                                    color: Colors.grey),
-                                              ),
-                                            )
+                                          ? airport(destination)
                                           : Container()
                                     ],
                                   ),
@@ -160,6 +133,38 @@ class _SearchDestinationState extends State<SearchDestination> {
                         );
                 })
             : Container(),
+      ),
+    );
+  }
+
+  Widget locationIcon() {
+    return const Icon(
+      Icons.location_on,
+      color: Constants.primaryColor,
+      size: 16,
+    );
+  }
+
+  Widget destinationCity(destination) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: Text(
+        destination.city,
+        style: GoogleFonts.poppins(
+          fontSize: 17,
+          fontWeight: FontWeight.w500,
+        ),
+        overflow: TextOverflow.ellipsis,
+      ),
+    );
+  }
+
+  Widget airport(destination) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        Constants.iataList[destination.iata]![0],
+        style: GoogleFonts.poppins(color: Colors.grey),
       ),
     );
   }

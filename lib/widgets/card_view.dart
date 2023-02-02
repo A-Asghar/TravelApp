@@ -7,11 +7,7 @@ class CardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color:
-        // AppTheme.isLightTheme == true
-        //     ? Theme.of(context).appBarTheme.backgroundColor
-        //     :
-        Colors.white,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(

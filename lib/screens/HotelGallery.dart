@@ -23,7 +23,7 @@ class _HotelGalleryState extends State<HotelGallery> {
             child: const SizedBox(
               width: 30,
               child: Icon(
-                Icons.keyboard_arrow_left,
+                Icons.arrow_back_ios,
                 color: Colors.black,
                 size: 30,
               ),
@@ -44,13 +44,14 @@ class _HotelGalleryState extends State<HotelGallery> {
           crossAxisSpacing: 20,
         ),
         itemBuilder: (BuildContext context, int index) {
+          var image = widget.hotelImages[index]!;
           return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => FullScreenImagePage(
-                    image: widget.hotelImages[index]!.url!,
+                    image: image.url!,
                   ),
                 ),
               );
@@ -59,7 +60,7 @@ class _HotelGalleryState extends State<HotelGallery> {
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 image: DecorationImage(
-                  image: NetworkImage(widget.hotelImages[index]!.url!),
+                  image: NetworkImage(image.url!),
                   fit: BoxFit.fill,
                 ),
               ),

@@ -3,7 +3,6 @@ import 'package:fyp/widgets/tealButton.dart';
 
 import 'bookings/CancelBookingScreen.dart';
 
-
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
 
@@ -67,9 +66,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   .textTheme
                                   .bodyText1!
                                   .copyWith(
-                                fontSize: 14,
-                                color: Colors.teal,
-                              ),
+                                    fontSize: 14,
+                                    color: Colors.teal,
+                                  ),
                             ),
                           ],
                         ),
@@ -88,17 +87,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      card(
-                          "assets/images/card.png",
-                        "•••• •••• •••• •••• 4679",
-                        Colors.teal),
-
+                      // card(
+                      //     "assets/images/card.png",
+                      //   "•••• •••• •••• •••• 4679",
+                      //   Colors.teal),
                     ],
                   ),
                 ],
               ),
             ),
-            TealButton(text: 'Continue', onPressed: (){}),
+            TealButton(text: 'Continue', onPressed: () {}),
             const SizedBox(height: 20),
           ],
         ),
