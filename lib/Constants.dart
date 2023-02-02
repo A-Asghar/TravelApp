@@ -31,6 +31,8 @@ class Constants {
     '4118e10643msh20c6a738855d389p13af7ejsnba3b88dd0d65'
   ];
   static const String weatherAPIKey = 'c3dd2e6a662447fdb6372507232701';
+  static const String flight_client_id = 'CF9FfomFYGbFUVGG15igLgdiGtapSK1g';
+  static const String flight_client_secret = 'XgukiYQGMPtShAMT';
 
   static convertDate(DateTime? date) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(date!);

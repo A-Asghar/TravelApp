@@ -68,4 +68,10 @@ class PackageNetwork {
         .where('travelerId', isEqualTo: travelerId)
         .get();
   }
+
+  getTravelAgencyBooking({required travelAgencyId}) async {
+    return await packageBookings
+        .where('travelAgencyId', isEqualTo: travelAgencyId)
+        .get();
+  }
 }

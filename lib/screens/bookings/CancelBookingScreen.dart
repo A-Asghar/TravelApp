@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../Constants.dart';
 import '../../widgets/customButton.dart';
 import '../../widgets/tealButton.dart';
-import '../Profile.dart';
+import '../profile/Profile.dart';
 
 class CancelBookingScreen extends StatefulWidget {
   const CancelBookingScreen({Key? key}) : super(key: key);

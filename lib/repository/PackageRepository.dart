@@ -54,7 +54,7 @@ class PackageRepository {
 
   getTravelAgencyBooking({required travelAgencyId}) async {
     List<PackageBooking> bookings = [];
-    var response = await network.getTravelerBooking(travelerId: travelAgencyId);
+    var response = await network.getTravelAgencyBooking(travelAgencyId: travelAgencyId);
     response.docs.forEach((snapshot) {
       bookings.add(PackageBooking.fromJson(snapshot.data()));
     });

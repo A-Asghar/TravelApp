@@ -7,8 +7,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Constants.dart';
+import '../../network/AuthNetwork.dart';
+import '../../widgets/authErrorDialog.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
+import '../Home2.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -148,24 +151,24 @@ class _LoginState extends State<Login> {
                           if (validateTextFields()) {
                             setState(() => isLoading = true);
 
-                            // await Network.login(
-                            //         email: _email.text,
-                            //         password: _password.text)
-                            //     .catchError((e) {
-                            //   print(e.code);
-                            //   authErrorDialog(e.code, context);
-                            //   setState(() => isLoading = false);
-                            // }).then(() {
-                            //   Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (context) => const Home2(),
-                            //   ));
-                            // });
+                            await AuthNetwork.login(
+                                    email: _email.text,
+                                    password: _password.text)
+                                .catchError((e) {
+                              print(e.code);
+                              authErrorDialog(e.code, context);
+                              setState(() => isLoading = false);
+                            }).then((_) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const BottomNavBar(),
+                              ));
+                            });
 
                             setState(() => isLoading = false);
 
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const BottomNavBar(),
-                            ));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //   builder: (context) => const BottomNavBar(),
+                            // ));
                           }
                         },
                       ),

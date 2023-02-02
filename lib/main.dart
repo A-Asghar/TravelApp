@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/network/AuthNetwork.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/PackageRepository.dart';
 import 'package:fyp/repository/WeatherRepository.dart';
 import 'package:fyp/screens/AddNewCard.dart';
@@ -9,15 +12,17 @@ import 'package:fyp/screens/AddPackage.dart';
 import 'package:fyp/screens/BoardingPass.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/ConfirmPayment.dart';
-import 'package:fyp/screens/EditProfile.dart';
+import 'package:fyp/screens/profile/EditProfile.dart';
 import 'package:fyp/screens/Home2.dart';
-import 'package:fyp/screens/Profile.dart';
 import 'package:fyp/screens/Search.dart';
 import 'package:fyp/screens/TicketScreen.dart';
 import 'package:fyp/screens/WeatherScreen.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
+import 'package:fyp/screens/profile/Profile.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
@@ -182,9 +187,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('Bookings')),
               ElevatedButton(
                   onPressed: () async {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => TicketScreen(),
-                    ));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (context) => TicketScreen(),
+                    // ));
                     // HotelRepository h = HotelRepository();
                     // h.detail();
                     // h.reviews();
@@ -207,13 +212,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     //     travelerId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
                     //     travelAgencyId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
                     //     packageId: '024201636');
+                    // AuthNetwork a = AuthNetwork();
+                    // AuthNetwork.createNewUser(email: 'aatest722@gmail.com', password: '123456');
+                    // AuthNetwork.login(email: 'aatest722@gmail.com', password: '123456');
+                    // final UserProvider controller = Get.put(UserProvider());
+                    // print(controller.user!.email);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Login(),
+                    ));
                   },
                   child: Text('API Test')),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AddPackage(),
-                    ));
+                    FirebaseAuth.instance.signOut();
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (context) => AddPackage(),
+                    // ));
                   },
                   child: Text('Package')),
             ],
