@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/screens/profile/EditProfile.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../Constants.dart';
 import '../../providers/UserProvider.dart';
@@ -176,7 +177,7 @@ class _ProfileState extends State<Profile> {
                                       const SizedBox(height: 30),
                                       CustomButton(
                                         text: "Yes, Logout",
-                                        onTap: () {
+                                        onTap: () async{
                                           Get.offAll(
                                             const Home2(),
                                             transition: Transition.rightToLeft,
@@ -186,6 +187,7 @@ class _ProfileState extends State<Profile> {
                                             transition: Transition.rightToLeft,
                                           );
                                           FirebaseAuth.instance.signOut();
+                                              await GoogleSignIn(scopes: <String>["email"]).signOut();
                                         },
                                       ),
                                       const SizedBox(height: 15),
