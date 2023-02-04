@@ -1,13 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fyp/models/Users.dart';
+import 'package:fyp/network/AuthNetwork.dart';
+import 'package:fyp/widgets/successSnackBar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../providers/UserProvider.dart';
-import '../widgets/customField.dart';
-import '../widgets/customTextField.dart';
-import '../widgets/poppinsText.dart';
-import '../widgets/tealButton.dart';
+import '../../providers/UserProvider.dart';
+import '../../widgets/customField.dart';
+import '../../widgets/customTextField.dart';
+import '../../widgets/poppinsText.dart';
+import '../../widgets/tealButton.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -32,6 +36,8 @@ TextEditingController gender =
     TextEditingController(text: controller.user?.gender ?? '');
 TextEditingController address =
     TextEditingController(text: controller.user?.address ?? '');
+
+bool isLoading = false;
 
 class _EditProfileState extends State<EditProfile> {
   @override
@@ -149,15 +155,37 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             Center(
-              child: TealButton(
-                text: "Update",
-                onPressed: () {
-                  // Get.offAll(
-                  //   const TabScreen(),
-                  //   transition: Transition.rightToLeft,
-                  // );
-                },
-              ),
+              child: isLoading
+                  ? const CircularProgressIndicator(color: Colors.teal)
+                  : TealButton(
+                      text: "Update",
+                      onPressed: () async {
+                        setState(() => isLoading = true);
+
+                        Users u = Users(
+                            name: name.text,
+                            email: email.text,
+                            phoneNumber: phoneNumber.text,
+                            profilePhotoUrl: profilePhotoUrl.text,
+                            dateOfBirth: dateOfBirth.text,
+                            gender: gender.text,
+                            address: address.text);
+                        await AuthNetwork.createUserProfile(
+                                signedInUser:
+                                    FirebaseAuth.instance.currentUser!,
+                                user: u)
+                            .then((_) {
+                          Navigator.of(context).pop();
+                          successSnackBar(context,
+                              'Your details have been updated successfully !');
+                        });
+                        setState(() => isLoading = false);
+                        // Get.offAll(
+                        //   const TabScreen(),
+                        //   transition: Transition.rightToLeft,
+                        // );
+                      },
+                    ),
             ),
             const SizedBox(height: 20),
           ],

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../models/Users.dart';
+import '../../network/AuthNetwork.dart';
 import '../../widgets/imageOptions.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
@@ -211,30 +214,29 @@ class _FillYourProfileState extends State<FillYourProfile> {
                   : TealButton(
                       text: "Continue",
                       onPressed: () async {
-                        // if (validateTextFields()) {
-                        //   setState(() => isLoading = true);
-                        //   await Network.createUserProfile(
-                        //     signedInUser: FirebaseAuth.instance.currentUser!,
-                        //     user: Users(
-                        //         email:
-                        //             FirebaseAuth.instance.currentUser!.email!,
-                        //         name: _name.text,
-                        //         address: _address.text,
-                        //         dateOfBirth: _dateOfBirth.text,
-                        //         phoneNumber: _phoneNumber.text,
-                        //         gender: _gender.text,
-                        //         profilePhotoUrl: _image?.path ?? ''),
-                        //   ).then((_) {
-                        //     setState(() => isLoading = false);
-                        //     Navigator.of(context).push(MaterialPageRoute(
-                        //       builder: (context) => const BottomNavBar(),
-                        //     ));
-                        //   });
-                        // }
+                        if (validateTextFields()) {
+                          setState(() => isLoading = true);
+                          await AuthNetwork.createUserProfile(
+                            signedInUser: FirebaseAuth.instance.currentUser!,
+                            user: Users(
+                                email: FirebaseAuth.instance.currentUser!.email!,
+                                name: _name.text,
+                                address: _address.text,
+                                dateOfBirth: _dateOfBirth.text,
+                                phoneNumber: _phoneNumber.text,
+                                gender: _gender.text,
+                                profilePhotoUrl: _image?.path ?? ''),
+                          ).then((_) {
+                            setState(() => isLoading = false);
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const BottomNavBar(),
+                            ));
+                          });
+                        }
 
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const BottomNavBar(),
-                        ));
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) => const BottomNavBar(),
+                        // ));
                       },
                     ),
             ),
@@ -272,7 +274,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
         context: context,
         initialDate: selectedDate,
         firstDate: DateTime(1950,1),
-        lastDate: DateTime(2023));
+        lastDate: DateTime(2024));
 
     if (selectedDate != null) {
       setState(() {

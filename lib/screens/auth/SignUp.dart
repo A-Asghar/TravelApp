@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Constants.dart';
+import '../../network/AuthNetwork.dart';
+import '../../widgets/authErrorDialog.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
 import 'FillYourProfile.dart';
@@ -165,36 +167,36 @@ class _SignUpState extends State<SignUp> {
                     : TealButton(
                         text: "Sign up",
                         onPressed: () async {
-                          // if (validateTextFields()) {
-                            // setState(() => isLoading = true);
-                            //
-                            // if ((_password.text.isNotEmpty &&
-                            //         _confirmPassword.text.isNotEmpty) &&
-                            //     (_password.text == _confirmPassword.text)) {
-                            //   await Network.createNewUser(
-                            //           email: _email.text,
-                            //           password: _password.text)
-                            //       .then((_){
-                            //     Navigator.of(context).push(MaterialPageRoute(
-                            //       builder: (context) => const FillYourProfile(),
-                            //     ));
-                            //   }).catchError((e) {
-                            //     authErrorDialog(e.code, context);
-                            //     setState(() => isLoading = false);
-                            //   });
-                            // } else {
-                            //   authErrorDialog("passwords-not-match", context);
-                            // }
-                            //
-                            // setState(() => isLoading = false);
+                          if (validateTextFields()) {
+                            setState(() => isLoading = true);
 
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //   builder: (context) => const FillYourProfile(),
-                            // ));
-                          // }
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const FillYourProfile(),
-                          ));
+                            if ((_password.text.isNotEmpty &&
+                                    _confirmPassword.text.isNotEmpty) &&
+                                (_password.text == _confirmPassword.text)) {
+                              await AuthNetwork.createNewUser(
+                                      email: _email.text,
+                                      password: _password.text)
+                                  .then((_){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const FillYourProfile(),
+                                ));
+                              }).catchError((e) {
+                                authErrorDialog(e.code, context);
+                                setState(() => isLoading = false);
+                              });
+                            } else {
+                              authErrorDialog("passwords-not-match", context);
+                            }
+
+                            setState(() => isLoading = false);
+
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const FillYourProfile(),
+                            ));
+                          }
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //   builder: (context) => const FillYourProfile(),
+                          // ));
                         },
                       ),
                 const SizedBox(height: 40),

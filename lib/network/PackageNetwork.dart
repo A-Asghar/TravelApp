@@ -61,11 +61,22 @@ class PackageNetwork {
       "travelAgencyId": packageBooking.travelAgencyId,
       "packageId": packageBooking.packageId
     });
+
+    // increment number of sales for the package
+    packages
+        .doc(packageBooking.packageId)
+        .update({'numOfSales': FieldValue.increment(1)});
   }
 
   getTravelerBooking({required travelerId}) async {
     return await packageBookings
         .where('travelerId', isEqualTo: travelerId)
+        .get();
+  }
+
+  getTravelAgencyBooking({required travelAgencyId}) async {
+    return await packageBookings
+        .where('travelAgencyId', isEqualTo: travelAgencyId)
         .get();
   }
 }
