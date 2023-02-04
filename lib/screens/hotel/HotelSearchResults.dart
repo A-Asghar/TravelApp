@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/screens/hotel_search_details.dart';
+import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../Details.dart';
+import '../hotel_details.dart';
 
 class HotelSearchResults extends StatefulWidget {
   const HotelSearchResults({Key? key}) : super(key: key);
@@ -92,8 +94,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
                                   return InkWell(
                                     onTap: () {
                                       Get.to(
-                                        Details(
-                                          detailsType: 'hotel',
+                                        HotelSearchDetails(
                                           property: hotelProvider.hotels[index],
                                         ),
                                         transition: Transition.rightToLeft,
@@ -387,11 +388,5 @@ Widget searchCard(String text, Color bgColor, VoidCallback onTap) {
         ),
       ),
     ),
-  );
-}
-
-Widget lottieLoader() {
-  return Center(
-    child: Lottie.asset('assets/lf30_editor_pdzneexn.json', height: 100),
   );
 }

@@ -18,6 +18,7 @@ class _EditPackageState extends State<EditPackage> {
   TextEditingController adults = TextEditingController();
   TextEditingController imgUrls = TextEditingController();
   TextEditingController hotelPropertyId = TextEditingController();
+  TextEditingController destination = TextEditingController();
   late double rating;
   late int numOfSales;
   late String travelAgencyId;
@@ -39,6 +40,7 @@ class _EditPackageState extends State<EditPackage> {
     rating = widget.package.rating;
     numOfSales = widget.package.numOfSales;
     travelAgencyId = widget.package.travelAgencyId;
+    destination.text = widget.package.destination;
 
     Future<void> _selectDate(BuildContext context) async {
       final DateTime? picked = await showDatePicker(
@@ -71,6 +73,10 @@ class _EditPackageState extends State<EditPackage> {
               controller: packageDescription,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(hintText: 'packageDescription'),
+            ),
+            TextField(
+              controller: destination,
+              decoration: InputDecoration(hintText: 'Package Destination'),
             ),
             TextButton(
                 onPressed: () {
@@ -119,7 +125,8 @@ class _EditPackageState extends State<EditPackage> {
                           imgUrls: imgUrls.text.split(','),
                           adults: int.parse(adults.text),
                           travelAgencyId: travelAgencyId,
-                          hotelPropertyId: hotelPropertyId.text));
+                          hotelPropertyId: hotelPropertyId.text,
+                          destination: destination.text));
                 })
           ],
         ),

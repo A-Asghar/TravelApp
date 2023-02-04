@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/models/PropertyUnits.dart';
 import 'package:fyp/models/Review.dart';
+import 'package:fyp/screens/hotel_details.dart';
 
 import '../models/Detail.dart';
 import '../network/HotelNetwork.dart';
@@ -165,6 +166,52 @@ class HotelRepository {
     // reviews?.forEach((r) {
     //   print(r.text);
     // });
+  }
+
+  getHotels() async {
+    List response = await network.getPropertyListings();
+    List<PropertySearchListing> hotels = [];
+    List<String> city = [];
+    for (var value in response) {
+      hotels.add(value['property']);
+      city.add(value['city']);
+    }
+    return [hotels, city];
+  }
+
+  getHotelRooms({required propertyId, required regionId}) async {
+    List response =
+        await network.getHotelRooms(propertyId: propertyId, regionId: regionId);
+    print("from repo: ${response[0]}");
+    List<Unit> hotelRooms = [];
+    for (var value in response) {
+      hotelRooms.add(value);
+      print(value.description);
+    }
+    print("from repo: ${hotelRooms[0]}");
+    return hotelRooms;
+  }
+
+  getHotelReviews({required propertyId}) async {
+    var response = await network.getHotelReviews(propertyId: propertyId);
+    print("from repo: ${response[0]}");
+    List<ReviewElement> reviews = [];
+    for (var value in response) {
+      reviews.add(value);
+      print(value.id);
+    }
+    return reviews;
+  }
+
+  getHotelDetails({required propertyId}) async {
+    List response = await network.getHotelDetails(propertyId: propertyId);
+    List<ImageImage?> hotelImages = response[0];
+    List<TopAmenitiesItem> amenities = response[1];
+    Coordinates coordinates = response[2];
+    String description = response[3];
+    String address = response[4];
+
+    return [hotelImages, amenities, coordinates, description, address];
   }
 }
 

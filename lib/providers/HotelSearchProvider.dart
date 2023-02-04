@@ -106,7 +106,6 @@ class HotelSearchProvider extends ChangeNotifier {
   clearHotelDetail() {
     _hotelRooms = [];
     _hotelReviews = [];
-    _hotelImages = [];
     notifyListeners();
   }
 
