@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
+import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/repository/PackageRepository.dart';
 import 'package:fyp/repository/WeatherRepository.dart';
 import 'package:fyp/screens/AddNewCard.dart';
@@ -9,6 +11,7 @@ import 'package:fyp/screens/AddPackage.dart';
 import 'package:fyp/screens/BoardingPass.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/ConfirmPayment.dart';
+import 'package:fyp/screens/EditPackage.dart';
 import 'package:fyp/screens/EditProfile.dart';
 import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/Profile.dart';
@@ -33,6 +36,8 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => FlightSearchProvider()),
         ChangeNotifierProvider(create: (_) => HotelSearchProvider()),
+        ChangeNotifierProvider(create: (_) => HomeProvider()),
+        ChangeNotifierProvider(create: (_) => PackageHomeProvider()),
       ],
       child: const MyApp(),
     ),
@@ -124,6 +129,23 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('SignIn')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AddPackage(),
+                    ));
+                  },
+                  child: Text('Add Package')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => EditPackage(
+                        package:
+                            context.read<PackageHomeProvider>().packages[0],
+                      ),
+                    ));
+                  },
+                  child: Text('Edit Package')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(

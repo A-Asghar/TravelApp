@@ -1,6 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/models/Package.dart';
+import 'package:fyp/models/PropertySearchListings.dart';
+import 'package:fyp/providers/HomeProvider.dart';
+import 'package:fyp/providers/PackageHomeProvider.dart';
+import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
+import 'package:fyp/screens/hotel/HotelSearchResults.dart';
+import 'package:fyp/screens/hotel_details.dart';
+import 'package:fyp/screens/hotel_home_details.dart';
+import 'package:fyp/screens/package_details.dart';
+import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
+import 'package:provider/provider.dart';
 
 import '../Constants.dart';
 import '../repository/FlightRepository.dart';
@@ -17,7 +29,31 @@ class _Home2State extends State<Home2> {
   void initState() {
     // req();
     // print(destinationController.flights.length);
+    fetchHotels();
+    fetchPackages();
     super.initState();
+  }
+
+  bool isLoading = false;
+  fetchHotels() async {
+    setState(() => isLoading = true);
+    HotelRepository hotelRepository = HotelRepository();
+    List hotelResponse = await hotelRepository.getHotels();
+    context.read<HomeProvider>().hotels = hotelResponse[0];
+    context.read<HomeProvider>().city = hotelResponse[1];
+    print(context.read<HomeProvider>().hotels[0].price);
+  }
+
+  fetchPackages() async {
+    QuerySnapshot snapshot =
+        await FirebaseFirestore.instance.collection('packages').get();
+    snapshot.docs.forEach((document) {
+      context
+          .read<PackageHomeProvider>()
+          .packages
+          .add(Package.fromJson(document.data() as Map<String, dynamic>));
+    });
+    setState(() => isLoading = false);
   }
 
   req() async {
@@ -40,6 +76,8 @@ class _Home2State extends State<Home2> {
 
   @override
   Widget build(BuildContext context) {
+    var homeProvider = context.watch<HomeProvider>();
+    var packageProvider = context.watch<PackageHomeProvider>();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -48,49 +86,55 @@ class _Home2State extends State<Home2> {
         automaticallyImplyLeading: false,
       ),
       // drawer: SideBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.width,
-              child: Stack(
+      body: isLoading
+          ? lottieLoader()
+          : SingleChildScrollView(
+              child: Column(
                 children: [
-                  Positioned(
-                    // top: 0,
-                    child: topBackgroundImage(context),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.width,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          // top: 0,
+                          child: topBackgroundImage(context),
+                        ),
+                        Positioned(
+                          bottom: MediaQuery.of(context).size.width * 0.02,
+                          child: topIcons(context),
+                        ),
+                        // searchBar(context),
+                        Positioned(
+                          top: 120,
+                          left: 20,
+                          child: topHeading('Asghar'),
+                        ),
+                      ],
+                    ),
                   ),
-                  Positioned(
-                    bottom: MediaQuery.of(context).size.width * 0.02,
-                    child: topIcons(context),
+                  heading('Summer Escapes', 25.0),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: poppinsText(
+                        text:
+                            'Break the routine and escape to these hand-picked properties for exceptional prices',
+                        color: Constants.secondaryColor),
                   ),
-                  // searchBar(context),
-                  Positioned(
-                    top: 120,
-                    left: 20,
-                    child: topHeading('Asghar'),
+                  const SizedBox(height: 10),
+                  summerEscapes(
+                    context,
+                    context.read<HomeProvider>().hotels,
+                    context.read<HomeProvider>().city,
                   ),
+                  const SizedBox(height: 20),
+                  heading('Recommended Destinations', 20.0),
+                  recommendedDestinations(),
+                  const SizedBox(height: 10),
+                  heading('Top Packages', 20.0),
+                  topPackages(context.read<PackageHomeProvider>().packages)
                 ],
               ),
             ),
-            heading('Summer Escapes', 25.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: poppinsText(
-                  text:
-                      'Break the routine and escape to these hand-picked properties for exceptional prices',
-                  color: Constants.secondaryColor),
-            ),
-            const SizedBox(height: 10),
-            summerEscapes(context),
-            const SizedBox(height: 10),
-            heading('Recommended Destinations', 20.0),
-            recommendedDestinations(),
-            const SizedBox(height: 10),
-            heading('Top Packages', 20.0),
-            topPackages()
-          ],
-        ),
-      ),
     );
   }
 }
@@ -182,7 +226,8 @@ Widget heading(text, size) {
       child: poppinsText(text: text, size: size, fontBold: FontWeight.w600));
 }
 
-Widget summerEscapes(context) {
+Widget summerEscapes(
+    context, List<PropertySearchListing> hotels, List<String> city) {
   List images = [
     'https://pix10.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
     'https://media-cdn.tripadvisor.com/media/photo-s/1d/24/9b/85/hotel-exterior.jpg',
@@ -195,96 +240,104 @@ Widget summerEscapes(context) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     // width: MediaQuery.of(context).size.width * 0.95,
-    height: 280,
+    height: MediaQuery.of(context).size.height * 0.36,
     child: ListView.builder(
-        itemCount: 7,
+        itemCount: hotels.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => Details(
-              //     detailsType: 'hotel',
-              //   ),
-              // )
-              // );
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HotelHomeDetails(
+                  property: hotels[index],
+                ),
+              ));
             },
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  roundedImage(160.0, 200.0, images[index]),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        poppinsText(
-                            text: 'Hotel $index',
-                            size: 20.0,
-                            fontBold: FontWeight.w500),
-                        // poppinsText(text: 'Karachi, Pakistan', size: 18.0),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              size: 12.0,
-                              color: Constants.primaryColor,
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            poppinsText(
-                                text: 'Karachi, Pakistan',
-                                size: 15.0,
-                                color: Constants.secondaryColor),
-                          ],
-                        ),
-
-                        Container(
-                          width: 180,
-                          alignment: Alignment.bottomRight,
-                          child: Row(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.85,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    roundedImage(160.0, MediaQuery.of(context).size.width * 0.8,
+                        hotels[index].propertyImage!.image!.url),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 2),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          poppinsText(
+                              text: hotels[index].name.toString(),
+                              size: 20.0,
+                              fontBold: FontWeight.w500),
+                          // poppinsText(text: 'Karachi, Pakistan', size: 18.0),
+                          Row(
                             children: [
                               const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                                size: 15,
+                                Icons.location_on,
+                                size: 12.0,
+                                color: Constants.primaryColor,
                               ),
                               const SizedBox(
                                 width: 2,
                               ),
-                              poppinsText(
-                                  text: '9.6',
-                                  color: Colors.black87,
-                                  fontBold: FontWeight.w400),
-                              const Spacer(),
-                              // SizedBox(width: 10,)
+                              // poppinsText(
+                              //     text: city[index],
+                              //     size: 15.0,
+                              //     color: Constants.secondaryColor),
                             ],
                           ),
-                        ),
 
-                        Row(
-                          children: [
-                            poppinsText(
-                                text: '\$199.99',
-                                size: 20.0,
-                                color: Constants.primaryColor,
-                                fontBold: FontWeight.w500),
-                            poppinsText(
-                                text: ' /night',
-                                color: Constants.secondaryColor,
-                                size: 12.0)
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                          Container(
+                            width: 180,
+                            alignment: Alignment.bottomRight,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 15,
+                                ),
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                poppinsText(
+                                    text:
+                                        hotels[index].reviews!.score.toString(),
+                                    color: Colors.black87,
+                                    fontBold: FontWeight.w400),
+                                const Spacer(),
+                                // SizedBox(width: 10,)
+                              ],
+                            ),
+                          ),
+
+                          Row(
+                            children: [
+                              poppinsText(
+                                  text: hotels[index]
+                                      .price!
+                                      .lead!
+                                      .amount
+                                      .toString(),
+                                  size: 20.0,
+                                  color: Constants.primaryColor,
+                                  fontBold: FontWeight.w500),
+                              poppinsText(
+                                  text: ' /night',
+                                  color: Constants.secondaryColor,
+                                  size: 12.0)
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -419,23 +472,23 @@ class sideBarRow extends StatelessWidget {
   }
 }
 
-Widget topPackages() {
+Widget topPackages(List<Package> packages) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     // width: MediaQuery.of(context).size.width * 0.95,
     height: 260,
     child: ListView.builder(
-        itemCount: 7,
+        itemCount: packages.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => Details(
-              //     detailsType: 'package',
-              //   ),
-              // ));
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PackageDetails(
+                  package: packages[index],
+                ),
+              ));
             },
             child: Card(
               shape: RoundedRectangleBorder(
@@ -443,8 +496,7 @@ Widget topPackages() {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  roundedImage(160.0, 200.0,
-                      'https://media.cntraveler.com/photos/57d87670fd86274a1db91acd/master/pass/most-beautiful-paris-pont-alexandre-iii-GettyImages-574883771.jpg'),
+                  roundedImage(160.0, 200.0, packages[index].imgUrls[0]),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
@@ -452,7 +504,7 @@ Widget topPackages() {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         poppinsText(
-                            text: 'Package Name',
+                            text: packages[index].packageName,
                             size: 20.0,
                             fontBold: FontWeight.w500),
                         Row(
@@ -463,7 +515,7 @@ Widget topPackages() {
                               size: 12,
                             ),
                             poppinsText(
-                                text: ' Paris, France',
+                                text: packages[index].destination,
                                 size: 15.0,
                                 color: Constants.secondaryColor),
                           ],
@@ -471,7 +523,7 @@ Widget topPackages() {
                         Row(
                           children: [
                             poppinsText(
-                                text: '\$499.99',
+                                text: packages[index].packagePrice.toString(),
                                 size: 20.0,
                                 color: Constants.primaryColor,
                                 fontBold: FontWeight.w500),

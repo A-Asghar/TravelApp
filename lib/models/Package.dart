@@ -12,21 +12,24 @@ class Package {
   String travelAgencyId;
   String hotelPropertyId;
   List<String>? dayWiseDetails;
+  String destination;
 
-  Package(
-      {required this.packageId,
-      required this.packageName,
-      required this.packagePrice,
-      required this.packageDescription,
-      required this.startDate,
-      required this.endDate,
-      required this.rating,
-      required this.numOfSales,
-      required this.imgUrls,
-      required this.adults,
-      required this.travelAgencyId,
-      required this.hotelPropertyId,
-      this.dayWiseDetails});
+  Package({
+    required this.packageId,
+    required this.packageName,
+    required this.packagePrice,
+    required this.packageDescription,
+    required this.startDate,
+    required this.endDate,
+    required this.rating,
+    required this.numOfSales,
+    required this.imgUrls,
+    required this.adults,
+    required this.travelAgencyId,
+    required this.hotelPropertyId,
+    this.dayWiseDetails,
+    required this.destination,
+  });
 
   factory Package.fromJson(Map<String, dynamic> json) => Package(
         packageId: json["packageId"],
@@ -44,5 +47,6 @@ class Package {
         adults: json["adults"],
         travelAgencyId: json["travelAgencyId"],
         hotelPropertyId: json["hotelPropertyId"],
+        destination: json['destination'],
       );
 }

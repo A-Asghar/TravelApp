@@ -156,21 +156,7 @@ Future _selectDate(BuildContext context, String date) async {
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101));
 
-  if (selectedDate != null) {
-    if (date == 'depart') {
-      context.read<FlightSearchProvider>().departDate =
-          Constants.convertDate(selectedDate);
-    } else if (date == 'return') {
-      context.read<FlightSearchProvider>().returnDate =
-          Constants.convertDate(selectedDate);
-    } else if (date == 'checkin') {
-      context.read<HotelSearchProvider>().checkIn =
-          Constants.convertDate(selectedDate);
-    } else if (date == 'checkout') {
-      context.read<HotelSearchProvider>().checkOut =
-          Constants.convertDate(selectedDate);
-    }
-  }
+  return selectedDate;
 }
 
 Widget checkin_checkout_textfield(

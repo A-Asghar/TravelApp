@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fyp/Constants.dart';
+import 'package:fyp/models/Detail.dart';
+import 'package:fyp/models/PropertySearchListings.dart';
+import 'package:fyp/models/PropertyUnits.dart';
+import 'package:fyp/models/Review.dart';
 import 'package:http/http.dart' as http;
-
-import '../Constants.dart';
 
 class HotelNetwork {
   hotelsAPIKey() {
@@ -176,5 +180,102 @@ class HotelNetwork {
     print('network.reviews().statusCode: ${response.statusCode}');
 
     return response.body;
+  }
+
+  getHotels() async {
+    CollectionReference hotels =
+        FirebaseFirestore.instance.collection('propertySearchListing');
+    QuerySnapshot snapshot = await hotels.get();
+    List<dynamic> allHotels = snapshot.docs.map((doc) => doc.data()).toList();
+    print("hotel: ${allHotels[0]}");
+    return allHotels;
+  }
+
+  Future<List<Map<String, dynamic>>> getPropertyListings() async {
+    List<Map<String, dynamic>> listings = [];
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("propertySearchListing")
+        .get();
+
+    snapshot.docs.forEach((document) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      data["property"] = PropertySearchListing.fromJson(data["property"]);
+      listings.add(data);
+    });
+
+    return listings;
+  }
+
+  Future<List<Unit>> getHotelRooms(
+      {required propertyId, required regionId}) async {
+    List<Unit> hotelRooms = [];
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('propertyUnits')
+        .where('propertyId', isEqualTo: propertyId)
+        .where('regionId', isEqualTo: regionId)
+        .get();
+
+    snapshot.docs.forEach((document) {
+      print("before mapping: $document");
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      for (var room in data['hotelRooms']) {
+        room = Unit.fromJson(room);
+        hotelRooms.add(room);
+      }
+      // print("after mapping: ${data['hotelRooms']}");
+    });
+    print(hotelRooms[0].description);
+    return hotelRooms;
+  }
+
+  Future<List<ReviewElement>> getHotelReviews({required propertyId}) async {
+    List<ReviewElement> hotelReviews = [];
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('reviews')
+        .where('propertyId', isEqualTo: propertyId)
+        .get();
+
+    snapshot.docs.forEach((document) {
+      print("before mapping: $document");
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      for (var review in data['hotelReviews']) {
+        review = ReviewElement.fromJson(review);
+        hotelReviews.add(review);
+      }
+    });
+    print(hotelReviews[0].id);
+    return hotelReviews;
+  }
+
+  Future<List<dynamic>> getHotelDetails({required propertyId}) async {
+    List<ImageImage?> hotelImages = [];
+    List<TopAmenitiesItem> amenities = [];
+    Coordinates coordinates = Coordinates(latitude: 0.0, longitude: 0.0);
+    String description = '';
+    String address = '';
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('propertyDetails')
+        .where('propertyId', isEqualTo: propertyId)
+        .get();
+
+    snapshot.docs.forEach((document) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+      for (var image in data['hotelImages']) {
+        image = ImageImage.fromJson(image);
+        hotelImages.add(image);
+      }
+      for (var amenity in data['amenities']) {
+        amenity = TopAmenitiesItem.fromJson(amenity);
+        amenities.add(amenity);
+      }
+      coordinates = Coordinates.fromJson(data['coordinates']);
+      description = data['description'];
+      address = data['address'];
+    });
+
+    return [hotelImages, amenities, coordinates, description, address];
   }
 }
