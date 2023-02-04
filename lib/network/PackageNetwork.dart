@@ -61,6 +61,11 @@ class PackageNetwork {
       "travelAgencyId": packageBooking.travelAgencyId,
       "packageId": packageBooking.packageId
     });
+
+    // increment number of sales for the package
+    packages
+        .doc(packageBooking.packageId)
+        .update({'numOfSales': FieldValue.increment(1)});
   }
 
   getTravelerBooking({required travelerId}) async {

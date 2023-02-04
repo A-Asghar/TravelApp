@@ -28,7 +28,8 @@ class Constants {
     '377f061c79msh0b8044efc318220p16ed0cjsn628612571327',
     'f7ccbb53c9msh627753cf834adb5p13fafdjsn55e4135f34ef',
     'd12ffd2508msh533523f43bce082p1dda6djsn3a65c3422048',
-    '4118e10643msh20c6a738855d389p13af7ejsnba3b88dd0d65'
+    '4118e10643msh20c6a738855d389p13af7ejsnba3b88dd0d65',
+    'bc020343ecmsh3bfca8acaff3f02p137a4ajsn0de6998d3fcc'
   ];
   static const String weatherAPIKey = 'c3dd2e6a662447fdb6372507232701';
   static const String flight_client_id = 'CF9FfomFYGbFUVGG15igLgdiGtapSK1g';

@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/network/AuthNetwork.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/PackageRepository.dart';
 import 'package:fyp/repository/WeatherRepository.dart';
@@ -27,6 +29,8 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
 import 'Constants.dart';
+import 'models/Package.dart';
+import 'models/PropertySearchListings.dart';
 import 'models/Weather.dart';
 
 Future<void> main() async {
@@ -38,6 +42,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => FlightSearchProvider()),
         ChangeNotifierProvider(create: (_) => HotelSearchProvider()),
+        ChangeNotifierProvider(create: (_) => PackageHomeProvider()),
       ],
       child: const MyApp(),
     ),
@@ -217,9 +222,39 @@ class _MyHomePageState extends State<MyHomePage> {
                     // AuthNetwork.login(email: 'aatest722@gmail.com', password: '123456');
                     // final UserProvider controller = Get.put(UserProvider());
                     // print(controller.user!.email);
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Login(),
-                    ));
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (context) => Login(),
+                    // ));
+
+                    // Future<List<Map<String, dynamic>>>
+                    //     getPropertyListings() async {
+                    //   List<Map<String, dynamic>> listings = [];
+                    //
+                    //   QuerySnapshot snapshot = await FirebaseFirestore.instance
+                    //       .collection("propertySearchListing")
+                    //       .get();
+                    //
+                    //   snapshot.docs.forEach((document) {
+                    //     Map<String, dynamic> data =
+                    //         document.data() as Map<String, dynamic>;
+                    //     data["property"] = PropertySearchListing.fromJson(data["property"]);
+                    //     listings.add(data);
+                    //   });
+                    //
+                    //   return listings;
+                    // }
+                    getHomePackages() async {
+                      QuerySnapshot snapshot = await FirebaseFirestore.instance
+                          .collection('packages')
+                          .get();
+                      snapshot.docs.forEach((document) {
+                        context.read<PackageHomeProvider>().packages.add(
+                            Package.fromJson(
+                                document.data() as Map<String, dynamic>));
+                      });
+                    }
+
+                    await getHomePackages();
                   },
                   child: Text('API Test')),
               ElevatedButton(
