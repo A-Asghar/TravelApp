@@ -1,8 +1,8 @@
 # ExplorEase
 Explore the world with ExplorEase, your go-to travel planning app.
 
+![Apple iPhone 11 Pro Max Presentation (2)-min](https://user-images.githubusercontent.com/69311087/216818728-27c47529-05a2-4351-b510-7825223be1e9.png)
 
-![Google Pixel 4 XL Presentation](https://user-images.githubusercontent.com/69311087/216809490-ab702663-c502-48ba-b5d0-b14c63c94160.png)
 
 # Book Flights
 
