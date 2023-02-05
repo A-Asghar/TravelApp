@@ -6,7 +6,7 @@ Explore the world with ExplorEase, your go-to travel planning app.
 
 # Book Flights
 
-![Apple iPhone 11 Pro Max Presentation](https://user-images.githubusercontent.com/69311087/216809505-c98a4237-09be-47e1-aece-5205138e1441.png)
+![Apple iPhone 11 Pro Max Presentation (3)-min](https://user-images.githubusercontent.com/69311087/216819672-5fe5f910-c12e-4209-bfc1-1056ef94bf87.png)
 
 
 # Book Hotels
