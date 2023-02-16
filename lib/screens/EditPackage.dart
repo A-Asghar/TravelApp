@@ -23,7 +23,7 @@ class _EditPackageState extends State<EditPackage> {
   late int numOfSales;
   late String travelAgencyId;
   DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  int numOfDays = 0;
 
   DateTime selectedDate = DateTime.now();
 
@@ -36,7 +36,7 @@ class _EditPackageState extends State<EditPackage> {
     imgUrls.text = widget.package.imgUrls.join(', ');
     hotelPropertyId.text = widget.package.hotelPropertyId;
     startDate = widget.package.startDate;
-    endDate = widget.package.endDate;
+    numOfDays = widget.package.numOfDays;
     rating = widget.package.rating;
     numOfSales = widget.package.numOfSales;
     travelAgencyId = widget.package.travelAgencyId;
@@ -85,13 +85,11 @@ class _EditPackageState extends State<EditPackage> {
                   setState(() {});
                 },
                 child: Text('Start Date')),
-            TextButton(
-                onPressed: () {
-                  _selectDate(context);
-                  endDate = selectedDate;
-                  setState(() {});
-                },
-                child: Text('End Date')),
+            TextField(
+              controller: packageDescription,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(hintText: 'Number of Days'),
+            ),
             Text(widget.package.rating.toString()),
             Text(widget.package.numOfSales.toString()),
             Text(widget.package.travelAgencyId),
@@ -119,7 +117,7 @@ class _EditPackageState extends State<EditPackage> {
                           packagePrice: double.parse(packagePrice.text),
                           packageDescription: packageDescription.text,
                           startDate: startDate,
-                          endDate: endDate,
+                          numOfDays: numOfDays,
                           rating: rating,
                           numOfSales: numOfSales,
                           imgUrls: imgUrls.text.split(','),

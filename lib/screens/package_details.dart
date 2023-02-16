@@ -79,8 +79,8 @@ class _PackageDetailsState extends State<PackageDetails> {
                 InkWell(
                   onTap: () {
                     Get.to(
-                      HotelGallery(
-                        hotelImages: [],
+                      PackageGallery(
+                        packageImages: widget.package.imgUrls,
                       ),
                       transition: Transition.rightToLeft,
                     );
@@ -109,24 +109,16 @@ class _PackageDetailsState extends State<PackageDetails> {
                     physics: const ClampingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
+                      var image = widget.package.imgUrls[index];
                       return Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: Container(
                           height: 100,
                           width: 140,
                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
                             image: DecorationImage(
-                              image: AssetImage(
-                                index == 0
-                                    ? 'assets/images/g1.png'
-                                    : index == 1
-                                        ? 'assets/images/g2.png'
-                                        : index == 2
-                                            ? 'assets/images/g3.png'
-                                            : index == 3
-                                                ? 'assets/images/g4.png'
-                                                : 'assets/images/g5.png',
-                              ),
+                              image: NetworkImage(image),
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -134,24 +126,6 @@ class _PackageDetailsState extends State<PackageDetails> {
                       );
                     },
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                // Details
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: poppinsText(
-                    text: "Details",
-                    size: 20.0,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    //Put in ListView
-                    detailCard("Hotels"),
-                  ],
                 ),
                 const SizedBox(height: 20),
 
@@ -176,31 +150,37 @@ class _PackageDetailsState extends State<PackageDetails> {
                 const SizedBox(height: 20),
 
                 //Put in GridView
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    detailCard("Swimming Pool"),
-                    detailCard("Elevator"),
-                    detailCard("Fitness Center"),
-                    detailCard("24-hours Open"),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      detailCard("Swimming Pool"),
+                      detailCard("Elevator"),
+                      detailCard("Fitness Center"),
+                      detailCard("24-hours Open"),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    detailCard("Meeting Room"),
-                    detailCard("Elevator"),
-                    detailCard("Fitness Center"),
-                    detailCard("24-hours Open"),
-                  ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      detailCard("Meeting Room"),
+                      detailCard("Elevator"),
+                      detailCard("Fitness Center"),
+                      detailCard("24-hours Open"),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
 
-                // Day wise Details
-                // widget.package.dayWiseDetails!.isEmpty
-                //     ? Container()
-                //     : dayWiseDetail(widget.package.dayWiseDetails),
+                //Day wise Details
+                widget.package.dayWiseDetails!.isEmpty
+                    ? Container()
+                    : dayWiseDetail(widget.package.dayWiseDetails),
 
                 // Location Map
                 Padding(
@@ -358,8 +338,7 @@ Widget dayWiseDetail(List<String>? daywise) {
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
-              child: poppinsText(
-                  text: 'Day $index: ${daywise[index]} \n', size: 14.0),
+              child: poppinsText(text: '${daywise[index]} \n', size: 14.0),
             );
           }),
       const SizedBox(height: 20),

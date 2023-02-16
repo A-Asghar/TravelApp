@@ -8,8 +8,6 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-import '../hotel_details.dart';
-
 class HotelSearchResults extends StatefulWidget {
   const HotelSearchResults({Key? key}) : super(key: key);
 

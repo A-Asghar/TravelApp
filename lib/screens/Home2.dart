@@ -6,8 +6,6 @@ import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
-import 'package:fyp/screens/hotel/HotelSearchResults.dart';
-import 'package:fyp/screens/hotel_details.dart';
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
@@ -131,7 +129,11 @@ class _Home2State extends State<Home2> {
                   recommendedDestinations(),
                   const SizedBox(height: 10),
                   heading('Top Packages', 20.0),
-                  topPackages(context.read<PackageHomeProvider>().packages)
+                  topPackages(
+                      context.read<PackageHomeProvider>().packages, context),
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
             ),
@@ -240,7 +242,7 @@ Widget summerEscapes(
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     // width: MediaQuery.of(context).size.width * 0.95,
-    height: MediaQuery.of(context).size.height * 0.36,
+    height: MediaQuery.of(context).size.height * 0.38,
     child: ListView.builder(
         itemCount: hotels.length,
         shrinkWrap: true,
@@ -258,12 +260,12 @@ Widget summerEscapes(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.85,
+                width: 250,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    roundedImage(160.0, MediaQuery.of(context).size.width * 0.8,
-                        hotels[index].propertyImage!.image!.url),
+                    roundedImage(
+                        160.0, 250.0, hotels[index].propertyImage!.image!.url),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 2),
@@ -285,10 +287,10 @@ Widget summerEscapes(
                               const SizedBox(
                                 width: 2,
                               ),
-                              // poppinsText(
-                              //     text: city[index],
-                              //     size: 15.0,
-                              //     color: Constants.secondaryColor),
+                              poppinsText(
+                                  text: city[index],
+                                  size: 15.0,
+                                  color: Constants.secondaryColor),
                             ],
                           ),
 
@@ -319,10 +321,11 @@ Widget summerEscapes(
                           Row(
                             children: [
                               poppinsText(
-                                  text: hotels[index]
-                                      .price!
-                                      .lead!
-                                      .amount
+                                  text: double.parse(hotels[index]
+                                          .price!
+                                          .lead!
+                                          .amount!
+                                          .toStringAsFixed(2))
                                       .toString(),
                                   size: 20.0,
                                   color: Constants.primaryColor,
@@ -472,11 +475,10 @@ class sideBarRow extends StatelessWidget {
   }
 }
 
-Widget topPackages(List<Package> packages) {
+Widget topPackages(List<Package> packages, BuildContext context) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
-    // width: MediaQuery.of(context).size.width * 0.95,
-    height: 260,
+    height: MediaQuery.of(context).size.height * 0.32,
     child: ListView.builder(
         itemCount: packages.length,
         shrinkWrap: true,
@@ -493,50 +495,56 @@ Widget topPackages(List<Package> packages) {
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  roundedImage(160.0, 200.0, packages[index].imgUrls[0]),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        poppinsText(
-                            text: packages[index].packageName,
-                            size: 20.0,
-                            fontBold: FontWeight.w500),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.location_on,
-                              color: Constants.primaryColor,
-                              size: 12,
-                            ),
-                            poppinsText(
-                                text: packages[index].destination,
-                                size: 15.0,
-                                color: Constants.secondaryColor),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            poppinsText(
-                                text: packages[index].packagePrice.toString(),
-                                size: 20.0,
+              child: Container(
+                width: 250,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    roundedImage(160.0, 250.0, packages[index].imgUrls[0]),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 2),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          poppinsText(
+                              text: packages[index].packageName,
+                              size: 20.0,
+                              fontBold: FontWeight.w500),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
                                 color: Constants.primaryColor,
-                                fontBold: FontWeight.w500),
-                            poppinsText(
-                                text: ' /person',
-                                color: Constants.secondaryColor,
-                                size: 12.0)
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                                size: 12,
+                              ),
+                              poppinsText(
+                                  text: packages[index].destination,
+                                  size: 15.0,
+                                  color: Constants.secondaryColor),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              poppinsText(
+                                  text: double.parse(packages[index]
+                                          .packagePrice
+                                          .toStringAsFixed(2))
+                                      .toString(),
+                                  size: 20.0,
+                                  color: Constants.primaryColor,
+                                  fontBold: FontWeight.w500),
+                              poppinsText(
+                                  text: ' /person',
+                                  color: Constants.secondaryColor,
+                                  size: 12.0)
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );

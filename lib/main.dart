@@ -23,7 +23,6 @@ import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-
 import 'Constants.dart';
 import 'models/Weather.dart';
 
@@ -92,29 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.of(context).push(MaterialPageRoute(
-              //         builder: (context) => HotelSearchResults(),
-              //       ));
-              //     },
-              //     child: Text('Hotel Search Results')),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.of(context).push(MaterialPageRoute(
-              //         builder: (context) => Details(
-              //           detailsType: 'hotel',
-              //         ),
-              //       ));
-              //     },
-              //     child: Text('Hotel Detail')),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.of(context).push(MaterialPageRoute(
-              //         builder: (context) => Home(),
-              //       ));
-              //     },
-              //     child: Text('Home')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -153,22 +129,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('SignUp')),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.of(context).push(MaterialPageRoute(
-              //         builder: (context) => Details(
-              //           detailsType: 'package',
-              //         ),
-              //       ));
-              //     },
-              //     child: Text('Details Package')),
-              // ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.of(context).push(MaterialPageRoute(
-              //         builder: (context) => Details(detailsType: 'hotel'),
-              //       ));
-              //     },
-              //     child: Text('Details hotel room')),
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -194,7 +154,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ));
                   },
                   child: Text('Profile')),
-
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
