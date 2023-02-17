@@ -4,7 +4,7 @@ class Package {
   double packagePrice;
   String packageDescription;
   DateTime startDate;
-  DateTime endDate;
+  // DateTime endDate;
   double rating;
   int numOfSales;
   List<String> imgUrls;
@@ -20,7 +20,7 @@ class Package {
     required this.packagePrice,
     required this.packageDescription,
     required this.startDate,
-    required this.endDate,
+    // required this.endDate,
     required this.rating,
     required this.numOfSales,
     required this.imgUrls,
@@ -37,7 +37,7 @@ class Package {
         packagePrice: json["packagePrice"].toDouble(),
         packageDescription: json["packageDescription"],
         startDate: json["startDate"].toDate(),
-        endDate: json["endDate"].toDate(),
+        // endDate: json["endDate"].toDate(),
         rating: json["rating"].toDouble(),
         numOfSales: json["numOfSales"],
         imgUrls: List<String>.from(json["imgUrls"]!.map((x) => x)),

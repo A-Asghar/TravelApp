@@ -36,7 +36,7 @@ class _EditPackageState extends State<EditPackage> {
     imgUrls.text = widget.package.imgUrls.join(', ');
     hotelPropertyId.text = widget.package.hotelPropertyId;
     startDate = widget.package.startDate;
-    endDate = widget.package.endDate;
+    // endDate = widget.package.endDate;
     rating = widget.package.rating;
     numOfSales = widget.package.numOfSales;
     travelAgencyId = widget.package.travelAgencyId;
@@ -119,7 +119,7 @@ class _EditPackageState extends State<EditPackage> {
                           packagePrice: double.parse(packagePrice.text),
                           packageDescription: packageDescription.text,
                           startDate: startDate,
-                          endDate: endDate,
+                          // endDate: endDate,
                           rating: rating,
                           numOfSales: numOfSales,
                           imgUrls: imgUrls.text.split(','),

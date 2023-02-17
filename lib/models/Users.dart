@@ -6,6 +6,7 @@ class Users {
   String dateOfBirth;
   String gender;
   String address;
+  List searchedCities;
 
   Users({
     required this.name,
@@ -15,6 +16,7 @@ class Users {
     required this.dateOfBirth,
     required this.gender,
     required this.address,
+    required this.searchedCities,
   });
 
   factory Users.fromJson(Map<String, dynamic> json) => Users(
@@ -25,5 +27,6 @@ class Users {
         dateOfBirth: json["dateOfBirth"],
         gender: json["gender"],
         address: json["address"],
+        searchedCities: json["searchedCities"],
       );
 }

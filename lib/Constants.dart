@@ -10,8 +10,9 @@ class Constants {
   static const Color secondaryColor = Colors.black54;
   
   // Urls
-  static const String uri = 'test.api.amadeus.com';
+  static const String flight_uri = 'test.api.amadeus.com';
   static const String flightSearch = '/v2/shopping/flight-offers';
+  static const String city_similarity = '/v1/reference-data/recommended-locations';
   static const String citySearch = '/v1/reference-data/locations';
   static const String hotels = 'https://hotels4.p.rapidapi.com';
   static const String locations_v3_search = '/locations/v3/search';

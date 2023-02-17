@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/Users.dart';
@@ -24,16 +23,17 @@ class AuthNetwork {
         'phoneNumber': '',
         'gender': '',
         'profilePhotoUrl': '',
+        'searchedCities': [],
       });
     });
-    setUserInProvider();
+    await setUserInProvider();
   }
 
   static login({required email, required password}) async {
     await FirebaseAuth.instance
         .signInWithEmailAndPassword(email: email, password: password);
 
-    setUserInProvider();
+    await setUserInProvider();
   }
 
   static signInWithGoogle() async {
@@ -65,11 +65,12 @@ class AuthNetwork {
           'dateOfBirth': '',
           'phoneNumber': '',
           'gender': '',
-          'profilePhotoUrl': ''
+          'profilePhotoUrl': '',
+          'searchedCities': [],
         });
       }
     });
-    setUserInProvider();
+    await setUserInProvider();
     return exists;
   }
 
@@ -82,8 +83,9 @@ class AuthNetwork {
       'phoneNumber': user.phoneNumber,
       'gender': user.gender,
       'profilePhotoUrl': user.profilePhotoUrl,
+      'searchedCities': [],
     });
-    setUserInProvider();
+    await setUserInProvider();
   }
 
   static setUserInProvider() async {

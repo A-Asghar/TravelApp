@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/models/PropertyUnits.dart';
 import 'package:fyp/models/Review.dart';
-import 'package:fyp/screens/hotel_details.dart';
 
 import '../models/Detail.dart';
 import '../network/HotelNetwork.dart';

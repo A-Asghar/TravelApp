@@ -155,14 +155,14 @@ class _LoginState extends State<Login> {
                             await AuthNetwork.login(
                                     email: _email.text,
                                     password: _password.text)
-                                .catchError((e) {
-                              print(e.code);
-                              authErrorDialog(e.code, context);
-                              setState(() => isLoading = false);
-                            }).then((_) {
+                                .then((_) {
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => const BottomNavBar(),
                               ));
+                            }).catchError((e) {
+                              print(e.code);
+                              authErrorDialog(e.code, context);
+                              setState(() => isLoading = false);
                             });
 
                             setState(() => isLoading = false);

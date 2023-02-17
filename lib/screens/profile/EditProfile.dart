@@ -163,13 +163,15 @@ class _EditProfileState extends State<EditProfile> {
                         setState(() => isLoading = true);
 
                         Users u = Users(
-                            name: name.text,
-                            email: email.text,
-                            phoneNumber: phoneNumber.text,
-                            profilePhotoUrl: profilePhotoUrl.text,
-                            dateOfBirth: dateOfBirth.text,
-                            gender: gender.text,
-                            address: address.text);
+                          name: name.text,
+                          email: email.text,
+                          phoneNumber: phoneNumber.text,
+                          profilePhotoUrl: profilePhotoUrl.text,
+                          dateOfBirth: dateOfBirth.text,
+                          gender: gender.text,
+                          address: address.text,
+                          searchedCities: [],
+                        );
                         await AuthNetwork.createUserProfile(
                                 signedInUser:
                                     FirebaseAuth.instance.currentUser!,
