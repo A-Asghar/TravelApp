@@ -302,7 +302,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         const SizedBox(height: 20),
 
                         // Rooms
-                        hotelRooms(hotelProvider),
+                        hotelRooms2(hotelProvider),
 
                         // Reviews
                         InkWell(
@@ -441,7 +441,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
   }
 }
 
-Widget hotelRooms(HotelSearchProvider hotelProvider) {
+Widget hotelRooms2(HotelSearchProvider hotelProvider) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

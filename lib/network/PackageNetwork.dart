@@ -15,14 +15,17 @@ class PackageNetwork {
       "packagePrice": package.packagePrice,
       "packageDescription": package.packageDescription,
       "startDate": package.startDate,
-      // "endDate": package.endDate,
+
+      "numOfDays": package.numOfDays,
+
       "rating": package.rating,
       "numOfSales": package.numOfSales,
       "imgUrls": package.imgUrls,
       "adults": package.adults,
       "travelAgencyId": package.travelAgencyId,
       "hotelPropertyId": package.hotelPropertyId,
-      "dayWiseDetails": package.dayWiseDetails
+      "dayWiseDetails": package.dayWiseDetails,
+      "destination": package.destination,
     });
   }
 
@@ -42,7 +45,9 @@ class PackageNetwork {
       "packagePrice": package.packagePrice,
       "packageDescription": package.packageDescription,
       "startDate": package.startDate,
-      // "endDate": package.endDate,
+
+      "numOfDays": package.numOfDays,
+
       "rating": package.rating,
       "numOfSales": package.numOfSales,
       "imgUrls": package.imgUrls,

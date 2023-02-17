@@ -42,12 +42,8 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
     context.read<HomeProvider>().hotelRooms =
         await hotelRepository.getHotelRooms(
             propertyId: widget.property.id, regionId: widget.property.regionId);
-    print("from prov: ${context.read<HomeProvider>().hotelRooms[0].id}");
     List detailResponse =
         await hotelRepository.getHotelDetails(propertyId: widget.property.id);
-    print("should be images: ${detailResponse[0]}");
-    print("should be amenities: ${detailResponse[1]}");
-    print("should be coord: ${detailResponse[2]}");
     context.read<HomeProvider>().hotelImages = detailResponse[0];
     context.read<HomeProvider>().amenities = detailResponse[1];
     context.read<HomeProvider>().coordinates = detailResponse[2];
@@ -58,8 +54,6 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
     setState(() => isLoading = false);
     var e = DateTime.now();
     print(e.difference(s).inSeconds);
-    print(
-        'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HomeProvider>().hotelReviews.length}');
   }
 
   @override
@@ -260,7 +254,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                         const SizedBox(height: 20),
 
                         // Rooms
-                        hotelRooms(homeProvider),
+                        hotelRooms1(homeProvider),
 
                         // Reviews
                         InkWell(
@@ -399,7 +393,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
   }
 }
 
-Widget hotelRooms(HomeProvider homeProvider) {
+Widget hotelRooms1(HomeProvider homeProvider) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

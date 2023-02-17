@@ -27,7 +27,7 @@ class _AddPackageState extends State<AddPackage> {
   TextEditingController destination = TextEditingController();
 
   DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+  int numOfDays = 0;
   DateTime selectedDate = DateTime.now();
 
   @override
@@ -85,13 +85,11 @@ class _AddPackageState extends State<AddPackage> {
                   setState(() {});
                 },
                 child: Text('Start Date')),
-            TextButton(
-                onPressed: () {
-                  _selectDate(context);
-                  endDate = selectedDate;
-                  setState(() {});
-                },
-                child: Text('End Date')),
+            TextField(
+              controller: adults,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(hintText: 'Number of days'),
+            ),
             // TextField(
             //   controller: rating,
             //   keyboardType: TextInputType.number,
@@ -125,14 +123,17 @@ class _AddPackageState extends State<AddPackage> {
                         packagePrice: double.parse(packagePrice.text),
                         packageDescription: packageDescription.text,
                         startDate: startDate,
-                        // endDate: endDate,
+
+                        numOfDays: numOfDays,
+
                         rating: 0.0,
                         numOfSales: 0,
                         imgUrls: imgUrls.text.split(','),
                         adults: int.parse(adults.text),
                         travelAgencyId: random9DigitNumber(),
                         hotelPropertyId: random9DigitNumber(),
-                        destination: "Aliasghars', House"),
+                        destination: "Aliasghars', House",
+                        dayWiseDetails: []),
                   );
                 }),
 
