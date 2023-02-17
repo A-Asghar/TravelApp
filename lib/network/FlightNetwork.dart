@@ -21,7 +21,7 @@ class FlightNetwork{
     AccessTokenRepository accessTokenRepository = AccessTokenRepository();
 
     final url = Uri.parse(
-        'https://${Constants.uri}${Constants.flightSearch}?originLocationCode=$originLocationCode&destinationLocationCode=$destinationLocationCode&departureDate=$departureDate&adults=$adults${returnDate == '' ? '' : '&returnDate=$returnDate'}');
+        'https://${Constants.flight_uri}${Constants.flightSearch}?originLocationCode=$originLocationCode&destinationLocationCode=$destinationLocationCode&departureDate=$departureDate&adults=$adults${returnDate == '' ? '' : '&returnDate=$returnDate'}');
 
     var response = await http.get(
       url,
@@ -53,11 +53,11 @@ class FlightNetwork{
   }
 
   getAccessToken() async {
-    var url = Uri.https(Constants.uri, '/v1/security/oauth2/token');
+    var url = Uri.https(Constants.flight_uri, '/v1/security/oauth2/token');
     var response = await http.post(url, body: {
       'grant_type': 'client_credentials',
-      'client_id': 'CF9FfomFYGbFUVGG15igLgdiGtapSK1g',
-      'client_secret': 'XgukiYQGMPtShAMT',
+      'client_id': Constants.flight_client_id,
+      'client_secret': Constants.flight_client_secret,
       // 'client_id': 'tsqjLha5nk2Vjp0dd46KdrNOItpKyQrN',
       // 'client_secret': 'CGS1XARCa9TQWvON',
     });

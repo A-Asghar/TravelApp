@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../models/Users.dart';
+import '../../network/AuthNetwork.dart';
 import '../../widgets/imageOptions.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
@@ -90,10 +93,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
         //   child: const Icon(Icons.arrow_back_ios, color: Colors.black),
         // ),
         centerTitle: true,
-        title: poppinsText(
-          text:"Fill Your Profile",
-          size: 24.0
-        ),
+        title: poppinsText(text: "Fill Your Profile", size: 24.0),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -112,7 +112,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
                       // Profile Picture
                       Center(
                         child: InkWell(
-                          onTap: ()=>_showSelectPhotoOptions(context),
+                          onTap: () => _showSelectPhotoOptions(context),
                           child: Container(
                             height: 140,
                             width: 140,
@@ -120,8 +120,8 @@ class _FillYourProfileState extends State<FillYourProfile> {
                               image: DecorationImage(
                                 image: AssetImage(
                                     _image?.path ?? 'assets/images/user.png'
-                                  // _image == null ? 'assets/images/user.png' : _image!.path,
-                                ),
+                                    // _image == null ? 'assets/images/user.png' : _image!.path,
+                                    ),
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -152,21 +152,21 @@ class _FillYourProfileState extends State<FillYourProfile> {
 
                       // Date of birth
                       CustomTextField(
-                          readOnly: true,
-                          onTap: ()=>_selectDate(context),
-                          keyboardType: TextInputType.datetime,
-                          hintText: "date of birth",
-                          showError: validateDateOfBirth,
-                          textFieldController: _dateOfBirth,
-                          sufix: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: SvgPicture.asset(
-                              'assets/images/Calendar.svg',
-                              color: Constants.secondaryColor,
-                            ),
+                        readOnly: true,
+                        onTap: () => _selectDate(context),
+                        keyboardType: TextInputType.datetime,
+                        hintText: "date of birth",
+                        showError: validateDateOfBirth,
+                        textFieldController: _dateOfBirth,
+                        sufix: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: SvgPicture.asset(
+                            'assets/images/Calendar.svg',
+                            color: Constants.secondaryColor,
                           ),
-                          prefix: const SizedBox(),
                         ),
+                        prefix: const SizedBox(),
+                      ),
 
                       const SizedBox(height: 20),
 
@@ -211,30 +211,31 @@ class _FillYourProfileState extends State<FillYourProfile> {
                   : TealButton(
                       text: "Continue",
                       onPressed: () async {
-                        // if (validateTextFields()) {
-                        //   setState(() => isLoading = true);
-                        //   await Network.createUserProfile(
-                        //     signedInUser: FirebaseAuth.instance.currentUser!,
-                        //     user: Users(
-                        //         email:
-                        //             FirebaseAuth.instance.currentUser!.email!,
-                        //         name: _name.text,
-                        //         address: _address.text,
-                        //         dateOfBirth: _dateOfBirth.text,
-                        //         phoneNumber: _phoneNumber.text,
-                        //         gender: _gender.text,
-                        //         profilePhotoUrl: _image?.path ?? ''),
-                        //   ).then((_) {
-                        //     setState(() => isLoading = false);
-                        //     Navigator.of(context).push(MaterialPageRoute(
-                        //       builder: (context) => const BottomNavBar(),
-                        //     ));
-                        //   });
-                        // }
+                        if (validateTextFields()) {
+                          setState(() => isLoading = true);
+                          await AuthNetwork.createUserProfile(
+                            signedInUser: FirebaseAuth.instance.currentUser!,
+                            user: Users(
+                              email: FirebaseAuth.instance.currentUser!.email!,
+                              name: _name.text,
+                              address: _address.text,
+                              dateOfBirth: _dateOfBirth.text,
+                              phoneNumber: _phoneNumber.text,
+                              gender: _gender.text,
+                              profilePhotoUrl: _image?.path ?? '',
+                              searchedCities: [],
+                            ),
+                          ).then((_) {
+                            setState(() => isLoading = false);
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const BottomNavBar(),
+                            ));
+                          });
+                        }
 
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const BottomNavBar(),
-                        ));
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) => const BottomNavBar(),
+                        // ));
                       },
                     ),
             ),
@@ -271,15 +272,14 @@ class _FillYourProfileState extends State<FillYourProfile> {
         },
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(1950,1),
-        lastDate: DateTime(2023));
+        firstDate: DateTime(1950, 1),
+        lastDate: DateTime(2024));
 
     if (selectedDate != null) {
       setState(() {
         _dateOfBirth.text = Constants.convertDate(selectedDate);
       });
     }
-
   }
 
   validateTextFields() {
@@ -325,9 +325,13 @@ class _FillYourProfileState extends State<FillYourProfile> {
       setState(() => validateGender = true);
     }
 
-    if (validateGender && validatePhoneNumber && validateEmail
-        && validateDateOfBirth && validateDateOfBirth && validateAddress
-        && validateName)
+    if (validateGender &&
+        validatePhoneNumber &&
+        validateEmail &&
+        validateDateOfBirth &&
+        validateDateOfBirth &&
+        validateAddress &&
+        validateName)
       return true;
     else
       return false;

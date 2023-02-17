@@ -6,6 +6,9 @@ import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
+
+import 'package:fyp/screens/hotel/HotelSearchResults.dart';
+
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
@@ -367,11 +370,11 @@ Widget roundedImage(height, width, src) {
 
 Widget recommendedDestinations() {
   List images = [
-    'https://cdn.britannica.com/16/99616-050-72CD201A/Colosseum-Rome.jpg',
+    'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=944&q=80',
     'https://london.com/wp-content/uploads/2019/03/london_001.jpg',
-    'https://media.cntraveler.com/photos/57d87670fd86274a1db91acd/master/pass/most-beautiful-paris-pont-alexandre-iii-GettyImages-574883771.jpg',
-    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/3b/95/61/photo2jpg.jpg?w=600&h=400&s=1',
-    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/23/6a/ff/2a/caption.jpg?w=700&h=500&s=1&cx=7014&cy=3760&chk=v1_14690e40614ca9b48b73',
+    'https://images.unsplash.com/photo-1444723121867-7a241cacace9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    'https://images.unsplash.com/photo-1496568816309-51d7c20e3b21?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1031&q=80',
     'https://cdn.britannica.com/49/179449-138-9F4EC401/Overview-Berlin.jpg?w=800&h=450&c=crop',
     'https://content.r9cdn.net/rimg/dimg/62/28/22c46ab3-city-3286-164709113b2.jpg?crop=true&width=1020&height=498',
   ];

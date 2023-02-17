@@ -123,7 +123,9 @@ class _AddPackageState extends State<AddPackage> {
                         packagePrice: double.parse(packagePrice.text),
                         packageDescription: packageDescription.text,
                         startDate: startDate,
+
                         numOfDays: numOfDays,
+
                         rating: 0.0,
                         numOfSales: 0,
                         imgUrls: imgUrls.text.split(','),

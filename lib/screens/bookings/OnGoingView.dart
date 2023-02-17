@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../Constants.dart';
 import '../../widgets/customButton.dart';
 import '../../widgets/poppinsText.dart';
-import '../Profile.dart';
+import '../profile/Profile.dart';
 import 'CancelBookingScreen.dart';
 
 class OnGoingView extends StatefulWidget {

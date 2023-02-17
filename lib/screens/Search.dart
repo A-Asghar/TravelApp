@@ -4,6 +4,7 @@ import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
 import 'package:fyp/repository/HotelRepository.dart';
+import 'package:fyp/repository/RecommendationRepository.dart';
 import 'package:fyp/screens/SearchDestination.dart';
 import 'package:fyp/screens/flight/FlightSearchResult.dart';
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';
@@ -507,6 +508,11 @@ class _FlightLayoutState extends State<FlightLayout> {
   searchFlight(flightTrips) async {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const FlightSearchResult()));
+
+    // todo update user searchedCities
+
+    RecommendationRepository().updateUserSearchedCities(
+        iata: context.read<FlightSearchProvider>().to.iata);
     FlightRepository flightRepository = FlightRepository();
     List response = await flightRepository.flightOffersSearch(
         originLocationCode: context.read<FlightSearchProvider>().from.iata,
@@ -610,6 +616,10 @@ class _HotelLayoutState extends State<HotelLayout> {
   searchHotel() async {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const HotelSearchResults()));
+
+    RecommendationRepository().updateUserSearchedCities(
+        iata: context.read<HotelSearchProvider>().to.iata);
+
     HotelRepository hotelRepository = HotelRepository();
     List response = await hotelRepository.hotelSearch(
         city: context.read<HotelSearchProvider>().to.city.split(',')[0],

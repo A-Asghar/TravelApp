@@ -3,7 +3,7 @@ import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 
 import '../Constants.dart';
-import '../screens/Profile.dart';
+import '../screens/profile/Profile.dart';
 import 'customButton.dart';
 
 class BookingFilterView extends StatelessWidget {

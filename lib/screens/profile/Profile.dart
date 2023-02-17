@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fyp/screens/EditProfile.dart';
+import 'package:fyp/screens/profile/EditProfile.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-import '../Constants.dart';
-import '../providers/UserProvider.dart';
-import '../widgets/customButton.dart';
-import '../widgets/poppinsText.dart';
-import 'Home2.dart';
+import '../../Constants.dart';
+import '../../providers/UserProvider.dart';
+import '../../widgets/customButton.dart';
+import '../../widgets/poppinsText.dart';
+import '../Home2.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -65,17 +66,21 @@ class _ProfileState extends State<Profile> {
                         const SizedBox(height: 20),
 
                         // Name
-                        poppinsText(
-                          text: controller.user?.name ?? "Ali Asghar",
-                          size: 24.0,
-                          fontBold: FontWeight.w700,
+                        GetBuilder<UserProvider>(
+                          builder: (_) {
+                            return poppinsText(
+                              text: controller.user?.name ?? "Your Name",
+                              size: 24.0,
+                              fontBold: FontWeight.w700,
+                            );
+                          },
                         ),
                         const SizedBox(height: 10),
 
                         // Email
                         poppinsText(
                             text: controller.user?.email ??
-                                "ali_asghar@yourdomain.com",
+                                "email@domain.com",
                             size: 14.0),
                         const Divider(color: Constants.secondaryColor),
                         const SizedBox(height: 20),
@@ -172,7 +177,7 @@ class _ProfileState extends State<Profile> {
                                       const SizedBox(height: 30),
                                       CustomButton(
                                         text: "Yes, Logout",
-                                        onTap: () {
+                                        onTap: () async{
                                           Get.offAll(
                                             const Home2(),
                                             transition: Transition.rightToLeft,
@@ -182,6 +187,7 @@ class _ProfileState extends State<Profile> {
                                             transition: Transition.rightToLeft,
                                           );
                                           FirebaseAuth.instance.signOut();
+                                              await GoogleSignIn(scopes: <String>["email"]).signOut();
                                         },
                                       ),
                                       const SizedBox(height: 15),
@@ -245,5 +251,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-
