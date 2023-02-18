@@ -14,8 +14,7 @@ class RecommendationRepository {
     response = jsonDecode(response);
     Cities cities = Cities.fromJson(response);
 
-    final RecommendationProvider controller = Get.put(RecommendationProvider());
-    controller.recommendedCities = cities.data!;
+    return cities.data;
   }
 
   updateUserSearchedCities({required String iata}) async {

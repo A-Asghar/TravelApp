@@ -48,6 +48,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => HotelSearchProvider()),
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => PackageHomeProvider()),
+        ChangeNotifierProvider(create: (_) => RecommendationProvider()),
       ],
       child: const MyApp(),
     ),
@@ -244,9 +245,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     // RecommendationRepository().getRecommendedCities(
                     //     cityIatas: controller.user!.searchedCities);
                     //
-                    // final RecommendationProvider controller2 =
-                    //     Get.put(RecommendationProvider());
-                    //
+                    final RecommendationProvider controller2 =
+                        Get.put(RecommendationProvider());
+
+                    print(controller2.recommendedCities);
                     // controller2.recommendedCities?.forEach((element) {
                     //   print(element.name);
                     // });

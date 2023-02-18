@@ -1,12 +1,12 @@
-import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/RecommendedCities.dart';
 
-class RecommendationProvider extends GetxController {
+class RecommendationProvider extends ChangeNotifier {
   List<City>? _recommendedCities;
   set recommendedCities(value) {
     _recommendedCities = value;
-    update();
+    notifyListeners();
   }
 
   List<City>? get recommendedCities => _recommendedCities;

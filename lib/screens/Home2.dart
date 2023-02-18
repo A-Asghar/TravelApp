@@ -4,6 +4,7 @@ import 'package:fyp/models/Package.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
+import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
 
@@ -13,10 +14,16 @@ import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../Constants.dart';
+import '../models/RecommendedCities.dart';
+import '../providers/RecommendationProvider.dart';
 import '../repository/FlightRepository.dart';
+import '../repository/RecommendationRepository.dart';
 
 class Home2 extends StatefulWidget {
   const Home2({Key? key}) : super(key: key);
@@ -28,21 +35,33 @@ class Home2 extends StatefulWidget {
 class _Home2State extends State<Home2> {
   @override
   void initState() {
-    // req();
-    // print(destinationController.flights.length);
-    fetchHotels();
-    fetchPackages();
     super.initState();
+
+    fetchInfo();
+  }
+
+  fetchInfo() {
+    setState(() => isLoading = true);
+
+    if (context.read<RecommendationProvider>().recommendedCities == null) {
+      fetchRecommended();
+    }
+    if (context.read<HomeProvider>().hotels.isEmpty) {
+      fetchHotels();
+    }
+    if (context.read<PackageHomeProvider>().packages.isEmpty) {
+      fetchPackages();
+    }
+
+    setState(() => isLoading = false);
   }
 
   bool isLoading = false;
   fetchHotels() async {
-    setState(() => isLoading = true);
     HotelRepository hotelRepository = HotelRepository();
     List hotelResponse = await hotelRepository.getHotels();
     context.read<HomeProvider>().hotels = hotelResponse[0];
     context.read<HomeProvider>().city = hotelResponse[1];
-    print(context.read<HomeProvider>().hotels[0].price);
   }
 
   fetchPackages() async {
@@ -54,25 +73,14 @@ class _Home2State extends State<Home2> {
           .packages
           .add(Package.fromJson(document.data() as Map<String, dynamic>));
     });
-    setState(() => isLoading = false);
   }
 
-  req() async {
-    // AccessTokenRepository a = AccessTokenRepository();
-    // AccessToken accessToken = await a.getAccessToken();
-    // print(accessToken.accessToken);
-    // Network n = Network();
-    // n.flightOffersSearch();
-    FlightRepository flightRepository = FlightRepository();
-    // await flightRepository.flightOffersSearch(
-    //     originLocationCode: 'KHI',
-    //     destinationLocationCode: 'DXB',
-    //     adults: '1',
-    //     departureDate: '2022-10-12');
-    // flightRepository.citySearch(keyword: 'lon');
-    // HotelRepository hotelRepository = HotelRepository();
-    // hotelRepository.hotelSearch(city: 'edinburgh');
-    // hotelRepository.getHotelReviews(id: 402789);
+  fetchRecommended() async {
+    final UserProvider controller = Get.put(UserProvider());
+
+    context.read<RecommendationProvider>().recommendedCities =
+        await RecommendationRepository()
+            .getRecommendedCities(cityIatas: controller.user!.searchedCities);
   }
 
   @override
@@ -128,8 +136,7 @@ class _Home2State extends State<Home2> {
                     context.read<HomeProvider>().city,
                   ),
                   const SizedBox(height: 20),
-                  heading('Recommended Destinations', 20.0),
-                  recommendedDestinations(),
+                  recommendedDestinations(context),
                   const SizedBox(height: 10),
                   heading('Top Packages', 20.0),
                   topPackages(
@@ -245,12 +252,13 @@ Widget summerEscapes(
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     // width: MediaQuery.of(context).size.width * 0.95,
-    height: MediaQuery.of(context).size.height * 0.38,
+    height: 300,
     child: ListView.builder(
         itemCount: hotels.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
+          var formatter = NumberFormat('#,##,000');
           return GestureDetector(
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -262,14 +270,15 @@ Widget summerEscapes(
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              child: Container(
-                width: 250,
+              child: SizedBox(
+                width: 200,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     roundedImage(
                         160.0, 250.0, hotels[index].propertyImage!.image!.url),
                     Container(
+                      height: 130,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 2),
                       child: Column(
@@ -277,9 +286,8 @@ Widget summerEscapes(
                         children: [
                           poppinsText(
                               text: hotels[index].name.toString(),
-                              size: 20.0,
+                              size: 16.0,
                               fontBold: FontWeight.w500),
-                          // poppinsText(text: 'Karachi, Pakistan', size: 18.0),
                           Row(
                             children: [
                               const Icon(
@@ -296,7 +304,6 @@ Widget summerEscapes(
                                   color: Constants.secondaryColor),
                             ],
                           ),
-
                           Container(
                             width: 180,
                             alignment: Alignment.bottomRight,
@@ -310,17 +317,28 @@ Widget summerEscapes(
                                 const SizedBox(
                                   width: 2,
                                 ),
-                                poppinsText(
-                                    text:
-                                        hotels[index].reviews!.score.toString(),
-                                    color: Colors.black87,
-                                    fontBold: FontWeight.w400),
+                                Row(
+                                  children: [
+                                    poppinsText(
+                                        text: hotels[index]
+                                            .reviews!
+                                            .score
+                                            .toString(),
+                                        color: Colors.black87,
+                                        fontBold: FontWeight.w400),
+                                    const SizedBox(width: 10),
+                                    poppinsText(
+                                        text:
+                                            '(${hotels[index].reviews!.total! > 1000 ? formatter.format(hotels[index].reviews!.total).toString() : hotels[index].reviews!.total.toString()} reviews)',
+                                        color: Constants.secondaryColor,
+                                        size: 13.0),
+                                  ],
+                                ),
                                 const Spacer(),
-                                // SizedBox(width: 10,)
                               ],
                             ),
                           ),
-
+                          const Spacer(),
                           Row(
                             children: [
                               poppinsText(
@@ -368,7 +386,7 @@ Widget roundedImage(height, width, src) {
   );
 }
 
-Widget recommendedDestinations() {
+Widget recommendedDestinations(BuildContext context) {
   List images = [
     'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=944&q=80',
     'https://london.com/wp-content/uploads/2019/03/london_001.jpg',
@@ -378,39 +396,46 @@ Widget recommendedDestinations() {
     'https://cdn.britannica.com/49/179449-138-9F4EC401/Overview-Berlin.jpg?w=800&h=450&c=crop',
     'https://content.r9cdn.net/rimg/dimg/62/28/22c46ab3-city-3286-164709113b2.jpg?crop=true&width=1020&height=498',
   ];
-  List locations = [
-    'Rome',
-    'London',
-    'Paris',
-    'Sydney',
-    'Dubai',
-    'Berlin',
-    'Beijing'
-  ];
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 5),
-    height: 145,
-    child: ListView.builder(
-      shrinkWrap: true,
-      scrollDirection: Axis.horizontal,
-      itemCount: 7,
-      itemBuilder: (context, index) {
-        return Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              roundedImage(100.0, 150.0, images[index]),
-              Container(
-                  padding: const EdgeInsets.all(5),
-                  child: poppinsText(text: locations[index], size: 16.0))
-            ],
+
+  List<City>? locations =
+      context.watch<RecommendationProvider>().recommendedCities;
+
+  if (locations == null) {
+    return Container();
+  }
+  if (locations.isNotEmpty) {
+    return Column(
+      children: [
+        heading('Recommended Destinations', 20.0),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          height: 145,
+          child: ListView.builder(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: locations.length,
+            itemBuilder: (context, index) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    roundedImage(100.0, 150.0, images[index]),
+                    Container(
+                        padding: const EdgeInsets.all(5),
+                        child: poppinsText(
+                            text: locations[index].name, size: 16.0))
+                  ],
+                ),
+              );
+            },
           ),
-        );
-      },
-    ),
-  );
+        )
+      ],
+    );
+  }
+  return Container();
 }
 
 class SideBar extends StatelessWidget {
