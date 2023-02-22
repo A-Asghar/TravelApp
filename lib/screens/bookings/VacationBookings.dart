@@ -10,8 +10,10 @@ import 'package:fyp/screens/bookings/FlightsCanceledView.dart';
 
 import '../../Constants.dart';
 import '../../widgets/poppinsText.dart';
+import 'Bookings.dart';
 import 'CanceledView.dart';
 import 'CompletedView.dart';
+import 'FlightBookings.dart';
 import 'OnGoingView.dart';
 
 class VacationsBookings extends StatefulWidget {
@@ -22,7 +24,9 @@ class VacationsBookings extends StatefulWidget {
 }
 
 class _VacationsBookingsState extends State<VacationsBookings> {
-  final documentController1 = Get.put(DocumentController());
+  final documentController1 = Get.put(DocumentController1());
+
+  String selectedname ='Packages';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,54 +38,104 @@ class _VacationsBookingsState extends State<VacationsBookings> {
             SizedBox(height: MediaQuery.of(context).padding.top + 20),
             Container(
               padding: const EdgeInsets.only(left: 16),
-              child: poppinsText(
-                  text: 'My Bookings', size: 24.0, fontBold: FontWeight.w600),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  poppinsText(
+                      text: 'My Bookings', size: 14.0, fontBold: FontWeight.w600),
+                  DropdownButton<String>(
+                    value: selectedname,
+                    items: [
+                      DropdownMenuItem(
+                        child: poppinsText(
+                            text: 'Hotel', size: 14.0, fontBold: FontWeight.w600),
+                        value: "Hotel",
+                      ),
+                      DropdownMenuItem(
+                        child: poppinsText(
+                            text: 'Flight', size: 14.0, fontBold: FontWeight.w600),
+                        value: "Flight",
+                      ),
+                      DropdownMenuItem(
+
+                        child: poppinsText(
+                            text: 'Packages', size: 14.0, fontBold: FontWeight.w600),
+                        value: "Packages",
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        Navigator.of(context).pop();
+                        selectedname = value!;
+                        if( value == "Hotel"){
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Bookings(),
+
+                          ));
+                        }else if(value == "Flight"){
+                          //Navigator.of(context).pop();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => FlightBookings(),
+                          ));
+                        }else if(value == "Packages"){
+                         // Navigator.of(context).pop();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VacationsBookings(),
+                          ));
+                        }
+                      });
+                    },
+
+                  ),
+
+                ],
+              ),
             ),
             const SizedBox(height: 20),
-            GetX<DocumentController>(
+            GetX<DocumentController1>(
               init: documentController1,
-              builder: (documentController) => Row(
+              builder: (documentController1) => Row(
                 children: [
                   tapCard(
                     "Ongoing",
-                    documentController.isDocument.value == 0
+                    documentController1.isDocument.value == 0
                         ? Constants.primaryColor
                         : Colors.transparent,
                         () {
-                      documentController.isDocument.value = 0;
+                      documentController1.isDocument.value = 0;
                     },
                   ),
                   const SizedBox(width: 14),
                   tapCard(
                     "Completed",
-                    documentController.isDocument.value == 1
+                    documentController1.isDocument.value == 1
                         ? Constants.primaryColor
                         : Colors.transparent,
                         () {
-                      documentController.isDocument.value = 1;
+                      documentController1.isDocument.value = 1;
                     },
                   ),
                   const SizedBox(width: 14),
                   tapCard(
 
                     "Canceled",
-                    documentController.isDocument.value == 2
+                    documentController1.isDocument.value == 2
                         ? Constants.primaryColor
                         : Colors.transparent,
                         () {
-                      documentController.isDocument.value = 2;
+                      documentController1.isDocument.value = 2;
                     },
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            GetX<DocumentController>(
+            GetX<DocumentController1>(
               init: documentController1,
-              builder: (documentController) =>
-              documentController.isDocument.value == 0
+              builder: (documentController1) =>
+              documentController1.isDocument.value == 0
                   ? const VacationsOnGoingView()
-                  : documentController.isDocument.value == 1
+                  : documentController1.isDocument.value == 1
                   ? const VacationsCompletedView()
                   : const VacationsCanceledView(),
             ),
@@ -120,6 +174,6 @@ class _VacationsBookingsState extends State<VacationsBookings> {
   }
 }
 
-class DocumentController extends GetxController {
+class DocumentController1 extends GetxController {
   RxInt isDocument = 0.obs;
 }

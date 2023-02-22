@@ -12,6 +12,8 @@ class Package {
   String travelAgencyId;
   String hotelPropertyId;
   List<String>? dayWiseDetails;
+  String destination;
+  int numOfDays;
 
   Package(
       {required this.packageId,
@@ -26,7 +28,11 @@ class Package {
       required this.adults,
       required this.travelAgencyId,
       required this.hotelPropertyId,
-      this.dayWiseDetails});
+      required this.numOfDays,
+      required this.destination,
+      this.dayWiseDetails
+
+      });
 
   factory Package.fromJson(Map<String, dynamic> json) => Package(
         packageId: json["packageId"],
@@ -37,6 +43,8 @@ class Package {
         endDate: json["endDate"].toDate(),
         rating: json["rating"].toDouble(),
         numOfSales: json["numOfSales"],
+        numOfDays: json["numOfDays"],
+        destination: json["destination"],
         imgUrls: List<String>.from(json["imgUrls"]!.map((x) => x)),
         dayWiseDetails: json["dayWiseDetails"] == null
             ? null

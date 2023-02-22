@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/screens/bookings/VacationBookings.dart';
 import 'package:get/get.dart';
-
+import 'FlightBookings.dart';
 import '../../Constants.dart';
 import '../../widgets/poppinsText.dart';
 import 'CanceledView.dart';
@@ -13,6 +14,7 @@ class Bookings extends StatefulWidget {
   @override
   State<Bookings> createState() => _BookingsState();
 }
+String selectedname ='Hotel';
 
 class _BookingsState extends State<Bookings> {
   final documentController = Get.put(DocumentController());
@@ -27,8 +29,61 @@ class _BookingsState extends State<Bookings> {
             SizedBox(height: MediaQuery.of(context).padding.top + 20),
             Container(
               padding: const EdgeInsets.only(left: 16),
-              child: poppinsText(
-                  text: 'My Bookings', size: 24.0, fontBold: FontWeight.w600),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  poppinsText(
+                      text: 'My Bookings', size: 14.0, fontBold: FontWeight.w600),
+                  DropdownButton<String>(
+                    value: selectedname,
+                    items: [
+                      DropdownMenuItem(
+                        child: poppinsText(
+                            text: 'Hotel', size: 14.0, fontBold: FontWeight.w600),
+                        value: "Hotel",
+                      ),
+                      DropdownMenuItem(
+                        child: poppinsText(
+                            text: 'Flight', size: 14.0, fontBold: FontWeight.w600),
+                        value: "Flight",
+                      ),
+                      DropdownMenuItem(
+
+                        child: poppinsText(
+                            text: 'Packages', size: 14.0, fontBold: FontWeight.w600),
+                        value: "Packages",
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        Navigator.of(context).pop();
+                        selectedname = value!;
+                        if( value == "Hotel"){
+
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => Bookings(),
+
+                          ));
+                        }else if(value == "Flight"){
+                         // Navigator.of(context).pop();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => FlightBookings(),
+                          ));
+                        }else if(value == "Packages"){
+                          //Navigator.of(context).pop();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VacationsBookings(),
+                          ));
+                        }
+                      });
+                    },
+
+                  ),
+
+                ],
+              ),
+
+
             ),
             const SizedBox(height: 20),
             GetX<DocumentController>(

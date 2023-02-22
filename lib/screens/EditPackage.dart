@@ -20,7 +20,9 @@ class _EditPackageState extends State<EditPackage> {
   TextEditingController hotelPropertyId = TextEditingController();
   late double rating;
   late int numOfSales;
+  late int numOfDays;
   late String travelAgencyId;
+  late String destination;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
@@ -38,6 +40,8 @@ class _EditPackageState extends State<EditPackage> {
     endDate = widget.package.endDate;
     rating = widget.package.rating;
     numOfSales = widget.package.numOfSales;
+    numOfDays = widget.package.numOfDays;
+    destination = widget.package.destination;
     travelAgencyId = widget.package.travelAgencyId;
 
     Future<void> _selectDate(BuildContext context) async {
@@ -116,6 +120,8 @@ class _EditPackageState extends State<EditPackage> {
                           endDate: endDate,
                           rating: rating,
                           numOfSales: numOfSales,
+                          numOfDays: numOfDays,
+                          destination: destination,
                           imgUrls: imgUrls.text.split(','),
                           adults: int.parse(adults.text),
                           travelAgencyId: travelAgencyId,

@@ -11,6 +11,7 @@ import 'package:fyp/screens/UserDetails.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
+import 'package:fyp/screens/bookings/VacationBookings.dart';
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
@@ -178,6 +179,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Text('Bookings')),
               ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => VacationsBookings(),
+                    ));
+                  },
+                  child: Text('VacationBookings')),
+              ElevatedButton(
                   onPressed: () async {
                     // HotelRepository h = HotelRepository();
                     // h.detail();
@@ -196,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AddPackage(),
+                      builder: (context) => PackageForm(),
                     ));
                   },
                   child: Text('Package')),
