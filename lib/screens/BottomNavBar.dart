@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Home2.dart';
-import 'Profile.dart';
+import 'profile/Profile.dart';
 import 'bookings/Bookings.dart';
 
 class BottomNavBar extends StatefulWidget {

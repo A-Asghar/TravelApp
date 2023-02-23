@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:fyp/screens/Profile.dart';
+import 'package:fyp/screens/profile/Profile.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';

@@ -10,8 +10,9 @@ class Constants {
   static const Color secondaryColor = Colors.black54;
   
   // Urls
-  static const String uri = 'test.api.amadeus.com';
+  static const String flight_uri = 'test.api.amadeus.com';
   static const String flightSearch = '/v2/shopping/flight-offers';
+  static const String city_similarity = '/v1/reference-data/recommended-locations';
   static const String citySearch = '/v1/reference-data/locations';
   static const String hotels = 'https://hotels4.p.rapidapi.com';
   static const String locations_v3_search = '/locations/v3/search';
@@ -28,9 +29,12 @@ class Constants {
     '377f061c79msh0b8044efc318220p16ed0cjsn628612571327',
     'f7ccbb53c9msh627753cf834adb5p13fafdjsn55e4135f34ef',
     'd12ffd2508msh533523f43bce082p1dda6djsn3a65c3422048',
-    '4118e10643msh20c6a738855d389p13af7ejsnba3b88dd0d65'
+    '4118e10643msh20c6a738855d389p13af7ejsnba3b88dd0d65',
+    'bc020343ecmsh3bfca8acaff3f02p137a4ajsn0de6998d3fcc'
   ];
   static const String weatherAPIKey = 'c3dd2e6a662447fdb6372507232701';
+  static const String flight_client_id = 'CF9FfomFYGbFUVGG15igLgdiGtapSK1g';
+  static const String flight_client_secret = 'XgukiYQGMPtShAMT';
 
   static convertDate(DateTime? date) {
     String formattedDate = DateFormat('yyyy-MM-dd').format(date!);
