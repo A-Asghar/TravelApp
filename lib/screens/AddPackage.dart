@@ -76,7 +76,9 @@ class _AddPackageState extends State<AddPackage> {
             TextField(
               controller: packageDescription,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(hintText: 'package Description'),
+              decoration: InputDecoration(
+                hintText: 'package Description',
+              ),
             ),
             TextButton(
                 onPressed: () {
