@@ -63,7 +63,7 @@ class _ReviewsState extends State<Reviews> {
           },
           child: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: Constants.secondaryColor,
           ),
         ),
         title:

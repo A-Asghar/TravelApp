@@ -69,12 +69,13 @@ class _LoginState extends State<Login> {
                   hintText: "Email",
                   textFieldController: _email,
                   showError: validateEmail,
-                  prefix: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: SvgPicture.asset(
-                      'assets/images/email.svg',
-                    ),
-                  ),
+                  prefix: const SizedBox(),
+                  // prefix: Padding(
+                  //   padding: const EdgeInsets.all(14.0),
+                  //   child: SvgPicture.asset(
+                  //     'assets/images/email.svg',
+                  //   ),
+                  // ),
                   sufix: const SizedBox(),
                 ),
                 const SizedBox(height: 15),

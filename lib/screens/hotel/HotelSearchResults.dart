@@ -34,7 +34,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios,
-                    color: Constants.primaryColor),
+                    color: Constants.secondaryColor),
                 onPressed: () {
                   Clear();
                   Navigator.of(context).pop();

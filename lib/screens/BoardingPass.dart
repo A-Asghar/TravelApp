@@ -69,7 +69,7 @@ class _BoardingPassState extends State<BoardingPass> {
                 const SizedBox(
                   height: 10,
                 ),
-                const Divider(color: Colors.black),
+                const Divider(color: Constants.secondaryColor),
                 Card(
                   margin:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -211,7 +211,7 @@ class _BoardingPassState extends State<BoardingPass> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Divider(color: Colors.black),
+                const Divider(color: Constants.secondaryColor),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -264,7 +264,7 @@ class _BoardingPassState extends State<BoardingPass> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                const Divider(color: Colors.black),
+                const Divider(color: Constants.secondaryColor),
               ],
             )),
             Center(

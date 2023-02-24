@@ -156,7 +156,7 @@ class _FlightsCompletedViewState extends State<FlightsCompletedView> {
                                 // Trip Price
                                 poppinsText(
                                     text: '\$200  ',
-                                    color: Colors.black,
+                                    color: Constants.secondaryColor,
                                     fontBold: FontWeight.w600,
                                     size: 20.0),
                               ],

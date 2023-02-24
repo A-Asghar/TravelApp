@@ -243,7 +243,7 @@ class _ProfileState extends State<Profile> {
           poppinsText(
               text: text,
               size: 18.0,
-              color: text == "Logout" ? Colors.redAccent : Colors.black87,
+              color: text == "Logout" ? Colors.redAccent : Constants.secondaryColor,
               fontBold: FontWeight.w400),
           const Expanded(child: SizedBox()),
         ],

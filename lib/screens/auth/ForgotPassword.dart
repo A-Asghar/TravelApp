@@ -24,7 +24,7 @@ class ForgotPassword extends StatelessWidget {
           leading: IconButton(
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Colors.black,
+                color: Constants.secondaryColor,
               ),
               onPressed: () => Navigator.pop(context)),
         ),

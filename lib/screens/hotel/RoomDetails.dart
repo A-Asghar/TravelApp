@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
 import 'package:html/parser.dart' show parse;
@@ -17,7 +18,7 @@ class RoomDetails extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: Constants.secondaryColor,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -56,7 +57,7 @@ class RoomDetails extends StatelessWidget {
         const SizedBox(width: 10),
         const Icon(
           Icons.circle,
-          color: Colors.black,
+          color: Constants.secondaryColor,
           size: 12,
         ),
         const SizedBox(width: 10),

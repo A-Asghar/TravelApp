@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 
 class SelectPhoto extends StatelessWidget {
@@ -33,7 +34,7 @@ class SelectPhoto extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: Colors.black,
+              color: Constants.secondaryColor,
             ),
             const SizedBox(
               width: 14,

@@ -249,7 +249,7 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
   Widget tripPrice(price) {
     return poppinsText(
         text: '\$$price  ',
-        color: Colors.black,
+        color: Constants.secondaryColor,
         fontBold: FontWeight.w600,
         size: 20.0);
   }

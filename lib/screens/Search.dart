@@ -59,7 +59,8 @@ class _SearchState extends State<Search> {
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
-                color: Colors.black,
+                color: Constants.secondaryColor,
+                iconSize: 30,
                 onPressed: () {
                   clear();
                   Navigator.pop(context);
@@ -69,7 +70,7 @@ class _SearchState extends State<Search> {
               elevation: 0,
               title: Text(
                 widget.title == 'hotel' ? 'Find your hotel' : 'Find a flight',
-                style: GoogleFonts.poppins(color: Colors.black),
+                style: GoogleFonts.poppins(color: Constants.secondaryColor),
               ),
               centerTitle: true,
             ),
@@ -138,10 +139,10 @@ Future _selectDate(BuildContext context, String date) async {
                 borderRadius: BorderRadius.circular(15.0),
               ),
             ),
-            colorScheme: const ColorScheme.light(
+            colorScheme: ColorScheme.light(
               primary: Constants.primaryColor, // header background color
               onPrimary: Colors.white, // header text color
-              onSurface: Colors.black, // body text color
+              onSurface: Constants.secondaryColor, // body text color
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
@@ -408,12 +409,12 @@ class _FlightLayoutState extends State<FlightLayout> {
                         border: Border.all(
                             color: flightTrips[index].isSelected
                                 ? Constants.primaryColor
-                                : Colors.black)),
+                                : Constants.secondaryColor)),
                     child: poppinsText(
                         text: flightTrips[index].text,
                         color: flightTrips[index].isSelected
                             ? Constants.primaryColor
-                            : Colors.black,
+                            : Constants.secondaryColor,
                         fontBold: flightTrips[index].isSelected
                             ? FontWeight.w600
                             : FontWeight.w300),

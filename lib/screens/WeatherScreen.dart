@@ -72,7 +72,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
             leading: IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.black,
+                  color: Constants.secondaryColor,
                 ),
                 onPressed: () => Navigator.of(context).pop()),
             backgroundColor: Colors.transparent,

@@ -43,7 +43,7 @@ class _ExpandableTextState extends State<ExpandableText> {
               children: <Widget>[
                 poppinsText(
                   text: flag ? (firstHalf + "...") : (firstHalf + secondHalf),
-                  color: Colors.black87,
+                  color: Constants.secondaryColor,
                 ),
                 InkWell(
                   child: Row(

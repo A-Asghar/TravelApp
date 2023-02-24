@@ -90,7 +90,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
         //   onTap: () {
         //     Navigator.pop(context);
         //   },
-        //   child: const Icon(Icons.arrow_back_ios, color: Colors.black),
+        //   child: const Icon(Icons.arrow_back_ios, color: Constants.secondaryColor),
         // ),
         centerTitle: true,
         title: poppinsText(text: "Fill Your Profile", size: 24.0),
@@ -256,10 +256,10 @@ class _FillYourProfileState extends State<FillYourProfile> {
                   borderRadius: BorderRadius.circular(15.0),
                 ),
               ),
-              colorScheme: const ColorScheme.light(
+              colorScheme: ColorScheme.light(
                 primary: Constants.primaryColor, // header background color
                 onPrimary: Colors.white, // header text color
-                onSurface: Colors.black, // body text color
+                onSurface: Constants.secondaryColor, // body text color
               ),
               textButtonTheme: TextButtonThemeData(
                 style: TextButton.styleFrom(
