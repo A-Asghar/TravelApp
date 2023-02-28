@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Home2.dart';
-import 'profile/Profile.dart';
 import 'bookings/Bookings.dart';
+import 'profile/Profile.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);

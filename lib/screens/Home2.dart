@@ -7,22 +7,18 @@ import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
-
-import 'package:fyp/screens/hotel/HotelSearchResults.dart';
-
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../Constants.dart';
 import '../models/RecommendedCities.dart';
 import '../providers/RecommendationProvider.dart';
-import '../repository/FlightRepository.dart';
 import '../repository/RecommendationRepository.dart';
 
 class Home2 extends StatefulWidget {

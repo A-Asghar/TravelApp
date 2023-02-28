@@ -11,7 +11,6 @@ import '../../network/AuthNetwork.dart';
 import '../../widgets/authErrorDialog.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
-import '../Home2.dart';
 import 'FillYourProfile.dart';
 
 class Login extends StatefulWidget {
