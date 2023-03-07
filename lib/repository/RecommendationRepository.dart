@@ -18,7 +18,7 @@ class RecommendationRepository {
     controller.recommendedCities = cities.data!;
   }
 
-  updateUserSearchedCities({required String iata}) async {
-    await RecommendationNetwork().updateUserSearchedCities(iata: iata);
-  }
+  // updateUserSearchedCities({required String iata}) async {
+  //   await RecommendationNetwork().updateUserSearchedCities(iata: iata);
+  // }
 }

@@ -511,8 +511,8 @@ class _FlightLayoutState extends State<FlightLayout> {
 
     // todo update user searchedCities
 
-    RecommendationRepository().updateUserSearchedCities(
-        iata: context.read<FlightSearchProvider>().to.iata);
+    // RecommendationRepository().updateUserSearchedCities(
+    //     iata: context.read<FlightSearchProvider>().to.iata);
     FlightRepository flightRepository = FlightRepository();
     List response = await flightRepository.flightOffersSearch(
         originLocationCode: context.read<FlightSearchProvider>().from.iata,
@@ -617,8 +617,8 @@ class _HotelLayoutState extends State<HotelLayout> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const HotelSearchResults()));
 
-    RecommendationRepository().updateUserSearchedCities(
-        iata: context.read<HotelSearchProvider>().to.iata);
+    // RecommendationRepository().updateUserSearchedCities(
+    //     iata: context.read<HotelSearchProvider>().to.iata);
 
     HotelRepository hotelRepository = HotelRepository();
     List response = await hotelRepository.hotelSearch(
