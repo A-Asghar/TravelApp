@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/widgets/tealButton.dart';
 
-import 'bookings/CancelBookingScreen.dart';
-
 class PaymentScreen extends StatefulWidget {
   const PaymentScreen({Key? key}) : super(key: key);
 

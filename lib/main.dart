@@ -1,42 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp/network/AuthNetwork.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/RecommendationProvider.dart';
-import 'package:fyp/providers/UserProvider.dart';
-import 'package:fyp/repository/PackageRepository.dart';
-import 'package:fyp/repository/RecommendationRepository.dart';
-import 'package:fyp/repository/WeatherRepository.dart';
-import 'package:fyp/screens/AddNewCard.dart';
 import 'package:fyp/screens/AddPackage.dart';
-import 'package:fyp/screens/BoardingPass.dart';
-import 'package:fyp/screens/BottomNavBar.dart';
-import 'package:fyp/screens/ConfirmPayment.dart';
 import 'package:fyp/screens/EditPackage.dart';
-import 'package:fyp/screens/auth/FillYourProfile.dart';
-import 'package:fyp/screens/profile/EditProfile.dart';
+
 import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/Search.dart';
-import 'package:fyp/screens/TicketScreen.dart';
-import 'package:fyp/screens/WeatherScreen.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
 import 'package:fyp/screens/profile/Profile.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-import 'Constants.dart';
-import 'models/Package.dart';
-import 'models/PropertySearchListings.dart';
-import 'models/Weather.dart';
-import 'network/RecommendationNetwork.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -91,6 +72,7 @@ class MyApp extends StatelessWidget {
 //   @override
 //   State<MyHomePage> createState() => _MyHomePageState();
 // }
+
 
 // class _MyHomePageState extends State<MyHomePage> {
 //   @override
@@ -184,6 +166,7 @@ class MyApp extends StatelessWidget {
 //                     // h.reviews();
 //                     // WeatherRepository w = WeatherRepository();
 
+
 //                     // Weather weather = await w.getWeather(
 //                     //     q: 'Karachi',
 //                     //     dt: Constants.convertDate(DateTime(DateTime.now().year,
@@ -240,33 +223,35 @@ class MyApp extends StatelessWidget {
 //                     //
 //                     // await getHomePackages();
 
-//                     // final UserProvider controller = Get.put(UserProvider());
-//                     //
-//                     // print(controller.user!.searchedCities);
-//                     // RecommendationRepository().getRecommendedCities(
-//                     //     cityIatas: controller.user!.searchedCities);
-//                     //
-//                     final RecommendationProvider controller2 =
-//                         Get.put(RecommendationProvider());
 
-//                     print(controller2.recommendedCities);
-//                     // controller2.recommendedCities?.forEach((element) {
-//                     //   print(element.name);
-//                     // });
-//                   },
-//                   child: Text('API Test')),
-//               ElevatedButton(
-//                   onPressed: () {
-//                     FirebaseAuth.instance.signOut();
-//                     // Navigator.of(context).push(MaterialPageRoute(
-//                     //   builder: (context) => AddPackage(),
-//                     // ));
-//                   },
-//                   child: Text('Package')),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+                    // final UserProvider controller = Get.put(UserProvider());
+                    //
+                    // print(controller.user!.searchedCities);
+                    // RecommendationRepository().getRecommendedCities(
+                    //     cityIatas: controller.user!.searchedCities);
+                    //
+                    // final RecommendationProvider controller2 =
+                    //     Get.put(RecommendationProvider());
+                    //
+                    // print(controller2.recommendedCities);
+                    // controller2.recommendedCities?.forEach((element) {
+                    //   print(element.name);
+                    // });
+                  },
+                  child: Text('API Test')),
+              ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //   builder: (context) => AddPackage(),
+                    // ));
+                  },
+                  child: Text('Package')),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

@@ -9,7 +9,6 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../../providers/UserProvider.dart';
 import '../../widgets/customField.dart';
-import '../../widgets/customTextField.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
 

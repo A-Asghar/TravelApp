@@ -6,8 +6,10 @@ import 'package:fyp/screens/hotel_search_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+
 import 'package:provider/provider.dart';
 
 class HotelSearchResults extends StatefulWidget {

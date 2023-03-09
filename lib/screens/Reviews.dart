@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../models/PropertySearchListings.dart';
 import '../providers/HotelSearchProvider.dart';
-import '../widgets/BookingFilterView.dart';
 import '../widgets/poppinsText.dart';
 import '../widgets/ratingCard.dart';
 

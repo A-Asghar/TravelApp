@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Detail.dart';
 import 'package:fyp/models/PropertySearchListings.dart';

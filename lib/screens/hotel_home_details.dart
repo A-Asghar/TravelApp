@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
-import 'package:fyp/models/Detail.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';

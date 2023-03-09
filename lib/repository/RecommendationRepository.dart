@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:fyp/models/RecommendedCities.dart';
-import 'package:get/get.dart';
 
 import '../network/RecommendationNetwork.dart';
-import '../providers/RecommendationProvider.dart';
 
 class RecommendationRepository {
   getRecommendedCities({required List cityIatas}) async {
