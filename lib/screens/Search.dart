@@ -4,7 +4,6 @@ import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
 import 'package:fyp/repository/HotelRepository.dart';
-import 'package:fyp/repository/RecommendationRepository.dart';
 import 'package:fyp/screens/SearchDestination.dart';
 import 'package:fyp/screens/flight/FlightSearchResult.dart';
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';
@@ -157,8 +156,22 @@ Future _selectDate(BuildContext context, String date) async {
       initialDate: selectedDate,
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101));
-
-  return selectedDate;
+  if (selectedDate != null) {
+    if (date == 'depart') {
+      context.read<FlightSearchProvider>().departDate =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'return') {
+      context.read<FlightSearchProvider>().returnDate =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'checkin') {
+      context.read<HotelSearchProvider>().checkIn =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'checkout') {
+      context.read<HotelSearchProvider>().checkOut =
+          Constants.convertDate(selectedDate);
+    }
+  }
+  // return selectedDate;
 }
 
 Widget checkin_checkout_textfield(
@@ -405,19 +418,20 @@ class _FlightLayoutState extends State<FlightLayout> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: flightTrips[index].isSelected
-                                ? Constants.primaryColor
-                                : Colors.transparent,
+                        color: flightTrips[index].isSelected
+                            ? Constants.primaryColor
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
                             color: flightTrips[index].isSelected
                                 ? Constants.primaryColor
                                 : Constants.primaryColor)),
                     child: poppinsText(
-                        text: flightTrips[index].text,
-                        color: flightTrips[index].isSelected
-                            ? Colors.white
-                            : Constants.primaryColor,),
+                      text: flightTrips[index].text,
+                      color: flightTrips[index].isSelected
+                          ? Colors.white
+                          : Constants.primaryColor,
+                    ),
                   ),
                 );
               }),

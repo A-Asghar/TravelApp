@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/auth/ForgotPassword.dart';
 import 'package:fyp/screens/auth/SignUp.dart';

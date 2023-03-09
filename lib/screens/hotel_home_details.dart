@@ -500,6 +500,12 @@ Widget hotelRooms1(HomeProvider homeProvider) {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      homeProvider
+                                          .hotelRooms[index]
+                                          .ratePlans![0]
+                                          .priceDetails![0]
+                                          .availability
+                                          ?.scarcityMessage != null ?
                                       Row(
                                         children: [
                                           Icon(
@@ -518,7 +524,7 @@ Widget hotelRooms1(HomeProvider homeProvider) {
                                               color: Colors.red,
                                               size: 18.0),
                                         ],
-                                      ),
+                                      ) : Container(),
                                       // poppinsText(
                                       //     text: 'Double Room, Balcony',
                                       //     color: Constants.secondaryColor,

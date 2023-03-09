@@ -4,12 +4,8 @@ import 'package:fyp/models/Package.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
-import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
-
-import 'package:fyp/screens/hotel/HotelSearchResults.dart';
-
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
@@ -17,12 +13,12 @@ import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
-
 import 'package:provider/provider.dart';
 
 import '../Constants.dart';
 import '../models/RecommendedCities.dart';
 import '../providers/RecommendationProvider.dart';
+import '../providers/UserProvider.dart';
 import '../repository/RecommendationRepository.dart';
 
 class Home2 extends StatefulWidget {
@@ -45,7 +41,7 @@ class _Home2State extends State<Home2> {
     setState(() => isLoading = true);
 
     // if (context.read<RecommendationProvider>().recommendedCities == null) {
-    //   fetchRecommended();
+    fetchRecommended();
     // }
     if (context.read<HomeProvider>().hotels.isEmpty) {
       fetchHotels();
@@ -75,13 +71,13 @@ class _Home2State extends State<Home2> {
     });
   }
 
-  // fetchRecommended() async {
-  //   final UserProvider controller = Get.put(UserProvider());
+  fetchRecommended() async {
+    final UserProvider controller = Get.put(UserProvider());
 
-  //   context.read<RecommendationProvider>().recommendedCities =
-  //       await RecommendationRepository()
-  //           .getRecommendedCities(cityIatas: controller.user!.searchedCities);
-  // }
+    context.read<RecommendationProvider>().recommendedCities =
+        await RecommendationRepository()
+            .getRecommendedCities(cityIatas: controller.user!.searchedCities);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -506,7 +502,7 @@ class sideBarRow extends StatelessWidget {
 Widget topPackages(List<Package> packages, BuildContext context) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
-    height: MediaQuery.of(context).size.height * 0.32,
+    height: 280,
     child: ListView.builder(
         itemCount: packages.length,
         shrinkWrap: true,
@@ -537,7 +533,7 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                         children: [
                           poppinsText(
                               text: packages[index].packageName,
-                              size: 20.0,
+                              size: 16.0,
                               fontBold: FontWeight.w500),
                           Row(
                             children: [
@@ -551,16 +547,14 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                                   size: 15.0,
                                   color: Constants.secondaryColor),
                             ],
-                            
                           ),
-
                           Row(
                             children: [
                               const Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                  size: 15,
-                                ),
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 15,
+                              ),
                               poppinsText(
                                   text: double.parse(packages[index]
                                           .rating
