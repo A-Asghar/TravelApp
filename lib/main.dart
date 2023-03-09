@@ -8,6 +8,7 @@ import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/RecommendationProvider.dart';
 import 'package:fyp/screens/AddPackage.dart';
 import 'package:fyp/screens/EditPackage.dart';
+
 import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/Search.dart';
 import 'package:fyp/screens/auth/Login.dart';
@@ -57,167 +58,171 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'ABCD'),
+      home: BottomNavBar(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.title});
 
-  final String title;
+//   final String title;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Home2(),
-                    ));
-                  },
-                  child: Text('Home2')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Login(),
-                    ));
-                  },
-                  child: Text('SignIn')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AddPackage(),
-                    ));
-                  },
-                  child: Text('Add Package')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => EditPackage(
-                        package:
-                            context.read<PackageHomeProvider>().packages[0],
-                      ),
-                    ));
-                  },
-                  child: Text('Edit Package')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SignUp(),
-                    ));
-                  },
-                  child: Text('SignUp')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Search(
-                        title: 'hotel',
-                      ),
-                    ));
-                  },
-                  child: Text('Search Hotel')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Search(
-                        title: 'flight',
-                      ),
-                    ));
-                  },
-                  child: Text('Search Flight')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Profile(),
-                    ));
-                  },
-                  child: Text('Profile')),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Bookings(),
-                    ));
-                  },
-                  child: Text('Bookings')),
-              ElevatedButton(
-                  onPressed: () async {
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
 
 
-                    // HotelRepository h = HotelRepository();
-                    // h.detail();
-                    // h.reviews();
-                    // WeatherRepository w = WeatherRepository();
+// class _MyHomePageState extends State<MyHomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(widget.title),
+//       ),
+//       body: Center(
+//         child: SingleChildScrollView(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => Home2(),
+//                     ));
+//                   },
+//                   child: Text('Home2')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => Login(),
+//                     ));
+//                   },
+//                   child: Text('SignIn')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => AddPackage(),
+//                     ));
+//                   },
+//                   child: Text('Add Package')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => EditPackage(
+//                         package:
+//                             context.read<PackageHomeProvider>().packages[0],
+//                       ),
+//                     ));
+//                   },
+//                   child: Text('Edit Package')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => SignUp(),
+//                     ));
+//                   },
+//                   child: Text('SignUp')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => Search(
+//                         title: 'hotel',
+//                       ),
+//                     ));
+//                   },
+//                   child: Text('Search Hotel')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => Search(
+//                         title: 'flight',
+//                       ),
+//                     ));
+//                   },
+//                   child: Text('Search Flight')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => Profile(),
+//                     ));
+//                   },
+//                   child: Text('Profile')),
+//               ElevatedButton(
+//                   onPressed: () {
+//                     Navigator.of(context).push(MaterialPageRoute(
+//                       builder: (context) => Bookings(),
+//                     ));
+//                   },
+//                   child: Text('Bookings')),
+//               ElevatedButton(
+//                   onPressed: () async {
+//                     // Navigator.of(context).push(MaterialPageRoute(
+//                     //   builder: (context) => TicketScreen(),
+//                     // ));
+//                     // HotelRepository h = HotelRepository();
+//                     // h.detail();
+//                     // h.reviews();
+//                     // WeatherRepository w = WeatherRepository();
 
-                    // Weather weather = await w.getWeather(
-                    //     q: 'Karachi',
-                    //     dt: Constants.convertDate(DateTime(DateTime.now().year,
-                    //         DateTime.now().month + 1, DateTime.now().day)));
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //   builder: (context) => WeatherScreen(
-                    //       q: 'Karachi',
-                    //       dt: Constants.convertDate(DateTime(
-                    //           DateTime.now().year,
-                    //           DateTime.now().month + 1,
-                    //           DateTime.now().day))),
-                    // ));
-                    // PackageRepository p = PackageRepository();
-                    // p.makePackageBooking(
-                    //     travelerId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
-                    //     travelAgencyId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
-                    //     packageId: '024201636');
-                    // AuthNetwork a = AuthNetwork();
-                    // AuthNetwork.createNewUser(email: 'aatest722@gmail.com', password: '123456');
-                    // AuthNetwork.login(email: 'aatest722@gmail.com', password: '123456');
-                    // final UserProvider controller = Get.put(UserProvider());
-                    // print(controller.user!.email);
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //   builder: (context) => Login(),
-                    // ));
 
-                    // Future<List<Map<String, dynamic>>>
-                    //     getPropertyListings() async {
-                    //   List<Map<String, dynamic>> listings = [];
-                    //
-                    //   QuerySnapshot snapshot = await FirebaseFirestore.instance
-                    //       .collection("propertySearchListing")
-                    //       .get();
-                    //
-                    //   snapshot.docs.forEach((document) {
-                    //     Map<String, dynamic> data =
-                    //         document.data() as Map<String, dynamic>;
-                    //     data["property"] = PropertySearchListing.fromJson(data["property"]);
-                    //     listings.add(data);
-                    //   });
-                    //
-                    //   return listings;
-                    // }
-                    // getHomePackages() async {
-                    //   QuerySnapshot snapshot = await FirebaseFirestore.instance
-                    //       .collection('packages')
-                    //       .get();
-                    //   snapshot.docs.forEach((document) {
-                    //     context.read<PackageHomeProvider>().packages.add(
-                    //         Package.fromJson(
-                    //             document.data() as Map<String, dynamic>));
-                    //   });
-                    // }
-                    //
-                    // await getHomePackages();
+//                     // Weather weather = await w.getWeather(
+//                     //     q: 'Karachi',
+//                     //     dt: Constants.convertDate(DateTime(DateTime.now().year,
+//                     //         DateTime.now().month + 1, DateTime.now().day)));
+//                     // Navigator.of(context).push(MaterialPageRoute(
+//                     //   builder: (context) => WeatherScreen(
+//                     //       q: 'Karachi',
+//                     //       dt: Constants.convertDate(DateTime(
+//                     //           DateTime.now().year,
+//                     //           DateTime.now().month + 1,
+//                     //           DateTime.now().day))),
+//                     // ));
+//                     // PackageRepository p = PackageRepository();
+//                     // p.makePackageBooking(
+//                     //     travelerId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
+//                     //     travelAgencyId: 'Px2HVU4xBNWabxuolk6cPTlvnVG2',
+//                     //     packageId: '024201636');
+//                     // AuthNetwork a = AuthNetwork();
+//                     // AuthNetwork.createNewUser(email: 'aatest722@gmail.com', password: '123456');
+//                     // AuthNetwork.login(email: 'aatest722@gmail.com', password: '123456');
+//                     // final UserProvider controller = Get.put(UserProvider());
+//                     // print(controller.user!.email);
+//                     // Navigator.of(context).push(MaterialPageRoute(
+//                     //   builder: (context) => Login(),
+//                     // ));
+
+//                     // Future<List<Map<String, dynamic>>>
+//                     //     getPropertyListings() async {
+//                     //   List<Map<String, dynamic>> listings = [];
+//                     //
+//                     //   QuerySnapshot snapshot = await FirebaseFirestore.instance
+//                     //       .collection("propertySearchListing")
+//                     //       .get();
+//                     //
+//                     //   snapshot.docs.forEach((document) {
+//                     //     Map<String, dynamic> data =
+//                     //         document.data() as Map<String, dynamic>;
+//                     //     data["property"] = PropertySearchListing.fromJson(data["property"]);
+//                     //     listings.add(data);
+//                     //   });
+//                     //
+//                     //   return listings;
+//                     // }
+//                     // getHomePackages() async {
+//                     //   QuerySnapshot snapshot = await FirebaseFirestore.instance
+//                     //       .collection('packages')
+//                     //       .get();
+//                     //   snapshot.docs.forEach((document) {
+//                     //     context.read<PackageHomeProvider>().packages.add(
+//                     //         Package.fromJson(
+//                     //             document.data() as Map<String, dynamic>));
+//                     //   });
+//                     // }
+//                     //
+//                     // await getHomePackages();
+
 
                     // final UserProvider controller = Get.put(UserProvider());
                     //
@@ -249,3 +254,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+

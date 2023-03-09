@@ -19,17 +19,21 @@ class _BookingsState extends State<Bookings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: poppinsText(
+              text: 'My Bookings', size: 24.0, fontBold: FontWeight.w600),
+        ),
+            backgroundColor: Colors.white,
+            elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: MediaQuery.of(context).padding.top + 20),
-            Container(
-              padding: const EdgeInsets.only(left: 16),
-              child: poppinsText(
-                  text: 'My Bookings', size: 24.0, fontBold: FontWeight.w600),
-            ),
             const SizedBox(height: 20),
             GetX<DocumentController>(
               init: documentController,
@@ -56,7 +60,6 @@ class _BookingsState extends State<Bookings> {
                   ),
                   const SizedBox(width: 14),
                   tapCard(
-
                     "Canceled",
                     documentController.isDocument.value == 2
                         ? Constants.primaryColor

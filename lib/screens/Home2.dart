@@ -7,6 +7,9 @@ import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
+
+import 'package:fyp/screens/hotel/HotelSearchResults.dart';
+
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
@@ -14,6 +17,7 @@ import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
 
 import '../Constants.dart';
@@ -36,12 +40,13 @@ class _Home2State extends State<Home2> {
     fetchInfo();
   }
 
+  bool isLoading = false;
   fetchInfo() {
     setState(() => isLoading = true);
 
-    if (context.read<RecommendationProvider>().recommendedCities == null) {
-      fetchRecommended();
-    }
+    // if (context.read<RecommendationProvider>().recommendedCities == null) {
+    //   fetchRecommended();
+    // }
     if (context.read<HomeProvider>().hotels.isEmpty) {
       fetchHotels();
     }
@@ -52,7 +57,6 @@ class _Home2State extends State<Home2> {
     setState(() => isLoading = false);
   }
 
-  bool isLoading = false;
   fetchHotels() async {
     HotelRepository hotelRepository = HotelRepository();
     List hotelResponse = await hotelRepository.getHotels();
@@ -71,13 +75,13 @@ class _Home2State extends State<Home2> {
     });
   }
 
-  fetchRecommended() async {
-    final UserProvider controller = Get.put(UserProvider());
+  // fetchRecommended() async {
+  //   final UserProvider controller = Get.put(UserProvider());
 
-    context.read<RecommendationProvider>().recommendedCities =
-        await RecommendationRepository()
-            .getRecommendedCities(cityIatas: controller.user!.searchedCities);
-  }
+  //   context.read<RecommendationProvider>().recommendedCities =
+  //       await RecommendationRepository()
+  //           .getRecommendedCities(cityIatas: controller.user!.searchedCities);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +171,7 @@ Widget iconBox(icon, backgroundColor, text, VoidCallback onTap) {
           height: 60,
           width: 60,
           decoration: BoxDecoration(
-              boxShadow: const <BoxShadow>[
+              boxShadow: <BoxShadow>[
                 BoxShadow(
                     color: Constants.secondaryColor,
                     blurRadius: 5.0,
@@ -320,7 +324,7 @@ Widget summerEscapes(
                                             .reviews!
                                             .score
                                             .toString(),
-                                        color: Colors.black87,
+                                        color: Constants.secondaryColor,
                                         fontBold: FontWeight.w400),
                                     const SizedBox(width: 10),
                                     poppinsText(
@@ -520,7 +524,7 @@ Widget topPackages(List<Package> packages, BuildContext context) {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
               child: Container(
-                width: 250,
+                width: 200,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -546,6 +550,25 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                                   text: packages[index].destination,
                                   size: 15.0,
                                   color: Constants.secondaryColor),
+                            ],
+                            
+                          ),
+
+                          Row(
+                            children: [
+                              const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 15,
+                                ),
+                              poppinsText(
+                                  text: double.parse(packages[index]
+                                          .rating
+                                          .toStringAsFixed(1))
+                                      .toString(),
+                                  size: 15.0,
+                                  color: Constants.secondaryColor,
+                                  fontBold: FontWeight.w500),
                             ],
                           ),
                           Row(

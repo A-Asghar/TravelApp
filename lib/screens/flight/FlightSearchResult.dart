@@ -32,7 +32,7 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Constants.primaryColor),
+          icon: const Icon(Icons.arrow_back_ios, size: 25, color: Constants.primaryColor),
           onPressed: () {
             Clear();
             Navigator.of(context).pop();
@@ -249,7 +249,7 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
   Widget tripPrice(price) {
     return poppinsText(
         text: '\$$price  ',
-        color: Colors.black,
+        color: Constants.secondaryColor,
         fontBold: FontWeight.w600,
         size: 20.0);
   }

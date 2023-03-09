@@ -7,7 +7,7 @@ class Constants {
 
   // Colors
   static const Color primaryColor = Colors.teal;
-  static const Color secondaryColor = Colors.black54;
+  static const Color secondaryColor = Colors.black87;
   
   // Urls
   static const String flight_uri = 'test.api.amadeus.com';

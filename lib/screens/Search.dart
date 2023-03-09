@@ -59,7 +59,8 @@ class _SearchState extends State<Search> {
             appBar: AppBar(
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
-                color: Colors.black,
+                color: Constants.secondaryColor,
+                iconSize: 25,
                 onPressed: () {
                   clear();
                   Navigator.pop(context);
@@ -69,7 +70,7 @@ class _SearchState extends State<Search> {
               elevation: 0,
               title: Text(
                 widget.title == 'hotel' ? 'Find your hotel' : 'Find a flight',
-                style: GoogleFonts.poppins(color: Colors.black),
+                style: GoogleFonts.poppins(color: Constants.secondaryColor),
               ),
               centerTitle: true,
             ),
@@ -138,10 +139,10 @@ Future _selectDate(BuildContext context, String date) async {
                 borderRadius: BorderRadius.circular(15.0),
               ),
             ),
-            colorScheme: const ColorScheme.light(
+            colorScheme: ColorScheme.light(
               primary: Constants.primaryColor, // header background color
               onPrimary: Colors.white, // header text color
-              onSurface: Colors.black, // body text color
+              onSurface: Constants.secondaryColor, // body text color
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
@@ -182,7 +183,7 @@ Widget checkin_checkout_textfield(
             children: [
               const Icon(
                 Icons.calendar_today,
-                color: Constants.secondaryColor,
+                color: Constants.primaryColor,
                 size: 18,
               ),
               const SizedBox(
@@ -404,19 +405,19 @@ class _FlightLayoutState extends State<FlightLayout> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
+                      color: flightTrips[index].isSelected
+                                ? Constants.primaryColor
+                                : Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
                             color: flightTrips[index].isSelected
                                 ? Constants.primaryColor
-                                : Colors.black)),
+                                : Constants.primaryColor)),
                     child: poppinsText(
                         text: flightTrips[index].text,
                         color: flightTrips[index].isSelected
-                            ? Constants.primaryColor
-                            : Colors.black,
-                        fontBold: flightTrips[index].isSelected
-                            ? FontWeight.w600
-                            : FontWeight.w300),
+                            ? Colors.white
+                            : Constants.primaryColor,),
                   ),
                 );
               }),
@@ -511,8 +512,8 @@ class _FlightLayoutState extends State<FlightLayout> {
 
     // todo update user searchedCities
 
-    RecommendationRepository().updateUserSearchedCities(
-        iata: context.read<FlightSearchProvider>().to.iata);
+    // RecommendationRepository().updateUserSearchedCities(
+    //     iata: context.read<FlightSearchProvider>().to.iata);
     FlightRepository flightRepository = FlightRepository();
     List response = await flightRepository.flightOffersSearch(
         originLocationCode: context.read<FlightSearchProvider>().from.iata,
@@ -617,8 +618,8 @@ class _HotelLayoutState extends State<HotelLayout> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const HotelSearchResults()));
 
-    RecommendationRepository().updateUserSearchedCities(
-        iata: context.read<HotelSearchProvider>().to.iata);
+    // RecommendationRepository().updateUserSearchedCities(
+    //     iata: context.read<HotelSearchProvider>().to.iata);
 
     HotelRepository hotelRepository = HotelRepository();
     List response = await hotelRepository.hotelSearch(

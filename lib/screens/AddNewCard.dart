@@ -21,7 +21,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
+            size: 25,
             color: Theme.of(context).textTheme.bodyText1!.color,
           ),
         ),

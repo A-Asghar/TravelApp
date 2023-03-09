@@ -52,7 +52,7 @@ class SelectPhotoOptionsScreen extends StatelessWidget {
             ),
             SelectPhoto(
               onTap: () => onTap(ImageSource.camera),
-              icon: Icons.camera_alt_outlined,
+              icon: Icons.camera_alt,
               textLabel: 'Use a Camera',
             ),
           ])

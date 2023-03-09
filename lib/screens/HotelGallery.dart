@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Detail.dart';
 
 import 'FullScreenImagePage.dart';
@@ -24,8 +25,8 @@ class _HotelGalleryState extends State<HotelGallery> {
               width: 30,
               child: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 30,
+                color: Constants.secondaryColor,
+                size: 25,
               ),
             )),
         title: Text(
@@ -94,8 +95,8 @@ class _PackageGalleryState extends State<PackageGallery> {
               width: 30,
               child: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 30,
+                color: Constants.secondaryColor,
+                size: 25,
               ),
             )),
         title: Text(

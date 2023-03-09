@@ -23,6 +23,7 @@ Future? listCities;
 FlightRepository flightRepository = FlightRepository();
 
 class _SearchDestinationState extends State<SearchDestination> {
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,10 +35,12 @@ class _SearchDestinationState extends State<SearchDestination> {
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              size: 25,
+              color: Constants.secondaryColor,
             ),
             onPressed: () {
               Navigator.of(context).pop();
+
             },
           ),
           title: Container(
@@ -62,7 +65,18 @@ class _SearchDestinationState extends State<SearchDestination> {
                           city: entry[1] + ', ' + entry[2], iata: iata));
                     }
                   });
-                  return matchingList;
+                  final uniqueHotelsByName =
+                      matchingList.fold<List<Destination>>([], (prev, dest) {
+                    if (!prev.any((h) => h.city == dest.city)) {
+                      prev.add(dest);
+                    }
+                    return prev;
+                  });
+                  if (widget.option == 'hotel') {
+                    return uniqueHotelsByName;
+                  } else {
+                    return matchingList;
+                  }
                 });
                 setState(() {});
               },

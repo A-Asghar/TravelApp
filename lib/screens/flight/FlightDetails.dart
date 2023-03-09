@@ -26,7 +26,7 @@ class _FlightDetailsState extends State<FlightDetails> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Constants.primaryColor),
+          icon: const Icon(Icons.arrow_back_ios, size: 25, color: Constants.primaryColor),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -213,7 +213,7 @@ class _FlightDetailsState extends State<FlightDetails> {
                             poppinsText(text: 'Date',size: 12.0,color: Constants.secondaryColor),
                             Row(
                               children: [
-                                const Icon(Icons.calendar_month_outlined,color: Colors.black,),
+                                const Icon(Icons.calendar_month_outlined,color: Constants.secondaryColor,),
                                 const SizedBox(width:5),
                                 poppinsText(text: Constants.convertDate(widget.trip.itineraries[itineraryIndex].segments[index].departure.at))
                               ],
@@ -236,7 +236,7 @@ class _FlightDetailsState extends State<FlightDetails> {
                             poppinsText(text: 'Duration',size: 12.0,color: Constants.secondaryColor),
                             Row(
                               children: [
-                                const Icon(Icons.access_time,color: Colors.black,),
+                                const Icon(Icons.access_time,color: Constants.secondaryColor,),
                                 const SizedBox(width: 5,),
                                 poppinsText(text: widget.trip.itineraries[itineraryIndex].segments[index].duration.replaceAll('PT', '').replaceAll('H', 'H ').toLowerCase())
                               ],

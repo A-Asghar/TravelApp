@@ -45,12 +45,12 @@ class RecommendationNetwork {
     return response.body;
   }
 
-  updateUserSearchedCities({required String iata}) async {
-    final UserProvider controller = Get.put(UserProvider());
-    controller.user!.searchedCities.add(iata);
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .update({'searchedCities': controller.user!.searchedCities});
-  }
+  // updateUserSearchedCities({required String iata}) async {
+  //   final UserProvider controller = Get.put(UserProvider());
+  //   controller.user!.searchedCities.add(iata);
+  //   FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser?.uid)
+  //       .update({'searchedCities': controller.user!.searchedCities});
+  // }
 }
