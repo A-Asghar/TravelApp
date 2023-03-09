@@ -521,7 +521,7 @@ Widget topPackages(List<Package> packages, BuildContext context) {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
               child: Container(
-                width: 250,
+                width: 200,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -547,6 +547,25 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                                   text: packages[index].destination,
                                   size: 15.0,
                                   color: Constants.secondaryColor),
+                            ],
+                            
+                          ),
+
+                          Row(
+                            children: [
+                              const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 15,
+                                ),
+                              poppinsText(
+                                  text: double.parse(packages[index]
+                                          .rating
+                                          .toStringAsFixed(1))
+                                      .toString(),
+                                  size: 15.0,
+                                  color: Constants.secondaryColor,
+                                  fontBold: FontWeight.w500),
                             ],
                           ),
                           Row(

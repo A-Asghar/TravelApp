@@ -27,7 +27,7 @@ class _FlightDetailsState extends State<FlightDetails> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Constants.primaryColor),
+          icon: const Icon(Icons.arrow_back_ios, size: 25, color: Constants.primaryColor),
           onPressed: () {
             Navigator.of(context).pop();
           },

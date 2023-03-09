@@ -60,7 +60,7 @@ class _SearchState extends State<Search> {
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
                 color: Constants.secondaryColor,
-                iconSize: 30,
+                iconSize: 25,
                 onPressed: () {
                   clear();
                   Navigator.pop(context);
@@ -183,7 +183,7 @@ Widget checkin_checkout_textfield(
             children: [
               const Icon(
                 Icons.calendar_today,
-                color: Constants.secondaryColor,
+                color: Constants.primaryColor,
                 size: 18,
               ),
               const SizedBox(
@@ -405,19 +405,19 @@ class _FlightLayoutState extends State<FlightLayout> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
+                      color: flightTrips[index].isSelected
+                                ? Constants.primaryColor
+                                : Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
                             color: flightTrips[index].isSelected
                                 ? Constants.primaryColor
-                                : Constants.secondaryColor)),
+                                : Constants.primaryColor)),
                     child: poppinsText(
                         text: flightTrips[index].text,
                         color: flightTrips[index].isSelected
-                            ? Constants.primaryColor
-                            : Constants.secondaryColor,
-                        fontBold: flightTrips[index].isSelected
-                            ? FontWeight.w600
-                            : FontWeight.w300),
+                            ? Colors.white
+                            : Constants.primaryColor,),
                   ),
                 );
               }),
@@ -512,8 +512,8 @@ class _FlightLayoutState extends State<FlightLayout> {
 
     // todo update user searchedCities
 
-    RecommendationRepository().updateUserSearchedCities(
-        iata: context.read<FlightSearchProvider>().to.iata);
+    // RecommendationRepository().updateUserSearchedCities(
+    //     iata: context.read<FlightSearchProvider>().to.iata);
     FlightRepository flightRepository = FlightRepository();
     List response = await flightRepository.flightOffersSearch(
         originLocationCode: context.read<FlightSearchProvider>().from.iata,
@@ -618,8 +618,8 @@ class _HotelLayoutState extends State<HotelLayout> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const HotelSearchResults()));
 
-    RecommendationRepository().updateUserSearchedCities(
-        iata: context.read<HotelSearchProvider>().to.iata);
+    // RecommendationRepository().updateUserSearchedCities(
+    //     iata: context.read<HotelSearchProvider>().to.iata);
 
     HotelRepository hotelRepository = HotelRepository();
     List response = await hotelRepository.hotelSearch(

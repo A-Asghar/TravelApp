@@ -26,7 +26,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
             Navigator.pop(context);
           },
           child: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: Theme.of(context).textTheme.bodyText1!.color,
             size: 25,
           ),

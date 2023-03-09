@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fyp/screens/auth/FillYourProfile.dart';
 import 'package:fyp/screens/profile/EditProfile.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
@@ -26,24 +27,22 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+            title: Padding(
+          padding: EdgeInsets.all(20),
+          child: poppinsText(
+              text: 'Profile', size: 24.0, fontBold: FontWeight.w600),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
         body: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).padding.top + 20),
-              Row(
-                children: [
-                  const SizedBox(width: 16),
-                  Text(
-                    "Profile",
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                  ),
-                ],
-              ),
               Expanded(
                 child: ListView(
                   physics: const ClampingScrollPhysics(),
@@ -55,7 +54,8 @@ class _ProfileState extends State<Profile> {
                           child: Container(
                             height: 120,
                             width: 120,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100.0),
                               image: DecorationImage(
                                 image: AssetImage('assets/images/user.png'),
                                 fit: BoxFit.fill,
@@ -79,26 +79,25 @@ class _ProfileState extends State<Profile> {
 
                         // Email
                         poppinsText(
-                            text: controller.user?.email ??
-                                "email@domain.com",
+                            text: controller.user?.email ?? "email@domain.com",
                             size: 14.0),
                         const Divider(color: Constants.secondaryColor),
                         const SizedBox(height: 20),
 
                         // Edit Profile
                         rowData(
-                          'assets/images/profile.svg',
+                          Icons.person,
                           "Edit Profile",
                           () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const EditProfile()));
+                                builder: (context) => const FillYourProfile()));
                           },
                         ),
                         const SizedBox(height: 30),
 
                         // Payment
                         rowData(
-                          'assets/images/Wallet.svg',
+                          Icons.wallet,
                           "Payment",
                           () {},
                         ),
@@ -106,7 +105,7 @@ class _ProfileState extends State<Profile> {
 
                         // Notification
                         rowData(
-                          'assets/images/Notification.svg',
+                          Icons.notifications,
                           "Notifications",
                           () {
                             // Get.to(
@@ -119,7 +118,7 @@ class _ProfileState extends State<Profile> {
 
                         // Security
                         rowData(
-                          'assets/images/sheildDone.svg',
+                          Icons.security,
                           "Security",
                           () {
                             // Get.to(
@@ -132,7 +131,7 @@ class _ProfileState extends State<Profile> {
 
                         // Help
                         rowData(
-                          'assets/images/infoSquare.svg',
+                          Icons.help,
                           "Help",
                           () {},
                         ),
@@ -140,7 +139,7 @@ class _ProfileState extends State<Profile> {
 
                         // Logout
                         rowData(
-                          'assets/images/Logout.svg',
+                          Icons.logout_outlined,
                           "Logout",
                           () {
                             Get.bottomSheet(
@@ -177,7 +176,7 @@ class _ProfileState extends State<Profile> {
                                       const SizedBox(height: 30),
                                       CustomButton(
                                         text: "Yes, Logout",
-                                        onTap: () async{
+                                        onTap: () async {
                                           Get.offAll(
                                             const Home2(),
                                             transition: Transition.rightToLeft,
@@ -187,7 +186,9 @@ class _ProfileState extends State<Profile> {
                                             transition: Transition.rightToLeft,
                                           );
                                           FirebaseAuth.instance.signOut();
-                                              await GoogleSignIn(scopes: <String>["email"]).signOut();
+                                          await GoogleSignIn(
+                                                  scopes: <String>["email"])
+                                              .signOut();
                                         },
                                       ),
                                       const SizedBox(height: 15),
@@ -221,7 +222,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget rowData(String image, String text, VoidCallback onTap) {
+  Widget rowData(IconData icon, String text, VoidCallback onTap) {
     return InkWell(
       onTap: () {
         onTap();
@@ -231,19 +232,15 @@ class _ProfileState extends State<Profile> {
           SizedBox(
             height: 28,
             width: 28,
-            child: SvgPicture.asset(
-              image,
-              color: text == "Logout"
-                  ? const Color(0xffF75555)
-                  : Theme.of(context).textTheme.bodyText1!.color,
-              fit: BoxFit.fill,
-            ),
+            child: Icon(icon, color: text == 'Logout' ? Colors.red : Constants.primaryColor,),
           ),
           const SizedBox(width: 16),
           poppinsText(
               text: text,
               size: 18.0,
-              color: text == "Logout" ? Colors.redAccent : Constants.secondaryColor,
+              color: text == "Logout"
+                  ? Colors.redAccent
+                  : Constants.secondaryColor,
               fontBold: FontWeight.w400),
           const Expanded(child: SizedBox()),
         ],

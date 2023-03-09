@@ -28,6 +28,7 @@ class _TicketScreenState extends State<TicketScreen> {
           },
           child: Icon(
             Icons.arrow_back_ios,
+            size: 25,
             color: Theme.of(context).textTheme.bodyText1!.color!,
           ),
         ),

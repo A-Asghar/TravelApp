@@ -26,7 +26,7 @@ class _HotelGalleryState extends State<HotelGallery> {
               child: Icon(
                 Icons.arrow_back_ios,
                 color: Constants.secondaryColor,
-                size: 30,
+                size: 25,
               ),
             )),
         title: Text(
@@ -96,7 +96,7 @@ class _PackageGalleryState extends State<PackageGallery> {
               child: Icon(
                 Icons.arrow_back_ios,
                 color: Constants.secondaryColor,
-                size: 30,
+                size: 25,
               ),
             )),
         title: Text(

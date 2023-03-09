@@ -34,7 +34,7 @@ class SelectPhoto extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: Constants.secondaryColor,
+              color: Constants.primaryColor,
             ),
             const SizedBox(
               width: 14,

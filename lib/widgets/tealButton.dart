@@ -14,7 +14,7 @@ class TealButton extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 20),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-            fixedSize: Size(MediaQuery.of(context).size.width * 0.85, 50),
+            fixedSize: Size(MediaQuery.of(context).size.width * 0.9, 50),
             backgroundColor: Constants.primaryColor),
         onPressed: onPressed,
         child: poppinsText(

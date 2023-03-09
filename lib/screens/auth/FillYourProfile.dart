@@ -86,14 +86,15 @@ class _FillYourProfileState extends State<FillYourProfile> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        // leading: InkWell(
-        //   onTap: () {
-        //     Navigator.pop(context);
-        //   },
-        //   child: const Icon(Icons.arrow_back_ios, color: Constants.secondaryColor),
-        // ),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: const Icon(Icons.arrow_back_ios,
+              size: 25, color: Constants.secondaryColor),
+        ),
         centerTitle: true,
-        title: poppinsText(text: "Fill Your Profile", size: 24.0),
+        title: poppinsText(text: "Fill Your Profile", size: 24.0, fontBold: FontWeight.w500),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -117,6 +118,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
                             height: 140,
                             width: 140,
                             decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
                               image: DecorationImage(
                                 image: AssetImage(
                                     _image?.path ?? 'assets/images/user.png'
@@ -132,12 +134,11 @@ class _FillYourProfileState extends State<FillYourProfile> {
 
                       // Name
                       CustomTextField(
-                        hintText: "name",
-                        textFieldController: _name,
-                        showError: validateName,
-                        sufix: const SizedBox(),
-                        prefix: const SizedBox(),
-                      ),
+                          hintText: "name",
+                          textFieldController: _name,
+                          showError: validateName,
+                          sufix: const SizedBox(),
+                          prefix: Icons.person),
                       const SizedBox(height: 15),
 
                       // Address
@@ -146,7 +147,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
                         textFieldController: _address,
                         showError: validateAddress,
                         sufix: const SizedBox(),
-                        prefix: const SizedBox(),
+                        prefix: Icons.location_on
                       ),
                       const SizedBox(height: 15),
 
@@ -158,14 +159,8 @@ class _FillYourProfileState extends State<FillYourProfile> {
                         hintText: "date of birth",
                         showError: validateDateOfBirth,
                         textFieldController: _dateOfBirth,
-                        sufix: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: SvgPicture.asset(
-                            'assets/images/Calendar.svg',
-                            color: Constants.secondaryColor,
-                          ),
-                        ),
-                        prefix: const SizedBox(),
+                        sufix: const SizedBox(),
+                        prefix: Icons.calendar_month_rounded
                       ),
 
                       const SizedBox(height: 20),
@@ -177,12 +172,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
                         hintText: "phone",
                         textFieldController: _phoneNumber,
                         sufix: const SizedBox(),
-                        prefix: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: SvgPicture.asset(
-                            'assets/images/p2.svg',
-                          ),
-                        ),
+                        prefix: Icons.phone
                       ),
                       const SizedBox(height: 20),
 
@@ -192,7 +182,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
                         hintText: "gender",
                         textFieldController: _gender,
                         sufix: const SizedBox(),
-                        prefix: const SizedBox(),
+                        prefix: Icons.wc
                       ),
                       const SizedBox(height: 20),
                     ],
@@ -341,7 +331,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
 class CustomTextField extends StatefulWidget {
   final String hintText;
   final TextEditingController textFieldController;
-  final Widget prefix;
+  final IconData prefix;
   final Widget sufix;
   final bool hideText;
   final bool showError;
@@ -366,43 +356,79 @@ class CustomTextField extends StatefulWidget {
 }
 
 class _CustomTextFieldState extends State<CustomTextField> {
+  final FocusNode _focusNode = FocusNode();
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60,
-      width: Get.width,
-      child: TextFormField(
-        readOnly: widget.readOnly,
-        onTap: widget.onTap,
-        keyboardType: widget.keyboardType,
-        obscureText: widget.hideText,
-        controller: widget.textFieldController,
-        style: GoogleFonts.poppins(
-          fontSize: 14,
-        ),
-        decoration: InputDecoration(
-          errorText: widget.showError ? null : 'This field can not be empty',
-          contentPadding: const EdgeInsets.only(top: 15),
-          fillColor: Colors.grey.withOpacity(0.05),
-          filled: true,
-          hintText: widget.hintText,
-          suffixIcon: widget.sufix,
-          prefixIcon: widget.prefix,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Colors.transparent,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: Colors.transparent,
-            ),
-          ),
-          hintStyle: GoogleFonts.poppins(
-            color: const Color(0xff9E9E9E),
+    return Focus(
+      onFocusChange: (hasFocus) {
+        setState(() {
+          _isFocused = hasFocus;
+        });
+      },
+      child: SizedBox(
+        height: 60,
+        width: Get.width,
+        child: TextFormField(
+          focusNode: _focusNode,
+          readOnly: widget.readOnly,
+          onTap: widget.onTap,
+          keyboardType: widget.keyboardType,
+          obscureText: widget.hideText,
+          controller: widget.textFieldController,
+          style: GoogleFonts.poppins(
             fontSize: 14,
+          ),
+          decoration: InputDecoration(
+            errorText: widget.showError ? null : 'This field can not be empty',
+            contentPadding: const EdgeInsets.only(top: 15),
+            fillColor: Colors.grey.withOpacity(0.05),
+            filled: true,
+            hintText: widget.hintText,
+            suffixIcon: widget.sufix,
+            prefixIcon: Icon(
+              widget.prefix,
+              color: _isFocused ? Constants.primaryColor : Colors.grey,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Colors.transparent,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Colors.transparent,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: Constants.primaryColor,
+              ),
+            ),
+            hintStyle: GoogleFonts.poppins(
+              color: const Color(0xff9E9E9E),
+              fontSize: 14,
+            ),
           ),
         ),
       ),
