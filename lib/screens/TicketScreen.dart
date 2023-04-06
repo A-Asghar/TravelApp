@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:get/get.dart';
 
 import '../providers/UserProvider.dart';
@@ -119,6 +120,7 @@ class _TicketScreenState extends State<TicketScreen> {
               child: TealButton(
                 text: "Download Ticket",
                 onPressed: () {},
+                bgColor: Constants.primaryColor, txtColor: Colors.white,
               ),
             ),
             const SizedBox(height: 20),

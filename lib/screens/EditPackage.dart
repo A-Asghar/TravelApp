@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/repository/PackageRepository.dart';
 import 'package:fyp/widgets/tealButton.dart';
 
@@ -129,7 +130,7 @@ class _EditPackageState extends State<EditPackage> {
                           travelAgencyId: travelAgencyId,
                           hotelPropertyId: hotelPropertyId.text,
                           destination: destination.text));
-                })
+                }, bgColor: Constants.primaryColor, txtColor: Colors.white,)
           ],
         ),
       ),

@@ -45,6 +45,7 @@ class RoomDetails extends StatelessWidget {
             child: TealButton(
               text: 'Book Now',
               onPressed: () {},
+              bgColor: Constants.primaryColor, txtColor: Colors.white,
             ),
           )
         ],

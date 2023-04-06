@@ -83,6 +83,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   });
                 }
               },
+              bgColor: Constants.primaryColor, txtColor: Colors.white,
             ),
           ],
         ),

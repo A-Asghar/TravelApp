@@ -142,76 +142,14 @@ class _PackageDetailsState extends State<PackageDetails> {
                 ),
                 const SizedBox(height: 20),
 
-                // Facilities
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: poppinsText(text: "Facilities", size: 20.0),
-                ),
-                const SizedBox(height: 20),
-
-                //Put in GridView
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      detailCard("Swimming Pool"),
-                      detailCard("Elevator"),
-                      detailCard("Fitness Center"),
-                      detailCard("24-hours Open"),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      detailCard("Meeting Room"),
-                      detailCard("Elevator"),
-                      detailCard("Fitness Center"),
-                      detailCard("24-hours Open"),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-
                 //Day wise Details
                 widget.package.dayWiseDetails!.isEmpty
                     ? Container()
-                    : dayWiseDetail(widget.package.dayWiseDetails),
-
-                // Location Map
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: poppinsText(text: "Location", size: 20.0),
-                ),
-                const SizedBox(height: 20),
-                InkWell(
-                  onTap: () {
-                    // Get.to(
-                    //   const HotelLocationScreen(),
-                    //   transition: Transition.rightToLeft,
-                    // );
-                  },
-                  child: InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: SizedBox(
-                        height: 180,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/images/map.png',
-                          fit: BoxFit.fill,
-                        ),
+                    : DayWiseDetail(
+                        daywise: widget.package.dayWiseDetails,
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
 
+                      const SizedBox(height: 20,),
                 // Reviews
                 InkWell(
                   onTap: () {
@@ -323,25 +261,60 @@ class _PackageDetailsState extends State<PackageDetails> {
   }
 }
 
-Widget dayWiseDetail(List<String>? daywise) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: poppinsText(text: "Day wise Itinerary", size: 20.0),
-      ),
-      ListView.builder(
-          physics: const ScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: daywise!.length,
-          itemBuilder: (context, index) {
-            return Padding(
+class DayWiseDetail extends StatefulWidget {
+  final List<String>? daywise;
+
+  const DayWiseDetail({Key? key, this.daywise}) : super(key: key);
+
+  @override
+  _DayWiseDetailState createState() => _DayWiseDetailState();
+}
+
+class _DayWiseDetailState extends State<DayWiseDetail> {
+  bool showAllItems = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: poppinsText(text: "Day wise Itinerary", size: 20.0),
+        ),
+        ListView.builder(
+            physics: const ScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: showAllItems ? widget.daywise!.length : 1,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: poppinsText(text: '${widget.daywise![index]} \n', size: 16.0)
+              );
+            }),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              showAllItems = !showAllItems;
+            });
+          },
+          child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
-              child: poppinsText(text: '${daywise[index]} \n', size: 14.0),
-            );
-          }),
-      const SizedBox(height: 20),
-    ],
-  );
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  poppinsText(
+                      text: showAllItems ? "Show less" : "Show more",
+                      color: Constants.primaryColor,
+                      size: 16.0),
+                  Icon(
+                    showAllItems ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                    color: Constants.primaryColor,
+                  )
+                ],
+              )),
+        ),
+      ],
+    );
+  }
 }

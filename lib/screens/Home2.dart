@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fyp/models/Package.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HomeProvider.dart';
@@ -7,22 +8,20 @@ import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
-
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';
-
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
+import 'package:fyp/screens/vacations/vacation_search.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:intl/intl.dart';
-
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
 import '../Constants.dart';
 import '../models/RecommendedCities.dart';
 import '../providers/RecommendationProvider.dart';
+import '../repository/FlightRepository.dart';
 import '../repository/RecommendationRepository.dart';
 
 class Home2 extends StatefulWidget {
@@ -44,9 +43,9 @@ class _Home2State extends State<Home2> {
   fetchInfo() {
     setState(() => isLoading = true);
 
-    // if (context.read<RecommendationProvider>().recommendedCities == null) {
-    //   fetchRecommended();
-    // }
+    if (context.read<RecommendationProvider>().recommendedCities == null) {
+      fetchRecommended();
+    }
     if (context.read<HomeProvider>().hotels.isEmpty) {
       fetchHotels();
     }
@@ -75,78 +74,91 @@ class _Home2State extends State<Home2> {
     });
   }
 
-  // fetchRecommended() async {
-  //   final UserProvider controller = Get.put(UserProvider());
+  fetchRecommended() async {
+    final UserProvider controller = Get.put(UserProvider());
 
-  //   context.read<RecommendationProvider>().recommendedCities =
-  //       await RecommendationRepository()
-  //           .getRecommendedCities(cityIatas: controller.user!.searchedCities);
-  // }
+    context.read<RecommendationProvider>().recommendedCities =
+        await RecommendationRepository()
+            .getRecommendedCities(cityIatas: controller.user!.searchedCities);
+  }
 
   @override
   Widget build(BuildContext context) {
-    var homeProvider = context.watch<HomeProvider>();
-    var packageProvider = context.watch<PackageHomeProvider>();
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-      ),
-      // drawer: SideBar(),
-      body: isLoading
-          ? lottieLoader()
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.width,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          // top: 0,
-                          child: topBackgroundImage(context),
-                        ),
-                        Positioned(
-                          bottom: MediaQuery.of(context).size.width * 0.02,
-                          child: topIcons(context),
-                        ),
-                        // searchBar(context),
-                        Positioned(
-                          top: 120,
-                          left: 20,
-                          child: topHeading('Asghar'),
-                        ),
-                      ],
+    UserProvider controller = Get.put(UserProvider());
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+        ),
+        // drawer: SideBar(),
+        body: isLoading
+            ? lottieLoader()
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.width,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            // top: 0,
+                            child: topBackgroundImage(context),
+                          ),
+                          Positioned(
+                            bottom: MediaQuery.of(context).size.width * 0.02,
+                            child: topIcons(context),
+                          ),
+                          // searchBar(context),
+                          Positioned(
+                            top: 120,
+                            left: 20,
+                            child: topHeading(controller.user!.name),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  heading('Summer Escapes', 25.0),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: poppinsText(
-                        text:
-                            'Break the routine and escape to these hand-picked properties for exceptional prices',
-                        color: Constants.secondaryColor),
-                  ),
-                  const SizedBox(height: 10),
-                  summerEscapes(
-                    context,
-                    context.read<HomeProvider>().hotels,
-                    context.read<HomeProvider>().city,
-                  ),
-                  const SizedBox(height: 20),
-                  recommendedDestinations(context),
-                  const SizedBox(height: 10),
-                  heading('Top Packages', 20.0),
-                  topPackages(
-                      context.read<PackageHomeProvider>().packages, context),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
+                    heading('Summer Escapes', 25.0),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: poppinsText(
+                          text:
+                              'Break the routine and escape to these hand-picked properties for exceptional prices',
+                          color: Constants.secondaryColor),
+                    ),
+                    const SizedBox(height: 10),
+                    summerEscapes(
+                      context,
+                      context.read<HomeProvider>().hotels,
+                      context.read<HomeProvider>().city,
+                    ),
+                    const SizedBox(height: 20),
+                    recommendedDestinations(context),
+                    const SizedBox(height: 10),
+                    heading('Top Packages', 25.0),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: poppinsText(
+                          text:
+                              'Explore the delicately crafted packages customized to your travel-buds',
+                          color: Constants.secondaryColor),
+                    ),
+                    const SizedBox(height: 10),
+                    packageList(context.read<PackageHomeProvider>().packages,
+                        context, 300),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }
@@ -204,7 +216,10 @@ Widget topIcons(context) {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => Search(title: 'hotel')));
         }),
-        iconBox(Icons.beach_access, Constants.primaryColor, 'Vacations', () {}),
+        iconBox(Icons.beach_access, Constants.primaryColor, 'Vacations', () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const VacationSearch()));
+        }),
       ],
     ),
   );
@@ -234,7 +249,7 @@ Widget searchBar(context) {
 Widget heading(text, size) {
   return Container(
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       child: poppinsText(text: text, size: size, fontBold: FontWeight.w600));
 }
 
@@ -342,12 +357,8 @@ Widget summerEscapes(
                           Row(
                             children: [
                               poppinsText(
-                                  text: double.parse(hotels[index]
-                                          .price!
-                                          .lead!
-                                          .amount!
-                                          .toStringAsFixed(2))
-                                      .toString(),
+                                  text:
+                                      '\$${double.parse(hotels[index].price!.lead!.amount!.toStringAsFixed(2)).toString()}',
                                   size: 20.0,
                                   color: Constants.primaryColor,
                                   fontBold: FontWeight.w500),
@@ -506,7 +517,7 @@ class sideBarRow extends StatelessWidget {
 Widget topPackages(List<Package> packages, BuildContext context) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
-    height: MediaQuery.of(context).size.height * 0.32,
+    height: 330,
     child: ListView.builder(
         itemCount: packages.length,
         shrinkWrap: true,
@@ -523,7 +534,7 @@ Widget topPackages(List<Package> packages, BuildContext context) {
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15)),
-              child: Container(
+              child: SizedBox(
                 width: 200,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -551,16 +562,14 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                                   size: 15.0,
                                   color: Constants.secondaryColor),
                             ],
-                            
                           ),
-
                           Row(
                             children: [
                               const Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                  size: 15,
-                                ),
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 15,
+                              ),
                               poppinsText(
                                   text: double.parse(packages[index]
                                           .rating
@@ -571,6 +580,7 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                                   fontBold: FontWeight.w500),
                             ],
                           ),
+                          const Spacer(),
                           Row(
                             children: [
                               poppinsText(
@@ -578,6 +588,128 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                                           .packagePrice
                                           .toStringAsFixed(2))
                                       .toString(),
+                                  size: 20.0,
+                                  color: Constants.primaryColor,
+                                  fontBold: FontWeight.w500),
+                              poppinsText(
+                                  text: ' /person',
+                                  color: Constants.secondaryColor,
+                                  size: 12.0)
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }),
+  );
+}
+
+Widget packageList(
+    List<Package> packages, BuildContext context, double height) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 5),
+    // width: MediaQuery.of(context).size.width * 0.95,
+    height: height,
+    child: ListView.builder(
+        itemCount: packages.length,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          var formatter = NumberFormat('#,##,000');
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PackageDetails(
+                  package: packages[index],
+                ),
+              ));
+            },
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              child: SizedBox(
+                width: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    roundedImage(
+                        160.0,
+                        250.0,
+                        packages[index].imgUrls.isEmpty ||
+                                packages[index].imgUrls[0] == ""
+                            ? 'https://www.iconsdb.com/icons/preview/gray/mountain-xxl.png'
+                            : packages[index].imgUrls[0]),
+                    Container(
+                      height: 130,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 2),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          poppinsText(
+                              text: packages[index].packageName,
+                              size: 18.0,
+                              color: Constants.secondaryColor,
+                              fontBold: FontWeight.w500),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                size: 16.0,
+                                color: Constants.primaryColor,
+                              ),
+                              const SizedBox(
+                                width: 2,
+                              ),
+                              poppinsText(
+                                  text: packages[index]
+                                      .destination
+                                      .split(',')
+                                      .first,
+                                  size: 16.0,
+                                  color: Constants.secondaryColor),
+                            ],
+                          ),
+                          Container(
+                            width: 180,
+                            alignment: Alignment.bottomRight,
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 16,
+                                ),
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                Row(
+                                  children: [
+                                    poppinsText(
+                                        text: double.parse(packages[index]
+                                                .rating
+                                                .toStringAsFixed(1))
+                                            .toString(),
+                                        size: 16.0,
+                                        color: Constants.secondaryColor,
+                                        fontBold: FontWeight.w400),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          Row(
+                            children: [
+                              poppinsText(
+                                  text:
+                                      '\$${double.parse(packages[index].packagePrice.toStringAsFixed(1)).toString()}',
                                   size: 20.0,
                                   color: Constants.primaryColor,
                                   fontBold: FontWeight.w500),

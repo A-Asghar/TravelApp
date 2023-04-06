@@ -91,7 +91,12 @@ class _SearchState extends State<Search> {
 }
 
 Widget searchButton(BuildContext context, VoidCallback onPressed) {
-  return TealButton(text: 'Search', onPressed: onPressed);
+  return TealButton(
+    text: 'Search',
+    onPressed: onPressed,
+    bgColor: Constants.primaryColor,
+    txtColor: Colors.white,
+  );
 }
 
 Widget packageLayout() {
@@ -157,8 +162,22 @@ Future _selectDate(BuildContext context, String date) async {
       initialDate: selectedDate,
       firstDate: DateTime(2015, 8),
       lastDate: DateTime(2101));
-
-  return selectedDate;
+  if (selectedDate != null) {
+    if (date == 'depart') {
+      context.read<FlightSearchProvider>().departDate =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'return') {
+      context.read<FlightSearchProvider>().returnDate =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'checkin') {
+      context.read<HotelSearchProvider>().checkIn =
+          Constants.convertDate(selectedDate);
+    } else if (date == 'checkout') {
+      context.read<HotelSearchProvider>().checkOut =
+          Constants.convertDate(selectedDate);
+    }
+  }
+  // return selectedDate;
 }
 
 Widget checkin_checkout_textfield(
@@ -405,19 +424,20 @@ class _FlightLayoutState extends State<FlightLayout> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: flightTrips[index].isSelected
-                                ? Constants.primaryColor
-                                : Colors.transparent,
+                        color: flightTrips[index].isSelected
+                            ? Constants.primaryColor
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
                             color: flightTrips[index].isSelected
                                 ? Constants.primaryColor
                                 : Constants.primaryColor)),
                     child: poppinsText(
-                        text: flightTrips[index].text,
-                        color: flightTrips[index].isSelected
-                            ? Colors.white
-                            : Constants.primaryColor,),
+                      text: flightTrips[index].text,
+                      color: flightTrips[index].isSelected
+                          ? Colors.white
+                          : Constants.primaryColor,
+                    ),
                   ),
                 );
               }),
@@ -512,8 +532,8 @@ class _FlightLayoutState extends State<FlightLayout> {
 
     // todo update user searchedCities
 
-    // RecommendationRepository().updateUserSearchedCities(
-    //     iata: context.read<FlightSearchProvider>().to.iata);
+    RecommendationRepository().updateUserSearchedCities(
+        iata: context.read<FlightSearchProvider>().to.iata);
     FlightRepository flightRepository = FlightRepository();
     List response = await flightRepository.flightOffersSearch(
         originLocationCode: context.read<FlightSearchProvider>().from.iata,
@@ -618,8 +638,8 @@ class _HotelLayoutState extends State<HotelLayout> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const HotelSearchResults()));
 
-    // RecommendationRepository().updateUserSearchedCities(
-    //     iata: context.read<HotelSearchProvider>().to.iata);
+    RecommendationRepository().updateUserSearchedCities(
+        iata: context.read<HotelSearchProvider>().to.iata);
 
     HotelRepository hotelRepository = HotelRepository();
     List response = await hotelRepository.hotelSearch(

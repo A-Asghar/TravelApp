@@ -1,18 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:fyp/screens/auth/FillYourProfile.dart';
-import 'package:fyp/screens/profile/EditProfile.dart';
-
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:fyp/screens/profile/EditProfile.dart';
+import 'package:fyp/widgets/tealButton.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../../Constants.dart';
 import '../../providers/UserProvider.dart';
-import '../../widgets/customButton.dart';
 import '../../widgets/poppinsText.dart';
 import '../Home2.dart';
 
@@ -32,14 +26,15 @@ class _ProfileState extends State<Profile> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-            title: Padding(
-          padding: EdgeInsets.all(20),
-          child: poppinsText(
-              text: 'Profile', size: 24.0, fontBold: FontWeight.w600),
+          title: Padding(
+            padding: EdgeInsets.all(20),
+            child: poppinsText(
+                text: 'Profile', size: 24.0, fontBold: FontWeight.w600),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
         body: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
@@ -54,14 +49,27 @@ class _ProfileState extends State<Profile> {
                       children: [
                         const SizedBox(height: 20),
                         Center(
-                          child: Container(
-                            height: 120,
-                            width: 120,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100.0),
-                              image: DecorationImage(
-                                image: AssetImage('assets/images/user.png'),
-                                fit: BoxFit.fill,
+                          child: GestureDetector(
+                            onTap: () {
+                              Get.to(const EditProfile(),
+                                  transition: Transition.fade);
+                            },
+                            child: Container(
+                              height: 120,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100.0),
+                                image: DecorationImage(
+                                  image: controller
+                                          .user!.profilePhotoUrl.isEmpty || controller
+                                          .user!.profilePhotoUrl == "assets/images/user.png"
+                                      ? const AssetImage(
+                                          'assets/images/user.png')
+                                      : NetworkImage(
+                                              controller.user!.profilePhotoUrl)
+                                          as ImageProvider<Object>,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           ),
@@ -92,8 +100,8 @@ class _ProfileState extends State<Profile> {
                           Icons.person,
                           "Edit Profile",
                           () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const FillYourProfile()));
+                            Get.to(const EditProfile(),
+                                transition: Transition.fade);
                           },
                         ),
                         const SizedBox(height: 30),
@@ -167,19 +175,19 @@ class _ProfileState extends State<Profile> {
                                           size: 24.0,
                                           color: const Color(0xffF75555),
                                           fontBold: FontWeight.w500),
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 10),
                                       const Divider(
                                           color: Constants.secondaryColor),
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 10),
                                       poppinsText(
                                         text:
                                             "Are you sure you want to log out?",
                                         size: 20.0,
                                       ),
-                                      const SizedBox(height: 30),
-                                      CustomButton(
+                                      const SizedBox(height: 10),
+                                      TealButton(
                                         text: "Yes, Logout",
-                                        onTap: () async {
+                                        onPressed: () async {
                                           Get.offAll(
                                             const Home2(),
                                             transition: Transition.rightToLeft,
@@ -189,18 +197,16 @@ class _ProfileState extends State<Profile> {
                                             transition: Transition.rightToLeft,
                                           );
                                           FirebaseAuth.instance.signOut();
-                                          await GoogleSignIn(
-                                                  scopes: <String>["email"])
-                                              .signOut();
+                                          await GoogleSignIn().signOut();
                                         },
+                                        bgColor: Colors.red,
+                                        txtColor: Colors.white,
                                       ),
-                                      const SizedBox(height: 15),
-                                      CustomButton(
+                                      TealButton(
                                         text: "Cancel",
-                                        bgColor: Constants.primaryColor
-                                            .withOpacity(0.1),
-                                        textColor: Constants.primaryColor,
-                                        onTap: () {
+                                        bgColor: Constants.primaryColor,
+                                        txtColor: Colors.white,
+                                        onPressed: () {
                                           Navigator.pop(context);
                                         },
                                       ),
@@ -235,7 +241,10 @@ class _ProfileState extends State<Profile> {
           SizedBox(
             height: 28,
             width: 28,
-            child: Icon(icon, color: text == 'Logout' ? Colors.red : Constants.primaryColor,),
+            child: Icon(
+              icon,
+              color: text == 'Logout' ? Colors.red : Constants.primaryColor,
+            ),
           ),
           const SizedBox(width: 16),
           poppinsText(

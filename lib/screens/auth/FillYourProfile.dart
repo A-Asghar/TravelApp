@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
+import 'package:fyp/screens/profile/profile.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -46,6 +48,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
       File? img = File(image.path);
       setState(() {
         _image = img;
+        uploadFile(_image!);
         Navigator.of(context).pop();
       });
     } on PlatformException catch (e) {
@@ -79,157 +82,178 @@ class _FillYourProfileState extends State<FillYourProfile> {
     );
   }
 
+  Future<String> uploadFile(File image) async {
+    String downloadURL;
+    String postId = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child("images")
+        .child("post_$postId.jpg");
+    await ref.putFile(image);
+    downloadURL = await ref.getDownloadURL();
+    AuthNetwork.updateProfilePhoto(
+        uid: FirebaseAuth.instance.currentUser!.uid, pfp: downloadURL);
+    return downloadURL;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(Icons.arrow_back_ios,
-              size: 25, color: Constants.secondaryColor),
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              SystemNavigator.pop();
+            },
+            child: const Icon(Icons.arrow_back_ios,
+                size: 25, color: Constants.secondaryColor),
+          ),
+          centerTitle: true,
+          title: poppinsText(
+              text: "Fill Your Profile", size: 24.0, fontBold: FontWeight.w500),
         ),
-        centerTitle: true,
-        title: poppinsText(text: "Fill Your Profile", size: 24.0, fontBold: FontWeight.w500),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView(
-                physics: const ClampingScrollPhysics(),
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ListView(
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
 
-                      // Profile Picture
-                      Center(
-                        child: InkWell(
-                          onTap: () => _showSelectPhotoOptions(context),
-                          child: Container(
-                            height: 140,
-                            width: 140,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                image: AssetImage(
-                                    _image?.path ?? 'assets/images/user.png'
-                                    // _image == null ? 'assets/images/user.png' : _image!.path,
-                                    ),
-                                fit: BoxFit.fill,
+                        // Profile Picture
+                        Center(
+                          child: InkWell(
+                            onTap: () => _showSelectPhotoOptions(context),
+                            child: Container(
+                              height: 140,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                    // _image?.path ?? 'assets/images/user.png'
+                                    _image == null
+                                        ? 'assets/images/user.png'
+                                        : _image!.path,
+                                  ),
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                      // Name
-                      CustomTextField(
-                          hintText: "name",
-                          textFieldController: _name,
-                          showError: validateName,
-                          sufix: const SizedBox(),
-                          prefix: Icons.person),
-                      const SizedBox(height: 15),
+                        // Name
+                        CustomTextField(
+                            hintText: "name",
+                            textFieldController: _name,
+                            showError: validateName,
+                            sufix: const SizedBox(),
+                            prefix: Icons.person),
+                        const SizedBox(height: 15),
 
-                      // Address
-                      CustomTextField(
-                        hintText: "address",
-                        textFieldController: _address,
-                        showError: validateAddress,
-                        sufix: const SizedBox(),
-                        prefix: Icons.location_on
-                      ),
-                      const SizedBox(height: 15),
+                        // Address
+                        CustomTextField(
+                            hintText: "address",
+                            textFieldController: _address,
+                            showError: validateAddress,
+                            sufix: const SizedBox(),
+                            prefix: Icons.location_on),
+                        const SizedBox(height: 15),
 
-                      // Date of birth
-                      CustomTextField(
-                        readOnly: true,
-                        onTap: () => _selectDate(context),
-                        keyboardType: TextInputType.datetime,
-                        hintText: "date of birth",
-                        showError: validateDateOfBirth,
-                        textFieldController: _dateOfBirth,
-                        sufix: const SizedBox(),
-                        prefix: Icons.calendar_month_rounded
-                      ),
+                        // Date of birth
+                        CustomTextField(
+                            readOnly: true,
+                            onTap: () => _selectDate(context),
+                            keyboardType: TextInputType.datetime,
+                            hintText: "date of birth",
+                            showError: validateDateOfBirth,
+                            textFieldController: _dateOfBirth,
+                            sufix: const SizedBox(),
+                            prefix: Icons.calendar_month_rounded),
 
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                      // Phone number
-                      CustomTextField(
-                        showError: validatePhoneNumber,
-                        keyboardType: TextInputType.phone,
-                        hintText: "phone",
-                        textFieldController: _phoneNumber,
-                        sufix: const SizedBox(),
-                        prefix: Icons.phone
-                      ),
-                      const SizedBox(height: 20),
+                        // Phone number
+                        CustomTextField(
+                            showError: validatePhoneNumber,
+                            keyboardType: TextInputType.phone,
+                            hintText: "phone",
+                            textFieldController: _phoneNumber,
+                            sufix: const SizedBox(),
+                            prefix: Icons.phone),
+                        const SizedBox(height: 20),
 
-                      // Gender
-                      CustomTextField(
-                        showError: validateGender,
-                        hintText: "gender",
-                        textFieldController: _gender,
-                        sufix: const SizedBox(),
-                        prefix: Icons.wc
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Center(
-              child: isLoading
-                  ? const Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: CircularProgressIndicator(
-                        color: Colors.teal,
-                      ),
+                        // Gender
+                        GenderDropdown(genderController: _gender),
+                        const SizedBox(height: 20),
+                      ],
                     )
-                  : TealButton(
-                      text: "Continue",
-                      onPressed: () async {
-                        if (validateTextFields()) {
-                          setState(() => isLoading = true);
-                          await AuthNetwork.createUserProfile(
-                            signedInUser: FirebaseAuth.instance.currentUser!,
-                            user: Users(
-                              email: FirebaseAuth.instance.currentUser!.email!,
-                              name: _name.text,
-                              address: _address.text,
-                              dateOfBirth: _dateOfBirth.text,
-                              phoneNumber: _phoneNumber.text,
-                              gender: _gender.text,
-                              profilePhotoUrl: _image?.path ?? '',
-                              searchedCities: [],
-                            ),
-                          ).then((_) {
-                            setState(() => isLoading = false);
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const BottomNavBar(),
-                            ));
-                          });
-                        }
+                  ],
+                ),
+              ),
+              Center(
+                child: isLoading
+                    ? const Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: CircularProgressIndicator(
+                          color: Colors.teal,
+                        ),
+                      )
+                    : TealButton(
+                        text: "Continue",
+                        onPressed: () async {
+                          if (validateTextFields()) {
+                            setState(() => isLoading = true);
 
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //   builder: (context) => const BottomNavBar(),
-                        // ));
-                      },
-                    ),
-            ),
-          ],
+                            await AuthNetwork.createUserProfile(
+                              signedInUser: FirebaseAuth.instance.currentUser!,
+                              user: Users(
+                                email:
+                                    FirebaseAuth.instance.currentUser!.email!,
+                                name: _name.text,
+                                role: controller.user!.role,
+                                address: _address.text,
+                                dateOfBirth: _dateOfBirth.text,
+                                phoneNumber: _phoneNumber.text,
+                                gender: _gender.text,
+                                profilePhotoUrl: controller.user!.profilePhotoUrl.isEmpty
+                                    ? ''
+                                    : controller.user!.profilePhotoUrl,
+                                searchedCities: [],
+                              ),
+                            ).then((_) {
+                              setState(() => isLoading = false);
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const BottomNavBar(),
+                              ));
+                            });
+                          }
+
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //   builder: (context) => const BottomNavBar(),
+                          // ));
+                        },
+                        bgColor: Constants.primaryColor,
+                        txtColor: Colors.white,
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -430,6 +454,105 @@ class _CustomTextFieldState extends State<CustomTextField> {
               fontSize: 14,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class GenderDropdown extends StatefulWidget {
+  const GenderDropdown({super.key, required this.genderController});
+  final TextEditingController genderController;
+
+  @override
+  _GenderDropdownState createState() => _GenderDropdownState();
+}
+
+class _GenderDropdownState extends State<GenderDropdown> {
+  String? _selectedGender;
+  final FocusNode _genderFocusNode = FocusNode();
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedGender = 'Select your gender';
+    _genderFocusNode.addListener(() {
+      setState(() {
+        _isFocused = _genderFocusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _genderFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      onFocusChange: (hasFocus) {
+        setState(() {
+          _isFocused = hasFocus;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.only(left: 10),
+        width: Get.width,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.wc,
+                color: _isFocused ? Constants.primaryColor : Colors.grey),
+            Expanded(
+              child: DropdownButton2(
+                underline: Container(),
+                focusNode: _genderFocusNode,
+                hint: poppinsText(text: _selectedGender!),
+                isExpanded: true,
+                items: [
+                  DropdownMenuItem(
+                    child: Row(
+                      children: [
+                        Icon(Icons.man,
+                            color: _isFocused
+                                ? Constants.primaryColor
+                                : Colors.grey),
+                        SizedBox(width: 16.0),
+                        poppinsText(text: 'Male')
+                      ],
+                    ),
+                    value: 'Male',
+                  ),
+                  DropdownMenuItem(
+                    child: Row(
+                      children: [
+                        Icon(Icons.woman,
+                            color: _isFocused
+                                ? Constants.primaryColor
+                                : Colors.grey),
+                        SizedBox(width: 16.0),
+                        poppinsText(text: 'Female')
+                      ],
+                    ),
+                    value: 'Female',
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGender = value!;
+                    widget.genderController.text = value;
+                  });
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

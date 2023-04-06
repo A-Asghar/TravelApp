@@ -153,6 +153,7 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
                   ),
                 );
               },
+              bgColor: Constants.primaryColor, txtColor: Colors.white,
             ),
             const SizedBox(height: 20),
           ],

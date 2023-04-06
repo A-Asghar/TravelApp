@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/widgets/tealButton.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -95,7 +96,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ],
               ),
             ),
-            TealButton(text: 'Continue', onPressed: () {}),
+            TealButton(text: 'Continue', onPressed: () {}, bgColor: Constants.primaryColor, txtColor: Colors.white,),
             const SizedBox(height: 20),
           ],
         ),

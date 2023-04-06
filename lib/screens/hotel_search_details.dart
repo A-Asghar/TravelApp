@@ -38,35 +38,42 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
   }
 
   bool isLoading = false;
-  callHotelInfo() async {
+    callHotelInfo() async {
     var s = DateTime.now();
     setState(() => isLoading = true);
     HotelRepository hotelRepository = HotelRepository();
     List detailResponse =
         await hotelRepository.detail(propertyId: widget.property.id!);
-    context.read<HotelSearchProvider>().hotelImages = detailResponse[0];
-    context.read<HotelSearchProvider>().address = detailResponse[1];
-    context.read<HotelSearchProvider>().coordinates = detailResponse[2];
-    context.read<HotelSearchProvider>().amenities = detailResponse[3];
-    context.read<HotelSearchProvider>().description = detailResponse[4];
+    if (mounted) {
+      context.read<HotelSearchProvider>().hotelImages = detailResponse[0];
+      context.read<HotelSearchProvider>().address = detailResponse[1];
+      context.read<HotelSearchProvider>().coordinates = detailResponse[2];
+      context.read<HotelSearchProvider>().amenities = detailResponse[3];
+      context.read<HotelSearchProvider>().description = detailResponse[4];
+    }
 
-    context.read<HotelSearchProvider>().hotelReviews =
-        await hotelRepository.reviews(propertyId: widget.property.id!);
-    context.read<HotelSearchProvider>().hotelRooms =
-        await hotelRepository.getOffers(
-            adults: context.read<HotelSearchProvider>().adults,
-            checkIn:
-                DateTime.parse(context.read<HotelSearchProvider>().checkIn),
-            checkOut:
-                DateTime.parse(context.read<HotelSearchProvider>().checkOut),
-            regionId: widget.property.regionId!,
-            propertyId: widget.property.id!);
+    if (mounted) {
+      context.read<HotelSearchProvider>().hotelReviews =
+          await hotelRepository.reviews(propertyId: widget.property.id!);
+      context.read<HotelSearchProvider>().hotelRooms =
+          await hotelRepository.getOffers(
+              adults: context.read<HotelSearchProvider>().adults,
+              checkIn:
+                  DateTime.parse(context.read<HotelSearchProvider>().checkIn),
+              checkOut:
+                  DateTime.parse(context.read<HotelSearchProvider>().checkOut),
+              regionId: widget.property.regionId!,
+              propertyId: widget.property.id!);
+    }
     setState(() => isLoading = false);
     var e = DateTime.now();
     print(e.difference(s).inSeconds);
-    print(
-        'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
+    if (mounted) {
+      print(
+          'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -133,39 +140,39 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         ),
                         const SizedBox(height: 15),
 
-                        DateFormat("yyyy-MM-dd")
-                                    .parse(hotelProvider.checkIn)
-                                    .difference(DateTime.now())
-                                    .inDays >
-                                14
-                            ? InkWell(
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 20),
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.sunny_snowing,
-                                        color: Colors.blue,
-                                      ),
-                                      const SizedBox(width: 10),
-                                      poppinsText(
-                                          text:
-                                              'Check the weather on your arrival',
-                                          color: Colors.blue)
-                                    ],
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => WeatherScreen(
-                                      q: hotelProvider.to.city.split(',')[0],
-                                      dt: hotelProvider.checkIn,
-                                    ),
-                                  ));
-                                },
-                              )
-                            : Container(),
+                        // DateFormat("yyyy-MM-dd")
+                        //             .parse(hotelProvider.checkIn)
+                        //             .difference(DateTime.now())
+                        //             .inDays >
+                        //         14
+                        //     ? InkWell(
+                        //         child: Container(
+                        //           margin: const EdgeInsets.symmetric(
+                        //               vertical: 5, horizontal: 20),
+                        //           child: Row(
+                        //             children: [
+                        //               const Icon(
+                        //                 Icons.sunny_snowing,
+                        //                 color: Colors.blue,
+                        //               ),
+                        //               const SizedBox(width: 10),
+                        //               poppinsText(
+                        //                   text:
+                        //                       'Check the weather on your arrival',
+                        //                   color: Colors.blue)
+                        //             ],
+                        //           ),
+                        //         ),
+                        //         onTap: () {
+                        //           Navigator.of(context).push(MaterialPageRoute(
+                        //             builder: (context) => WeatherScreen(
+                        //               q: hotelProvider.to.city.split(',')[0],
+                        //               dt: hotelProvider.checkIn,
+                        //             ),
+                        //           ));
+                        //         },
+                        //       )
+                        //     : Container(),
 
                         // Gallery Photos
                         InkWell(
@@ -355,7 +362,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    for (var i = 0; i < 3; i++)
+                                    for (var i = 0; i < 3 && i < hotelProvider.hotelReviews.length; i++)
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 20),

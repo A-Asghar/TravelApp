@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/widgets/card_view.dart';
 import 'package:fyp/widgets/tealButton.dart';
 import 'package:get/get.dart';
@@ -379,13 +380,16 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                                 //   transition: Transition.rightToLeft,
                                 // );
                               },
+                              bgColor: Constants.primaryColor,
+                              txtColor: Colors.white,
                             ),
-
                             TealButton(
                               text: "Cancel",
                               onPressed: () {
                                 Navigator.pop(context);
                               },
+                              bgColor: Colors.red,
+                              txtColor: Colors.white,
                             )
                           ],
                         ),
@@ -393,6 +397,8 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                     ),
                   );
                 },
+                bgColor: Constants.primaryColor,
+                txtColor: Colors.white,
               ),
             ),
             const SizedBox(height: 20),

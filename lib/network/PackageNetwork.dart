@@ -84,4 +84,5 @@ class PackageNetwork {
         .where('travelAgencyId', isEqualTo: travelAgencyId)
         .get();
   }
+  
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Package.dart';
 import 'package:fyp/widgets/tealButton.dart';
 
@@ -113,47 +114,54 @@ class _AddPackageState extends State<AddPackage> {
               decoration: InputDecoration(hintText: 'Package hotelPropertyId'),
             ),
             TealButton(
-                text: 'Add',
-                onPressed: () {
-                  PackageRepository p = PackageRepository();
-                  p.addPackage(
-                    package: Package(
-                        packageId: random9DigitNumber(),
-                        packageName: packageName.text,
-                        packagePrice: double.parse(packagePrice.text),
-                        packageDescription: packageDescription.text,
-                        startDate: startDate,
-
-                        numOfDays: numOfDays,
-
-                        rating: 0.0,
-                        numOfSales: 0,
-                        imgUrls: imgUrls.text.split(','),
-                        adults: int.parse(adults.text),
-                        travelAgencyId: random9DigitNumber(),
-                        hotelPropertyId: random9DigitNumber(),
-                        destination: "Aliasghars', House",
-                        dayWiseDetails: []),
-                  );
-                }),
-
-            TealButton(
-                text: 'Delete Package',
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => DeletePackage(),
-                  ));
-                }),
+              text: 'Add',
+              onPressed: () {
+                PackageRepository p = PackageRepository();
+                p.addPackage(
+                  package: Package(
+                      packageId: random9DigitNumber(),
+                      packageName: packageName.text,
+                      packagePrice: double.parse(packagePrice.text),
+                      packageDescription: packageDescription.text,
+                      startDate: startDate,
+                      numOfDays: numOfDays,
+                      rating: 0.0,
+                      numOfSales: 0,
+                      imgUrls: imgUrls.text.split(','),
+                      adults: int.parse(adults.text),
+                      travelAgencyId: random9DigitNumber(),
+                      hotelPropertyId: random9DigitNumber(),
+                      destination: "Aliasghars', House",
+                      dayWiseDetails: []),
+                );
+              },
+              bgColor: Constants.primaryColor,
+              txtColor: Colors.white,
+            ),
 
             TealButton(
-                text: 'Get All Packages',
-                onPressed: () async {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AllPackages(),
-                  ));
-                  // PackageRepository p = PackageRepository();
-                  // List<Package> packages = await p.getAllPackages();
-                })
+              text: 'Delete Package',
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DeletePackage(),
+                ));
+              },
+              bgColor: Colors.red,
+              txtColor: Colors.white,
+            ),
+
+            TealButton(
+              text: 'Get All Packages',
+              onPressed: () async {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AllPackages(),
+                ));
+                // PackageRepository p = PackageRepository();
+                // List<Package> packages = await p.getAllPackages();
+              },
+              bgColor: Constants.primaryColor,
+              txtColor: Colors.white,
+            )
           ],
         ),
       ),

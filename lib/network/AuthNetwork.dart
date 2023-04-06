@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fyp/screens/profile/profile.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -9,14 +10,17 @@ import '../providers/UserProvider.dart';
 class AuthNetwork {
   static CollectionReference users =
       FirebaseFirestore.instance.collection('users');
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  static createNewUser({required email, required password}) async {
+  static createNewUser(
+      {required email, required password, required role}) async {
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((user) async {
       await users.doc(user.user!.uid).set({
         'uid': user.user!.uid,
         'email': email,
+        'role': role,
         'name': '',
         'address': '',
         'dateOfBirth': '',
@@ -36,42 +40,45 @@ class AuthNetwork {
     await setUserInProvider();
   }
 
-  static signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser =
-        await GoogleSignIn(scopes: <String>["email"]).signIn();
+  Future<UserCredential?> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
+    // Obtain the auth details from the request
     final GoogleSignInAuthentication googleAuth =
         await googleUser!.authentication;
 
+    // Create a new credential
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
-    bool? exists;
-    await FirebaseAuth.instance
-        .signInWithCredential(credential)
-        .then((user) async {
-      var doc = await users.doc(user.user!.uid).get();
+    // Check if the user already exists in the Firebase collection
+    final user = await FirebaseAuth.instance.signInWithCredential(credential);
+    if (user.additionalUserInfo!.isNewUser) {
+      // Create a new user in the Firebase collection
+      final currentUser = FirebaseAuth.instance.currentUser!;
+      final newUser = Users(
+        name: currentUser.displayName!,
+        email: currentUser.email!,
+        role: "Agency",
+        phoneNumber: "",
+        profilePhotoUrl: currentUser.photoURL!,
+        dateOfBirth: "",
+        gender: "",
+        address: "",
+        searchedCities: [],
+      );
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .set(newUser.toJson());
+    }
 
-      exists = doc.exists;
-
-      if (!exists!) {
-        await users.doc(user.user!.uid).set({
-          'uid': user.user!.uid,
-          'email': user.user!.email,
-          'name': '',
-          'address': '',
-          'dateOfBirth': '',
-          'phoneNumber': '',
-          'gender': '',
-          'profilePhotoUrl': '',
-          'searchedCities': [],
-        });
-      }
-    });
+    // Once signed in, return the UserCredential
     await setUserInProvider();
-    return exists;
+    return user;
   }
 
   static createUserProfile(
@@ -79,11 +86,12 @@ class AuthNetwork {
     users.doc(signedInUser.uid).update({
       'name': user.name,
       'address': user.address,
+      'role': user.role,
       'dateOfBirth': user.dateOfBirth,
       'phoneNumber': user.phoneNumber,
       'gender': user.gender,
       'profilePhotoUrl': user.profilePhotoUrl,
-      'searchedCities': [],
+      'searchedCities': user.searchedCities,
     });
     await setUserInProvider();
   }
@@ -94,5 +102,12 @@ class AuthNetwork {
     var document =
         await users.doc(FirebaseAuth.instance.currentUser!.uid).get();
     controller.user = Users.fromJson(document.data() as Map<String, dynamic>);
+  }
+
+  static updateProfilePhoto({required uid, required String pfp}) async {
+    users.doc(uid).update({
+      'profilePhotoUrl': pfp,
+    });
+    setUserInProvider();
   }
 }
