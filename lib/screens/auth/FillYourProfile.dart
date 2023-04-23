@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:travel_agency/models/Users.dart';
-import 'package:travel_agency/network/AuthNetwork.dart';
+import 'package:travel_agency/network/auth_network.dart';
 import 'package:travel_agency/network/package_network.dart';
 import 'package:travel_agency/providers/package_provider.dart';
 import 'package:travel_agency/providers/user_provider.dart';

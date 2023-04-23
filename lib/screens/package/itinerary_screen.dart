@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -119,8 +120,15 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
                                     .agencyPackages
                                     .add(widget.package);
 
+                                setState(() => isLoading = true);
                                 try {
                                   await pak.addPackage(package: widget.package);
+                                  context
+                                          .read<PackageProvider>()
+                                          .agencyPackages =
+                                      await pak.fetchAgencyPackages(FirebaseAuth
+                                          .instance.currentUser!.uid);
+                                  setState(() => isLoading = false);
 
                                   // Show a snackbar message to indicate success
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -133,12 +141,16 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
                                       backgroundColor: Constants.primaryColor,
                                     ),
                                   );
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: ((context) =>
+                                              PackageListScreen())));
+                                  Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 } on FirebaseException catch (e) {
-                                  setState(() {
-                                    isLoading = false;
-                                  });
+                                  setState(() => isLoading = false);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: poppinsText(

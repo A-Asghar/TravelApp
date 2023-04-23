@@ -12,7 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
-import '../../network/AuthNetwork.dart';
+import 'package:travel_agency/network/auth_network.dart';
 import '../../widgets/authErrorDialog.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';

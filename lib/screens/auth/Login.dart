@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_agency/Constants.dart';
-import 'package:travel_agency/network/AuthNetwork.dart';
+import 'package:travel_agency/network/auth_network.dart';
 import 'package:travel_agency/network/package_network.dart';
 import 'package:travel_agency/providers/user_provider.dart';
 import 'package:travel_agency/screens/auth/FillYourProfile.dart';
@@ -273,7 +273,8 @@ class _LoginState extends State<Login> {
                                   ),
                                 );
                               } else {
-                                PackageNetwork packageNetwork = PackageNetwork();
+                                PackageNetwork packageNetwork =
+                                    PackageNetwork();
                                 if (controller.user!.role == "Agency") {
                                   context
                                           .read<PackageProvider>()
@@ -285,10 +286,11 @@ class _LoginState extends State<Login> {
                                       await packageNetwork.fetchPackages();
                                   Get.to(BottomNavBar(),
                                       transition: Transition.fade);
-                                } else if(controller.user!.role == "Traveler") {
+                                } else if (controller.user!.role ==
+                                    "Traveler") {
                                   FirebaseAuth.instance.signOut();
-                            Get.to(Login(), transition: Transition.fade);
-                            setState(() => isLoadingGoogle = false);
+                                  Get.to(Login(), transition: Transition.fade);
+                                  setState(() => isLoadingGoogle = false);
                                 }
                               }
                             }
@@ -394,6 +396,7 @@ class _LoginState extends State<Login> {
         final UserProvider controller = Get.put(UserProvider());
         PackageNetwork packageNetwork = PackageNetwork();
 
+        setState(() => isLoading = true);
         await AuthNetwork.login(email: _email.text, password: _password.text)
             .then((_) async {
           print(controller.user);
@@ -404,6 +407,7 @@ class _LoginState extends State<Login> {
             context.read<PackageProvider>().allPackages =
                 await packageNetwork.fetchPackages();
             Get.to(BottomNavBar(), transition: Transition.fade);
+            setState(() => isLoading = false);
           } else {
             FirebaseAuth.instance.signOut();
             Get.to(Login(), transition: Transition.fade);

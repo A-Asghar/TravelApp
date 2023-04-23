@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_agency/Constants.dart';
-import 'package:travel_agency/network/AuthNetwork.dart';
+import 'package:travel_agency/network/auth_network.dart';
 import 'package:travel_agency/screens/auth/SignUp.dart';
 import 'package:travel_agency/widgets/poppinsText.dart';
 import 'package:travel_agency/widgets/tealButton.dart';

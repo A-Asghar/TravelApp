@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_agency/models/package.dart';
+import 'package:travel_agency/providers/package_provider.dart';
 
 class PackageNetwork {
   CollectionReference packages =
@@ -74,5 +78,46 @@ class PackageNetwork {
       "dayWiseDetails":package.dayWiseDetails,
       "destination": package.destination
     });
+  }
+
+  double calculateAverageRating(BuildContext context) {
+    double totalRatings = 0.0;
+    int reviewCount = 0;
+
+    List<Package> packages = context.read<PackageProvider>().agencyPackages;
+
+    packages.forEach((package) {
+      package.packageReviews!.forEach((review) {
+        totalRatings += review.reviewRating;
+        reviewCount++;
+      });
+    });
+
+    return totalRatings / reviewCount;
+  }
+
+  double calculateTotalSales(BuildContext context) {
+    double totalSales = 0;
+
+    List<Package> packages = context.read<PackageProvider>().agencyPackages;
+
+
+    packages.forEach((package) {
+      totalSales += package.numOfSales * package.packagePrice;
+    });
+
+    return totalSales;
+  }
+
+  int calculateTotalNumberOfSales(BuildContext context) {
+    int totalNumberOfSales = 0;
+
+    List<Package> packages = context.read<PackageProvider>().agencyPackages;
+
+    packages.forEach((package) {
+      totalNumberOfSales += package.numOfSales;
+    });
+
+    return totalNumberOfSales;
   }
 }

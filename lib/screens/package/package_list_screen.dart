@@ -34,6 +34,7 @@ class _PackageListScreenState extends State<PackageListScreen> {
   @override
   void initState() {
     super.initState();
+    // fetchPackages();
     _scrollController.addListener(() {
       double showOffset = 10.0;
       if (_scrollController.offset > showOffset) {
@@ -50,6 +51,12 @@ class _PackageListScreenState extends State<PackageListScreen> {
     });
   }
 
+  fetchPackages() async {
+    PackageNetwork packageNetwork = PackageNetwork();
+    context.read<PackageProvider>().agencyPackages = await packageNetwork
+        .fetchAgencyPackages(FirebaseAuth.instance.currentUser!.uid);
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -58,7 +65,6 @@ class _PackageListScreenState extends State<PackageListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var packageProvider = context.read<PackageProvider>();
     return Stack(
       children: [
         Scaffold(
@@ -100,22 +106,9 @@ class _PackageListScreenState extends State<PackageListScreen> {
             ],
           ),
           body: context.watch<PackageProvider>().agencyPackages.isEmpty
-              ? const Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: PackagePrompt(),
-                )
-              : ListView.builder(
-                  itemCount: packageProvider.agencyPackages.length,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return PackageTile(
-                      package: packageProvider.agencyPackages[index],
-                      index: index,
-                    );
-                  },
-                  controller: _scrollController,
-                ),
-          endDrawer: SideDrawer(),
+              ? const PackagePromptLayout()
+              : const PackageListLayout(),
+          endDrawer: const SideDrawer(),
           endDrawerEnableOpenDragGesture: true,
           onEndDrawerChanged: (isOpen) {
             _isDrawerOpen = isOpen;
@@ -141,7 +134,7 @@ class _PackageListScreenState extends State<PackageListScreen> {
                       backgroundColor: Constants.primaryColor,
                     )
                   : HeartbeatFloatingActionButton(onPressed: () {
-                      Get.to(AddPackageForm());
+                      Get.to(AddPackageForm(), transition: Transition.fade);
                     }),
         ),
       ],
@@ -268,8 +261,7 @@ class _PackageTileState extends State<PackageTile> {
                     Row(
                       children: [
                         poppinsText(
-                            text:
-                                'Rs.${widget.package.packagePrice.toString()}',
+                            text: '\S${widget.package.packagePrice.toString()}',
                             color: Constants.primaryColor,
                             fontBold: FontWeight.w600,
                             size: 18.0),
@@ -311,7 +303,7 @@ class _PackageTileState extends State<PackageTile> {
                         PackageNetwork packageNetwork = PackageNetwork();
                         Get.bottomSheet(
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.38,
+                            height: MediaQuery.of(context).size.height * 0.33,
                             width: Get.width,
                             decoration: const BoxDecoration(
                               color: Colors.white,
@@ -337,13 +329,13 @@ class _PackageTileState extends State<PackageTile> {
                                   poppinsText(
                                     text:
                                         "Are you sure you want to delete this package?",
-                                    size: 20.0,
+                                    size: 16.0,
                                   ),
                                   const SizedBox(height: 20),
                                   isLoading
                                       ? const Center(
                                           child: CircularProgressIndicator(
-                                            color: Constants.primaryColor,
+                                            color: Colors.red,
                                           ),
                                         )
                                       : TealButton(
@@ -378,8 +370,12 @@ class _PackageTileState extends State<PackageTile> {
                                                 // );
                                               );
                                               setState(() => isLoading = false);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          PackageListScreen())));
                                               Navigator.pop(context);
-                                              setState(() {});
                                             } on FirebaseException catch (e) {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
@@ -431,34 +427,203 @@ class _PackageTileState extends State<PackageTile> {
   }
 }
 
-class PackagePrompt extends StatelessWidget {
-  const PackagePrompt({super.key});
+class PackageListLayout extends StatefulWidget {
+  const PackageListLayout({super.key});
+
+  @override
+  State<PackageListLayout> createState() => _PackageListLayoutState();
+}
+
+class _PackageListLayoutState extends State<PackageListLayout> {
+  final _scrollController = ScrollController();
+  bool showBtn = false;
+  bool _isDrawerOpen = false;
+  final UserProvider controller = Get.put(UserProvider());
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      double showOffset = 10.0;
+      if (_scrollController.offset > showOffset) {
+        showBtn = true;
+        setState(() {
+          //update state
+        });
+      } else {
+        showBtn = false;
+        setState(() {
+          //update state
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const SizedBox(
-          height: 50,
-        ),
-        Center(
-          child: poppinsText(
-              text: "No packages yet?",
-              color: Color.fromRGBO(158, 158, 158, 1),
-              size: 24.0,
-              fontBold: FontWeight.w600),
-        ),
-        const SizedBox(height: 16),
-        Center(
-          child: poppinsText(
-              text: "Wanna try?",
-              color: Colors.grey,
-              size: 24.0,
-              fontBold: FontWeight.w600),
-        ),
-        const SizedBox(height: 16),
-      ],
+    var packageProvider = context.watch<PackageProvider>();
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: poppinsText(
+            text: 'Your Packages',
+            fontBold: FontWeight.w600,
+            color: Constants.secondaryColor,
+            size: 24.0),
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: CircleAvatar(
+                backgroundColor: Constants.primaryColor,
+                child: controller.user!.profilePhotoUrl ==
+                            "assets/images/user.png" ||
+                        controller.user!.profilePhotoUrl.isEmpty
+                    ? poppinsText(
+                        text: controller.user!.name.substring(0, 1),
+                        size: 20.0,
+                        color: Colors.white,
+                        fontBold: FontWeight.w500)
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          controller.user!.profilePhotoUrl,
+                        ),
+                      ),
+              ),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              iconSize: 50,
+            ),
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: packageProvider.agencyPackages.length,
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          return PackageTile(
+            package: packageProvider.agencyPackages[index],
+            index: index,
+          );
+        },
+        controller: _scrollController,
+      ),
+      endDrawer: SideDrawer(),
+      endDrawerEnableOpenDragGesture: true,
+      onEndDrawerChanged: (isOpen) {
+        _isDrawerOpen = isOpen;
+      },
+      floatingActionButton: showBtn
+          ? FloatingActionButton(
+              onPressed: () {
+                _scrollController.animateTo(
+                    //go to top of scroll
+                    0, //scroll offset to go
+                    duration: Duration(milliseconds: 500), //duration of scroll
+                    curve: Curves.fastOutSlowIn //scroll type
+                    );
+              },
+              child: Icon(Icons.arrow_upward_outlined),
+              backgroundColor: Constants.primaryColor,
+            )
+          : HeartbeatFloatingActionButton(onPressed: () {
+              Get.to(AddPackageForm(), transition: Transition.fade);
+            }),
+    );
+  }
+}
+
+class PackagePromptLayout extends StatefulWidget {
+  const PackagePromptLayout({super.key});
+
+  @override
+  State<PackagePromptLayout> createState() => _PackagePromptLayoutState();
+}
+
+class _PackagePromptLayoutState extends State<PackagePromptLayout> {
+  final UserProvider controller = Get.put(UserProvider());
+  bool _isDrawerOpen = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: poppinsText(
+            text: 'Your Packages',
+            fontBold: FontWeight.w600,
+            color: Constants.secondaryColor,
+            size: 24.0),
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: CircleAvatar(
+                backgroundColor: Constants.primaryColor,
+                child: controller.user!.profilePhotoUrl ==
+                            "assets/images/user.png" ||
+                        controller.user!.profilePhotoUrl.isEmpty
+                    ? poppinsText(
+                        text: controller.user!.name.substring(0, 1),
+                        size: 20.0,
+                        color: Colors.white,
+                        fontBold: FontWeight.w500)
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          controller.user!.profilePhotoUrl,
+                        ),
+                      ),
+              ),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              iconSize: 50,
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            height: 50,
+          ),
+          Center(
+            child: poppinsText(
+                text: "No packages yet?",
+                color: Color.fromRGBO(158, 158, 158, 1),
+                size: 24.0,
+                fontBold: FontWeight.w600),
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: poppinsText(
+                text: "Wanna try?",
+                color: Colors.grey,
+                size: 24.0,
+                fontBold: FontWeight.w600),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+      endDrawer: SideDrawer(),
+      endDrawerEnableOpenDragGesture: true,
+      onEndDrawerChanged: (isOpen) {
+        _isDrawerOpen = isOpen;
+      },
+      floatingActionButton: HeartbeatFloatingActionButton(onPressed: () {
+        Get.to(AddPackageForm(), transition: Transition.fade);
+      }),
     );
   }
 }

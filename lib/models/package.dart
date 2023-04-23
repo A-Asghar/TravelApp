@@ -1,13 +1,12 @@
+import 'package:travel_agency/models/review.dart';
+
 class Package {
   String packageId;
   String packageName;
   double packagePrice;
   String packageDescription;
-  DateTime startDate;
-
+  String startDate;
   int numOfDays;
-
-
   double rating;
   int numOfSales;
   List<String> imgUrls;
@@ -16,6 +15,7 @@ class Package {
   String hotelPropertyId;
   List<String>? dayWiseDetails;
   String destination;
+  List<Review>? packageReviews;
 
   Package({
     required this.packageId,
@@ -23,9 +23,7 @@ class Package {
     required this.packagePrice,
     required this.packageDescription,
     required this.startDate,
-
     required this.numOfDays,
-
     required this.rating,
     required this.numOfSales,
     required this.imgUrls,
@@ -34,26 +32,46 @@ class Package {
     required this.hotelPropertyId,
     this.dayWiseDetails,
     required this.destination,
+    this.packageReviews
   });
 
-  factory Package.fromJson(Map<String, dynamic> json) => Package(
-        packageId: json["packageId"],
-        packageName: json["packageName"],
-        packagePrice: json["packagePrice"].toDouble(),
-        packageDescription: json["packageDescription"],
-        startDate: json["startDate"].toDate(),
+  factory Package.fromJson(Map<String, dynamic> json) {
+    return Package(
+      packageId: json['packageId'] as String,
+      packageName: json['packageName'] as String,
+      packagePrice: (json['packagePrice'] as num).toDouble(),
+      packageDescription: json['packageDescription'] as String,
+      startDate: json['startDate'],
+      numOfDays: json['numOfDays'] as int,
+      rating: (json['rating'] as num).toDouble(),
+      numOfSales: json['numOfSales'] as int,
+      imgUrls: List<String>.from(json['imgUrls'] as List),
+      adults: json['adults'] as int,
+      travelAgencyId: json['travelAgencyId'] as String,
+      hotelPropertyId: json['hotelPropertyId'] as String,
+      dayWiseDetails: json['dayWiseDetails'] != null ? List<String>.from(json['dayWiseDetails'] as List) : null,
+      destination: json['destination'] as String,
+      packageReviews: (json['packageReviews'] as List<dynamic>).map((e) => Review.fromJson(e as Map<String, dynamic>)).toList(),
+    );
+  }
 
-        numOfDays: json["numOfDays"],
-
-        rating: json["rating"].toDouble(),
-        numOfSales: json["numOfSales"],
-        imgUrls: List<String>.from(json["imgUrls"]!.map((x) => x)),
-        dayWiseDetails: json["dayWiseDetails"] == null
-            ? null
-            : List<String>.from(json["dayWiseDetails"]!.map((x) => x)),
-        adults: json["adults"],
-        travelAgencyId: json["travelAgencyId"],
-        hotelPropertyId: json["hotelPropertyId"],
-        destination: json['destination'],
-      );
+  Map<String, dynamic> toJson() {
+    return {
+      'packageId': packageId,
+      'packageName': packageName,
+      'packagePrice': packagePrice,
+      'packageDescription': packageDescription,
+      'startDate': startDate,
+      'numOfDays': numOfDays,
+      'rating': rating,
+      'numOfSales': numOfSales,
+      'imgUrls': imgUrls,
+      'adults': adults,
+      'travelAgencyId': travelAgencyId,
+      'hotelPropertyId': hotelPropertyId,
+      'dayWiseDetails': dayWiseDetails,
+      'destination': destination,
+      'packageReviews': packageReviews!.map((e) => e.toJson()).toList(),
+    };
+  }
 }

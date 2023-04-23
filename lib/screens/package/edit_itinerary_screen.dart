@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -132,6 +133,11 @@ class _EditItineraryScreenState extends State<EditItineraryScreen> {
                                   });
                                   await pak.updatePackage(
                                       package: widget.package);
+                                  context
+                                          .read<PackageProvider>()
+                                          .agencyPackages =
+                                      await pak.fetchAgencyPackages(FirebaseAuth
+                                          .instance.currentUser!.uid);
                                   setState(() {
                                     isLoading = false;
                                   });
@@ -146,6 +152,12 @@ class _EditItineraryScreenState extends State<EditItineraryScreen> {
                                       backgroundColor: Constants.primaryColor,
                                     ),
                                   );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) =>
+                                            PackageListScreen())));
+                                  Navigator.pop(context);
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 } on FirebaseException catch (e) {

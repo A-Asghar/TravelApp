@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:travel_agency/network/package_network.dart';
+import 'package:travel_agency/providers/package_provider.dart';
 import 'package:travel_agency/screens/agency_home.dart';
 import 'package:travel_agency/screens/booking/package_booking_screen.dart';
 import 'package:travel_agency/screens/package/package_list_screen.dart';
@@ -25,6 +29,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    //fetchPackages();
+  }
+
+  fetchPackages() async {
+    PackageNetwork packageNetwork = PackageNetwork();
+    context.read<PackageProvider>().agencyPackages = await packageNetwork
+        .fetchAgencyPackages(FirebaseAuth.instance.currentUser!.uid);
+    context.read<PackageProvider>().allPackages =
+        await packageNetwork.fetchPackages();
   }
 
   @override
@@ -46,23 +59,20 @@ class _BottomNavBarState extends State<BottomNavBar> {
             onTap: onTabTapped,
             items: [
               SalomonBottomBarItem(
-                icon: const Icon(Icons.home_filled),
-                title: const Text("Home"),
-                selectedColor: Colors.teal,
-                unselectedColor: Colors.teal
-              ),
+                  icon: const Icon(Icons.home_filled),
+                  title: const Text("Home"),
+                  selectedColor: Colors.teal,
+                  unselectedColor: Colors.teal),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.shopping_bag),
-                title: const Text("Packages"),
-                selectedColor: Colors.teal,
-                unselectedColor: Colors.teal
-              ),
+                  icon: const Icon(Icons.shopping_bag),
+                  title: const Text("Packages"),
+                  selectedColor: Colors.teal,
+                  unselectedColor: Colors.teal),
               SalomonBottomBarItem(
-                icon: const Icon(Icons.library_books),
-                title: const Text("Bookings"),
-                selectedColor: Colors.teal,
-                unselectedColor: Colors.teal
-              ),
+                  icon: const Icon(Icons.library_books),
+                  title: const Text("Bookings"),
+                  selectedColor: Colors.teal,
+                  unselectedColor: Colors.teal),
             ]),
         body: PageView(
           onPageChanged: onPageChanged,

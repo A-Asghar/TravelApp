@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_agency/Constants.dart';
 import 'package:travel_agency/providers/user_provider.dart';
 import 'package:travel_agency/screens/agency_home.dart';
@@ -19,6 +20,7 @@ class SideDrawer extends StatefulWidget {
 
 class _SideDrawerState extends State<SideDrawer> {
   final UserProvider controller = Get.put(UserProvider());
+  bool isLoggingOut = false;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,7 @@ class _SideDrawerState extends State<SideDrawer> {
             onTap: () {
               Get.bottomSheet(
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.44,
+                  height: MediaQuery.of(context).size.height * 0.35,
                   width: Get.width,
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -126,28 +128,41 @@ class _SideDrawerState extends State<SideDrawer> {
                           size: 20.0,
                         ),
                         const SizedBox(height: 20),
-                        TealButton(
-                          text: "Yes, Logout",
-                          onPressed: () async {
-                            Get.offAll(
-                              const AgencyHome(),
-                              transition: Transition.rightToLeft,
-                            );
-                            Get.offAll(
-                              const Login(),
-                              transition: Transition.rightToLeft,
-                            );
-                            FirebaseAuth.instance.signOut();
-                            await GoogleSignIn(scopes: <String>["email"])
-                                .signOut();
-                          },
-                          bgColor: Constants.primaryColor,
-                          txtColor: Colors.white,
-                        ),
+                        isLoggingOut
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.red,
+                                ),
+                              )
+                            : TealButton(
+                                text: "Yes, Logout",
+                                onPressed: () async {
+                                  setState(() => isLoggingOut = true);
+                                  SharedPreferences.getInstance().then(
+                                    (prefs) {
+                                      prefs.setBool("remember_me", false);
+                                    },
+                                  );
+                                  Get.offAll(
+                                    const AgencyHome(),
+                                    transition: Transition.rightToLeft,
+                                  );
+                                  Get.offAll(
+                                    const Login(),
+                                    transition: Transition.rightToLeft,
+                                  );
+                                  setState(() => isLoggingOut = false);
+                                  FirebaseAuth.instance.signOut();
+                                  await GoogleSignIn(scopes: <String>["email"])
+                                      .signOut();
+                                },
+                                bgColor: Colors.red.withOpacity(0.3),
+                                txtColor: Colors.red,
+                              ),
                         TealButton(
                           text: "Cancel",
-                          bgColor: Colors.red.withOpacity(0.3),
-                          txtColor: Colors.red,
+                          bgColor: Constants.primaryColor,
+                          txtColor: Colors.white,
                           onPressed: () {
                             Navigator.pop(context);
                           },

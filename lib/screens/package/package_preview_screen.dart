@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:travel_agency/widgets/PackageReviews.dart';
 import 'package:travel_agency/widgets/expandable_text.dart';
 import 'package:travel_agency/widgets/package_gallery.dart';
 import 'package:travel_agency/widgets/package_image_slider.dart';
@@ -77,8 +78,6 @@ class _PackagePreviewState extends State<PackagePreview> {
                 // Gallery Photos
                 InkWell(
                   onTap: () {
-                    widget.package.imgUrls.isEmpty || widget.package.imgUrls[0] == "" ?
-                    null :
                     Get.to(
                       PackageGallery(
                         packageImages: widget.package.imgUrls,
@@ -153,12 +152,12 @@ class _PackagePreviewState extends State<PackagePreview> {
                 // Reviews
                 InkWell(
                   onTap: () {
-                    // Get.to(
-                    //   Reviews(
-                    //     property: widget.property,
-                    //   ),
-                    //   transition: Transition.rightToLeft,
-                    // );
+                    Get.to(
+                      PackageReviews(
+                        packageReviews: widget.package.packageReviews!,
+                      ),
+                      transition: Transition.rightToLeft,
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
@@ -289,7 +288,7 @@ class _DayWiseDetailState extends State<DayWiseDetail> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: poppinsText(text: '${widget.daywise![index]} \n', size: 16.0)
+                child: poppinsText(text: 'Day ${index + 1}: ${widget.daywise![index]} \n', size: 16.0)
               );
             }),
         GestureDetector(

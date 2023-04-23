@@ -24,6 +24,16 @@ class AgencyHome extends StatefulWidget {
 class _AgencyHomeState extends State<AgencyHome> {
   PackageNetwork packageNetwork = PackageNetwork();
   final UserProvider controller = Get.put(UserProvider());
+  double totalSales = 0.0;
+  int totalNumOfSales = 0;
+  double averageRating = 0.0;
+
+  void initState() {
+    super.initState();
+    totalSales = packageNetwork.calculateTotalSales(context);
+    totalNumOfSales = packageNetwork.calculateTotalNumberOfSales(context);
+    averageRating = packageNetwork.calculateAverageRating(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +48,7 @@ class _AgencyHomeState extends State<AgencyHome> {
         actions: [
           Builder(
             builder: (context) => IconButton(
-              icon: controller.user!.profilePhotoUrl ==
-                          "assets/images/user.png"
+              icon: controller.user!.profilePhotoUrl == "assets/images/user.png"
                   ? CircleAvatar(
                       backgroundColor: Constants.primaryColor,
                       child: poppinsText(
@@ -73,10 +82,10 @@ class _AgencyHomeState extends State<AgencyHome> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     infoContainer(MediaQuery.of(context).size.width * 0.44, 150,
-                        'Bookings', '86', 72.0),
+                        'Bookings', totalNumOfSales.toString(), 72.0),
                     const SizedBox(width: 10),
                     infoContainer(MediaQuery.of(context).size.width * 0.44, 150,
-                        'Rating', '7.6', 72.0),
+                        'Rating', averageRating.toString(), 72.0),
                   ],
                 ),
               ),
@@ -87,7 +96,7 @@ class _AgencyHomeState extends State<AgencyHome> {
                   MediaQuery.of(context).size.width,
                   MediaQuery.of(context).size.height * 0.2,
                   'Sales',
-                  '\$720,821.46',
+                  totalSales.toString(),
                   54),
             ),
             const SizedBox(
@@ -132,7 +141,8 @@ class _AgencyHomeState extends State<AgencyHome> {
                     child: packageList(
                         context.read<PackageProvider>().agencyPackages,
                         context,
-                        'top', 300),
+                        'top',
+                        330),
                   ),
             const SizedBox(height: 30.0),
             Padding(

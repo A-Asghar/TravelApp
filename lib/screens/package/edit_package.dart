@@ -14,6 +14,8 @@ import 'package:travel_agency/network/package_network.dart';
 import 'package:travel_agency/providers/package_provider.dart';
 import 'package:travel_agency/screens/package/add_package.dart';
 import 'package:travel_agency/screens/package/edit_itinerary_screen.dart';
+import 'package:travel_agency/screens/package/package_list_screen.dart';
+import 'package:travel_agency/widgets/custom_error_dialog.dart';
 import 'package:travel_agency/widgets/pop_button.dart';
 import 'package:travel_agency/widgets/poppinsText.dart';
 import 'package:travel_agency/widgets/tealButton.dart';
@@ -44,6 +46,7 @@ class _EditPackageFormState extends State<EditPackageForm> {
   late DateTime _selectedDate;
 
   List<String> _imgUrls = <String>[];
+  bool isValidated = true;
 
   Future<void> _loadAssets() async {
     List<Asset> resultList = <Asset>[];
@@ -107,8 +110,8 @@ class _EditPackageFormState extends State<EditPackageForm> {
     _packageDescriptionController.text = widget.package.packageDescription;
     _packagePriceController.text = widget.package.packagePrice.toString();
     _adultsController.text = widget.package.adults.toString();
-    _startDateController.text = Constants.convertDate(widget.package.startDate);
-    _selectedDate = widget.package.startDate;
+    _startDateController.text = widget.package.startDate;
+    _selectedDate = DateTime.parse(widget.package.startDate);
     _numOfDaysController.text = widget.package.numOfDays.toString();
     _destinationController.text = widget.package.destination;
     _hotelPropertyIdController.text = widget.package.hotelPropertyId;
@@ -121,6 +124,7 @@ class _EditPackageFormState extends State<EditPackageForm> {
   @override
   Widget build(BuildContext context) {
     String to = widget.package.destination;
+    _imgUrls = widget.package.imgUrls;
     return Scaffold(
       appBar: AppBar(
         title: poppinsText(
@@ -139,146 +143,144 @@ class _EditPackageFormState extends State<EditPackageForm> {
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: Form(
             key: _formKey,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.86,
+              height: isValidated
+                  ? MediaQuery.of(context).size.height * 0.87
+                  : MediaQuery.of(context).size.height,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Column(
-                        children: [
-                          PackageField(
-                            controller: _packageNameController,
-                            labelText: 'Package Name',
-                            hintText: 'Enter the package name',
-                            validator: (value) {
-                              if (value?.isEmpty ?? false) {
-                                return 'Please enter the package name';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 16.0),
-                          PackageField(
-                            controller: _packagePriceController,
-                            keyboardType: TextInputType.number,
-                            labelText: 'Package Price',
-                            hintText: 'Enter the package price',
-                            validator: (value) {
-                              if (value?.isEmpty ?? false) {
-                                return 'Please enter the package price';
-                              }
-                              if (double.tryParse(value!) == null) {
-                                return 'Please enter a valid price';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 16.0),
-                          PackageField(
-                            controller: _packageDescriptionController,
-                            labelText: 'Package Description',
-                            hintText: 'Enter the package description',
-                            validator: (value) {
-                              if (value?.isEmpty ?? false) {
-                                return 'Please enter the package description';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 16.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
-                                      lastDate: DateTime.now()
-                                          .add(Duration(days: 365)),
-                                    ).then((selectedDate) {
-                                      if (selectedDate != null) {
-                                        setState(() {
-                                          _selectedDate = selectedDate;
-                                          _startDateController.text =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(selectedDate);
-                                        });
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10.0),
+                        PackageField(
+                          controller: _packageNameController,
+                          labelText: 'Package Name',
+                          hintText: 'Enter the package name',
+                          validator: (value) {
+                            if (value?.isEmpty ?? false) {
+                              return 'Please enter the package name';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        PackageField(
+                          controller: _packagePriceController,
+                          keyboardType: TextInputType.number,
+                          labelText: 'Package Price',
+                          hintText: 'Enter the package price',
+                          validator: (value) {
+                            if (value?.isEmpty ?? false) {
+                              return 'Please enter the package price';
+                            }
+                            if (double.tryParse(value!) == null) {
+                              return 'Please enter a valid price';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        PackageField(
+                          controller: _packageDescriptionController,
+                          labelText: 'Package Description',
+                          hintText: 'Enter the package description',
+                          validator: (value) {
+                            if (value?.isEmpty ?? false) {
+                              return 'Please enter the package description';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate:
+                                        DateTime.now().add(Duration(days: 365)),
+                                  ).then((selectedDate) {
+                                    if (selectedDate != null) {
+                                      setState(() {
+                                        _selectedDate = selectedDate;
+                                        _startDateController.text =
+                                            DateFormat('yyyy-MM-dd')
+                                                .format(selectedDate);
+                                      });
+                                    }
+                                  });
+                                },
+                                child: AbsorbPointer(
+                                  child: PackageField(
+                                    controller: _startDateController,
+                                    labelText: 'Start Date',
+                                    hintText: 'Select a start date',
+                                    keyboardType: TextInputType.datetime,
+                                    validator: (value) {
+                                      if (value?.isEmpty ?? false) {
+                                        return 'Please select a start date';
                                       }
-                                    });
-                                  },
-                                  child: AbsorbPointer(
-                                    child: PackageField(
-                                      controller: _startDateController,
-                                      labelText: 'Start Date',
-                                      hintText: 'Select a start date',
-                                      keyboardType: TextInputType.datetime,
-                                      validator: (value) {
-                                        if (value?.isEmpty ?? false) {
-                                          return 'Please select a start date';
-                                        }
-                                        return null;
-                                      },
-                                    ),
+                                      return null;
+                                    },
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 16.0),
-                          PackageField(
-                            controller: _numOfDaysController,
-                            keyboardType: TextInputType.number,
-                            labelText: 'Number of Days',
-                            hintText: 'Enter the number of days',
-                            validator: (value) {
-                              if (value?.isEmpty ?? false) {
-                                return 'Please enter the number of days';
-                              }
-                              if (int.tryParse(value!) == null) {
-                                return 'Please enter a valid number of days';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 16.0),
-                          TealButton(
-                            onPressed: _loadAssets,
-                            text: 'Add images',
-                            bgColor: Constants.primaryColor,
-                            txtColor: Colors.white,
-                          ),
-                          SizedBox(height: 16.0),
-                          PackageField(
-                            controller: _adultsController,
-                            keyboardType: TextInputType.number,
-                            labelText: 'Number of Adults',
-                            hintText: 'Enter the number of adults',
-                            validator: (value) {
-                              if (value?.isEmpty ?? false) {
-                                return 'Please enter the number of adults';
-                              }
-                              if (int.tryParse(value!) == null) {
-                                return 'Please enter a valid number of adults';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: 16.0),
-                          from_to_textfield(
-                              context, 'Destination', to, 'to', 'package'),
-                        ],
-                      ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16.0),
+                        PackageField(
+                          controller: _numOfDaysController,
+                          keyboardType: TextInputType.number,
+                          labelText: 'Number of Days',
+                          hintText: 'Enter the number of days',
+                          validator: (value) {
+                            if (value?.isEmpty ?? false) {
+                              return 'Please enter the number of days';
+                            }
+                            if (int.tryParse(value!) == null) {
+                              return 'Please enter a valid number of days';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 16.0),
+                        TealButton(
+                          onPressed: _loadAssets,
+                          text: 'Add images',
+                          bgColor: Constants.primaryColor,
+                          txtColor: Colors.white,
+                        ),
+                        SizedBox(height: 16.0),
+                        PackageField(
+                          controller: _adultsController,
+                          keyboardType: TextInputType.number,
+                          labelText: 'Number of Adults',
+                          hintText: 'Enter the number of adults',
+                          validator: (value) {
+                            if (value?.isEmpty ?? false) {
+                              return 'Please enter the number of adults';
+                            }
+                            if (int.tryParse(value!) == null) {
+                              return 'Please enter a valid number of adults';
+                            }
+                            return null;
+                          },
+                        ),
+                        from_to_textfield(
+                            context, 'Destination', to, 'to', 'package'),
+                      ],
                     ),
                   ),
                   TealButton(
@@ -291,7 +293,7 @@ class _EditPackageFormState extends State<EditPackageForm> {
                               double.parse(_packagePriceController.text),
                           packageDescription:
                               _packageDescriptionController.text,
-                          startDate: _selectedDate,
+                          startDate: _startDateController.text,
                           numOfDays: int.parse(_numOfDaysController.text),
                           rating: 0.0,
                           numOfSales: 0,
@@ -331,11 +333,11 @@ class _EditPackageFormState extends State<EditPackageForm> {
                                     double.parse(_packagePriceController.text),
                                 packageDescription:
                                     _packageDescriptionController.text,
-                                startDate: _selectedDate,
+                                startDate: _startDateController.text,
                                 numOfDays: int.parse(_numOfDaysController.text),
                                 rating: 0.0,
                                 numOfSales: 0,
-                                imgUrls: _imgUrlsController.text.split(','),
+                                imgUrls: _imgUrls,
                                 adults: int.parse(_adultsController.text),
                                 travelAgencyId:
                                     FirebaseAuth.instance.currentUser!.uid,
@@ -363,9 +365,18 @@ class _EditPackageFormState extends State<EditPackageForm> {
                                   isLoading = true;
                                 });
                                 await pak.updatePackage(package: editedPackage);
+                                context.read<PackageProvider>().agencyPackages =
+                                    await pak.fetchAgencyPackages(
+                                        FirebaseAuth.instance.currentUser!.uid);
                                 setState(() {
                                   isLoading = false;
                                 });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: ((context) =>
+                                            PackageListScreen())));
+                                Navigator.pop(context);
                                 Navigator.pop(context);
                                 // Show a snackbar message to indicate success
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -394,6 +405,8 @@ class _EditPackageFormState extends State<EditPackageForm> {
                                   ),
                                 );
                               }
+                            } else {
+                              setState(() => isValidated = false);
                             }
                           },
                           bgColor: Constants.primaryColor,

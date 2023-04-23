@@ -137,5 +137,11 @@ class AuthNetwork {
     await setUserInProvider();
     return user;
   }
-  
+
+  static updateProfilePhoto({required uid, required String pfp}) async {
+    users.doc(uid).update({
+      'profilePhotoUrl': pfp,
+    });
+    setUserInProvider();
+  }
 }

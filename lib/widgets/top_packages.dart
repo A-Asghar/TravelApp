@@ -100,7 +100,7 @@ Widget topPackages(
                             children: [
                               poppinsText(
                                   text:
-                                      'Rs.${double.parse(packages[index].packagePrice.toStringAsFixed(1)).toString()}',
+                                      '\$${double.parse(packages[index].packagePrice.toStringAsFixed(1)).toString()}',
                                   size: 20.0,
                                   color: Constants.primaryColor,
                                   fontBold: FontWeight.w500),
@@ -124,8 +124,8 @@ Widget topPackages(
 
 Widget packageList(
     List<Package> packages, BuildContext context, String packageType, double height) {
-  return SizedBox(
-    // width: MediaQuery.of(context).size.width * 0.95,
+  return Container(
+    alignment: Alignment.centerLeft,
     height: height,
     child: ListView.builder(
         itemCount: packages.length,
@@ -150,18 +150,9 @@ Widget packageList(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    packageType == 'top'
-                        ? Container()
-                        : Center(
-                          child: poppinsText(
-                              text: packages[index].packageName,
-                              color: Constants.primaryColor,
-                              fontBold: FontWeight.w400,
-                              size: 18.0),
-                        ),
-                    roundedImage(160.0, 250.0, packages[index].imgUrls.isEmpty || packages[index].imgUrls[0] == "" ? 'https://www.iconsdb.com/icons/preview/gray/mountain-xxl.png' : packages[index].imgUrls[0]),
+                    roundedImage(160.0, 250.0, packages[index].imgUrls[0]),
                     Container(
-                      height: 130,
+                      height: 160,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 2),
                       child: Column(
@@ -169,15 +160,32 @@ Widget packageList(
                         children: [
                           Row(
                             children: [
+                              Flexible(
+                                child: poppinsText(
+                                    text:
+                                        packages[index].packageName,
+                                    size: 18.0,
+                                    color: Constants.secondaryColor,
+                                    fontBold: FontWeight.w500,
+                                ),
+                                flex: 1,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
                               const Icon(
                                 Icons.monetization_on,
                                 color: Constants.primaryColor,
-                                size: 20,
+                                size: 18,
                               ),
+                              const SizedBox(
+                                  width: 2,
+                                ),
                               poppinsText(
                                   text:
                                       '${packages[index].numOfSales.toString()} Sales',
-                                  size: 18.0,
+                                  size: 16.0,
                                   color: Constants.secondaryColor,
                                   fontBold: FontWeight.w500),
                             ],
@@ -186,7 +194,7 @@ Widget packageList(
                             children: [
                               const Icon(
                                 Icons.location_on,
-                                size: 16.0,
+                                size: 18.0,
                                 color: Constants.primaryColor,
                               ),
                               const SizedBox(
@@ -206,7 +214,7 @@ Widget packageList(
                                 const Icon(
                                   Icons.star,
                                   color: Colors.amber,
-                                  size: 16,
+                                  size: 18,
                                 ),
                                 const SizedBox(
                                   width: 2,
@@ -231,7 +239,7 @@ Widget packageList(
                             children: [
                               poppinsText(
                                   text:
-                                      '\$.${double.parse(packages[index].packagePrice.toStringAsFixed(1)).toString()}',
+                                      '\$${double.parse(packages[index].packagePrice.toStringAsFixed(1)).toString()}',
                                   size: 20.0,
                                   color: Constants.primaryColor,
                                   fontBold: FontWeight.w500),

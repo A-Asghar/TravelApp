@@ -12,7 +12,7 @@ import 'package:travel_agency/Constants.dart';
 import 'package:travel_agency/providers/user_provider.dart';
 import 'package:travel_agency/screens/bottom_navbar.dart';
 import '../../models/Users.dart';
-import '../../network/AuthNetwork.dart';
+import 'package:travel_agency/network/auth_network.dart';
 import '../../widgets/imageOptions.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
@@ -48,6 +48,7 @@ class _EditProfileState extends State<EditProfile> {
       File? img = File(image.path);
       setState(() {
         _image = img;
+        uploadFile(_image!);
         Navigator.of(context).pop();
       });
     } on PlatformException catch (e) {
@@ -90,6 +91,9 @@ class _EditProfileState extends State<EditProfile> {
         .child("post_$postId.jpg");
     await ref.putFile(image);
     downloadURL = await ref.getDownloadURL();
+    AuthNetwork.updateProfilePhoto(
+        uid: FirebaseAuth.instance.currentUser!.uid, pfp: downloadURL);
+
     return downloadURL;
   }
 
@@ -145,13 +149,13 @@ class _EditProfileState extends State<EditProfile> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               image: DecorationImage(
-                                  image: _image == null ||
-                                          !File(_image!.path).existsSync()
-                                      ? AssetImage('assets/images/user.png')
-                                      : FileImage(File(_image!.path))
-                                          as ImageProvider<Object>,
-                                  fit: BoxFit.fill,
-                                ),
+                                image: _image == null ||
+                                        !File(_image!.path).existsSync()
+                                    ? AssetImage('assets/images/user.png')
+                                    : FileImage(File(_image!.path))
+                                        as ImageProvider<Object>,
+                                fit: BoxFit.fill,
+                              ),
                             ),
                           ),
                         ),
@@ -228,22 +232,23 @@ class _EditProfileState extends State<EditProfile> {
                           if (_image != null) {
                             profilePhotoUrl = await uploadFile(_image!);
                           } else {
-                            profilePhotoUrl = 'assets/images/user.png';
+                            profilePhotoUrl = "assets/images/user.png";
                           }
 
                           await AuthNetwork.createUserProfile(
                             signedInUser: FirebaseAuth.instance.currentUser!,
                             user: Users(
-                              email: FirebaseAuth.instance.currentUser!.email!,
-                              name: _name.text,
-                              address: _address.text,
-                              dateOfBirth: _dateOfBirth.text,
-                              phoneNumber: _phoneNumber.text,
-                              gender: _gender.text,
-                              profilePhotoUrl: profilePhotoUrl,
-                              searchedCities: controller.user!.searchedCities,
-                              role: controller.user!.role
-                            ),
+                                email:
+                                    FirebaseAuth.instance.currentUser!.email!,
+                                name: _name.text,
+                                address: _address.text,
+                                dateOfBirth: _dateOfBirth.text,
+                                phoneNumber: _phoneNumber.text,
+                                gender: _gender.text,
+                                profilePhotoUrl:
+                                    controller.user!.profilePhotoUrl,
+                                searchedCities: controller.user!.searchedCities,
+                                role: controller.user!.role),
                           ).then((_) {
                             setState(() => isLoading = false);
                             FirebaseAuth.instance.currentUser!.uid.isEmpty
@@ -522,27 +527,36 @@ class _GenderDropdownState extends State<GenderDropdown> {
             Expanded(
               child: DropdownButton2(
                 underline: Container(),
-                iconStyleData: IconStyleData(iconEnabledColor: _isFocused ? Constants.primaryColor : Colors.grey),
-                dropdownStyleData: DropdownStyleData(decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.0))),
+                iconStyleData: IconStyleData(
+                    iconEnabledColor:
+                        _isFocused ? Constants.primaryColor : Colors.grey),
+                dropdownStyleData: DropdownStyleData(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0))),
                 focusNode: _genderFocusNode,
                 hint: widget.genderController.text.isEmpty
                     ? poppinsText(
                         text: "Select your gender",
-                        color: const Color(0xff9E9E9E), size: 14.0, fontBold: FontWeight.w400)
+                        color: const Color(0xff9E9E9E),
+                        size: 14.0,
+                        fontBold: FontWeight.w400)
                     : poppinsText(text: widget.genderController.text),
                 isExpanded: true,
                 items: [
                   DropdownMenuItem(
                     value: 'Male',
                     child: Row(
-                        children: [
-                          Icon(Icons.man,
-                              color: _isFocused
-                                  ? Constants.primaryColor
-                                  : Colors.grey),
-                          const SizedBox(width: 16.0),
-                          poppinsText(text: 'Male', size: 14.0, fontBold: FontWeight.w400),
-                        ],
+                      children: [
+                        Icon(Icons.man,
+                            color: _isFocused
+                                ? Constants.primaryColor
+                                : Colors.grey),
+                        const SizedBox(width: 16.0),
+                        poppinsText(
+                            text: 'Male',
+                            size: 14.0,
+                            fontBold: FontWeight.w400),
+                      ],
                     ),
                   ),
                   DropdownMenuItem(
@@ -554,7 +568,10 @@ class _GenderDropdownState extends State<GenderDropdown> {
                                 ? Constants.primaryColor
                                 : Colors.grey),
                         const SizedBox(width: 16.0),
-                        poppinsText(text: 'Female', size: 14.0, fontBold: FontWeight.w400),
+                        poppinsText(
+                            text: 'Female',
+                            size: 14.0,
+                            fontBold: FontWeight.w400),
                       ],
                     ),
                   ),
