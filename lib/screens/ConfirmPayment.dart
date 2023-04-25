@@ -1,407 +1,1759 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fyp/Constants.dart';
+import 'package:fyp/models/Flight.dart';
+import 'package:fyp/models/FlightBooking.dart';
+import 'package:fyp/models/HotelBooking.dart';
+import 'package:fyp/models/Package.dart';
+import 'package:fyp/models/PackageBooking.dart';
+import 'package:fyp/models/PropertySearchListings.dart';
+import 'package:fyp/models/PropertyUnits.dart';
+import 'package:fyp/network/BookingNetwork.dart';
+import 'package:fyp/providers/FlightSearchProvider.dart';
+import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/providers/UserProvider.dart';
+import 'package:fyp/screens/BottomNavBar.dart';
+import 'package:fyp/screens/bookings/Bookings.dart';
 import 'package:fyp/widgets/card_view.dart';
+import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
 import 'package:get/get.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:http/http.dart' as http;
+import 'package:fyp/widgets/flight_card_view.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ConfirmPaymentScreen extends StatefulWidget {
-  const ConfirmPaymentScreen({Key? key}) : super(key: key);
+  ConfirmPaymentScreen(
+      {Key? key, this.unit, this.package, this.property, this.flight})
+      : super(key: key);
+  Unit? unit;
+  Package? package;
+  PropertySearchListing? property;
+  Flight? flight;
 
   @override
   State<ConfirmPaymentScreen> createState() => _ConfirmPaymentScreenState();
 }
 
 class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
+  Map<String, dynamic>? paymentIntent;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            size: 25,
-            color: Theme.of(context).textTheme.bodyText1!.color,
-          ),
-        ),
-        title: Text(
-          "Payment",
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18),
-        ),
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: SafeArea(
+        child: Scaffold(
+            backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              leading: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  size: 25,
+                  color: Theme.of(context).textTheme.bodyText1!.color,
+                ),
+              ),
+              title: poppinsText(
+                  text: 'Payment', size: 24.0, fontBold: FontWeight.w500),
+            ),
+            body: widget.package != null
+                ? PackagePaymentLayout(package: widget.package!)
+                : widget.flight != null
+                    ? FlightPaymentLayout(
+                        flight: widget.flight!,
+                      )
+                    : HotelPaymentLayout(
+                        unit: widget.unit!,
+                        property: widget.property!,
+                      )),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CardView(),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff04060F).withOpacity(0.05),
-                              blurRadius: 8,
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Start day",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "End day",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "Guest",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "December 16, 2024",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "December 20, 2024",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "3",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 20),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
+    );
+  }
+}
+
+class PackagePaymentLayout extends StatefulWidget {
+  const PackagePaymentLayout({super.key, required this.package});
+
+  final Package package;
+
+  @override
+  State<PackagePaymentLayout> createState() => _PackagePaymentLayoutState();
+}
+
+class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
+  double discountedRate = 10.0;
+  double discountAmount = 0.0;
+  bool isLoading = false;
+  String travelerId = FirebaseAuth.instance.currentUser!.uid;
+  Map<String, dynamic>? paymentIntent;
+  UserProvider controller = Get.put(UserProvider());
+  BookingNetwork bn = BookingNetwork();
+
+  double calculateDiscountedPrice(double discountedRate) {
+    double discountedAmount =
+        (discountedRate / 100) * widget.package.packagePrice;
+    return discountedAmount;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    discountAmount = calculateDiscountedPrice(discountedRate);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CardView(
+                      package: widget.package,
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff04060F).withOpacity(0.05),
+                            blurRadius: 8,
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff04060F).withOpacity(0.05),
-                              blurRadius: 8,
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Flight charges",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "Hotel charges",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "Remaining",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "Total",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "\$435.00",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "\$400.00",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "\$44.50",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "\$879.50",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(fontSize: 16),
-                                        ),
-                                        const SizedBox(height: 20),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        height: 80,
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff04060F).withOpacity(0.05),
-                              blurRadius: 8,
-                            )
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 32,
-                                width: 32,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      "assets/images/card.png",
-                                    ),
-                                    fit: BoxFit.fill,
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      poppinsText(
+                                          text: 'Summary',
+                                          color: Constants.secondaryColor,
+                                          fontBold: FontWeight.w500,
+                                          size: 16.0),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        'Name',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        'Phone number',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Start day",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "End day",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Guest",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 14),
-                              Text(
-                                "•••• •••• •••• •••• 4679",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1!
-                                    .copyWith(
-                                      fontSize: 18,
-                                    ),
-                              ),
-                              const Expanded(child: SizedBox()),
-                              Text(
-                                "Change",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1!
-                                    .copyWith(
-                                      fontSize: 16,
-                                      color: Colors.teal,
-                                    ),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 60),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Center(
-              child: TealButton(
-                text: "Confirm Payment",
-                onPressed: () {
-                  Get.dialog(
-                    AlertDialog(
-                      backgroundColor: Colors.white,
-                      buttonPadding: EdgeInsets.zero,
-                      titlePadding: EdgeInsets.zero,
-                      actionsPadding: EdgeInsets.zero,
-                      insetPadding: const EdgeInsets.only(left: 30, right: 30),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      content: Container(
-                        height: 520,
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24),
-                          color: Colors.white,
-                        ),
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 15),
-                            SizedBox(
-                              height: 180,
-                              width: 185,
-                              child: Image.asset(
-                                "assets/images/p3.png",
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            Text(
-                              "Payment Successfull!",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.teal,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 42),
+                                      Text(
+                                        controller.user!.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        controller.user!.phoneNumber,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        DateFormat('MMM dd, yyyy').format(
+                                            DateTime.parse(
+                                                widget.package.startDate)),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        DateFormat('MMM dd, yyyy')
+                                            .format(DateTime.parse(
+                                                    widget.package.startDate)
+                                                .add(Duration(
+                                                    days: widget
+                                                        .package.numOfDays)))
+                                            .toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        widget.package.adults.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
                                   ),
-                            ),
-                            const SizedBox(height: 15),
-                            Text(
-                              "Successfully made payment and\nhotel booking",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(
-                                    fontSize: 14,
-                                    height: 1.6,
-                                  ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 20),
-                            TealButton(
-                              text: "View Ticket",
-                              onPressed: () {
-                                // Get.to(
-                                //   const TicketScreen(),
-                                //   transition: Transition.rightToLeft,
-                                // );
-                              },
-                              bgColor: Constants.primaryColor,
-                              txtColor: Colors.white,
-                            ),
-                            TealButton(
-                              text: "Cancel",
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              bgColor: Colors.red,
-                              txtColor: Colors.white,
+                                ),
+                              ],
                             )
                           ],
                         ),
                       ),
                     ),
-                  );
-                },
-                bgColor: Constants.primaryColor,
-                txtColor: Colors.white,
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff04060F).withOpacity(0.05),
+                            blurRadius: 8,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      poppinsText(
+                                          text: 'Charges',
+                                          color: Constants.secondaryColor,
+                                          fontBold: FontWeight.w500,
+                                          size: 16.0),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Package price",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Discount rate",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Discount amount",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Total",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 40),
+                                      Text(
+                                        "\$${widget.package.packagePrice}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "${discountedRate.round()}%",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "\$$discountAmount",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "\$${widget.package.packagePrice - discountAmount}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Constants.primaryColor,
+                  ),
+                )
+              : Center(
+                  child: TealButton(
+                    text: "Pay Now",
+                    onPressed: () async {
+                      var bookingId = Random().nextInt(900000000) + 100000000;
+                      double totalAmount =
+                          widget.package.packagePrice - discountAmount;
+                      setState(() => isLoading = true);
+                      await makePayment(totalAmount.toInt().toString());
+                      await bn.bookPackage(
+                          packageBooking: PackageBooking(
+                              bookingId: bookingId.toString(),
+                              bookingDate:
+                                  Constants.convertDate(DateTime.now()),
+                              travelerId: travelerId,
+                              travelAgencyId: widget.package.travelAgencyId,
+                              packageId: widget.package.packageId));
+                      setState(() => isLoading = false);
+                    },
+                    bgColor: Constants.primaryColor,
+                    txtColor: Colors.white,
+                  ),
+                ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Future<void> makePayment(String amount) async {
+    try {
+      //STEP 1: Create Payment Intent
+      paymentIntent = await createPaymentIntent(amount, 'USD');
+
+      //STEP 2: Initialize Payment Sheet
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+                  paymentIntentClientSecret: paymentIntent![
+                      'client_secret'], //Gotten from payment intent
+                  style: ThemeMode.system,
+                  googlePay: const PaymentSheetGooglePay(
+                      merchantCountryCode: 'US',
+                      currencyCode: 'USD',
+                      testEnv: true),
+                  applePay: const PaymentSheetApplePay(
+                      merchantCountryCode: 'US',
+                      buttonType: PlatformButtonType.book),
+                  appearance: const PaymentSheetAppearance(
+                    primaryButton: PaymentSheetPrimaryButtonAppearance(
+                        colors: PaymentSheetPrimaryButtonTheme(
+                      dark: PaymentSheetPrimaryButtonThemeColors(
+                          background: Constants.primaryColor),
+                      light: PaymentSheetPrimaryButtonThemeColors(
+                          background: Constants.primaryColor),
+                    )),
+                    shapes: PaymentSheetShape(
+                      borderRadius: 10.0,
+                    ),
+                  ),
+                  customFlow: true,
+                  merchantDisplayName: 'Ali Asghar'))
+          .then((value) {});
+
+      //STEP 3: Display Payment sheet
+      displayPaymentSheet();
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
+
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      //Request body
+      Map<String, dynamic> body = {
+        'amount': amount,
+        'currency': currency,
+        'payment_method_types[]': 'card'
+      };
+
+      //Make post request to Stripe
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization':
+              'Bearer sk_test_51MygtvITbvfdqJloHb08cW1oA7brS4P3VzR2mBkv8z1FPHhbfLFEMfgkKE5LrOPcA5A4dox6n6Zv8n4SZW51ru8500H751CCni',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body,
+      );
+      return json.decode(response.body);
+    } catch (err) {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          err.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            backgroundColor: Colors.white,
+            buttonPadding: EdgeInsets.zero,
+            titlePadding: EdgeInsets.zero,
+            actionsPadding: EdgeInsets.zero,
+            insetPadding: const EdgeInsets.only(left: 30, right: 30),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            content: Container(
+              height: 520,
+              width: Get.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 15),
+                  Container(
+                    height: 180,
+                    width: 180,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Constants.primaryColor),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      color: Colors.white,
+                      size: 150,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "Payment Successfull!",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.teal,
+                        ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "Successfully made payment and\package booking",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 14,
+                          height: 1.6,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  TealButton(
+                    text: "Go to bookings",
+                    onPressed: () {
+                      Get.to(() => BottomNavBar(),
+                          transition: Transition.downToUp);
+                    },
+                    bgColor: Constants.primaryColor,
+                    txtColor: Colors.white,
+                  ),
+                ],
               ),
             ),
+          ),
+        );
+
+        paymentIntent = null;
+      }).onError((error, stackTrace) {
+        setState(() => isLoading = false);
+        print('Error is:---> $error');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            error.toString(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+      });
+    } on StripeException catch (e) {
+      setState(() => isLoading = false);
+      print('Error is:---> $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          e.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (e) {
+      print('$e');
+    }
+  }
+}
+
+class HotelPaymentLayout extends StatefulWidget {
+  const HotelPaymentLayout(
+      {super.key, required this.unit, required this.property});
+  final Unit unit;
+  final PropertySearchListing property;
+  @override
+  State<HotelPaymentLayout> createState() => _HotelPaymentLayoutState();
+}
+
+class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
+  double discountedRate = 10.0;
+  double discountAmount = 0.0;
+  Map<String, dynamic>? paymentIntent;
+  bool isLoading = false;
+  String travelerId = FirebaseAuth.instance.currentUser!.uid;
+  UserProvider controller = Get.put(UserProvider());
+  BookingNetwork bn = BookingNetwork();
+
+  double calculateDiscountedPrice(double discountedRate) {
+    double discountedAmount = (discountedRate / 100) *
+        widget.unit.ratePlans![0].priceDetails![0].price!.lead!.amount;
+    return discountedAmount;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    discountAmount = calculateDiscountedPrice(discountedRate);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var hotelProvider = context.watch<HotelSearchProvider>();
+    double hotelCharges =
+        widget.unit.ratePlans![0].priceDetails![0].price!.lead!.amount;
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CardView(
+                      unit: widget.unit,
+                      property: widget.property,
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff04060F).withOpacity(0.05),
+                            blurRadius: 8,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      poppinsText(
+                                          text: 'Summary',
+                                          color: Constants.secondaryColor,
+                                          fontBold: FontWeight.w500,
+                                          size: 16.0),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Name",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        'Phone number',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Start day",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "End day",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Guest",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 40),
+                                      Text(
+                                        controller.user!.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        controller.user!.phoneNumber,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        hotelProvider.checkIn,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        hotelProvider.checkOut,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        hotelProvider.adults.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff04060F).withOpacity(0.05),
+                            blurRadius: 8,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      poppinsText(
+                                          text: 'Charges',
+                                          color: Constants.secondaryColor,
+                                          fontBold: FontWeight.w500,
+                                          size: 16.0),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Hotel charges",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Discount rate",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Discounted amount",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Total",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 40),
+                                      Text(
+                                        "\$${hotelCharges.toStringAsFixed(2)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "${discountedRate.round()}%",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "\$${discountAmount.toStringAsFixed(2)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "\$${(hotelCharges - discountAmount).toStringAsFixed(2)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Constants.primaryColor,
+                  ),
+                )
+              : Center(
+                  child: TealButton(
+                    text: "Pay Now",
+                    onPressed: () async {
+                      var bookingId = Random().nextInt(900000000) + 100000000;
+                      double totalAmount = hotelCharges - discountAmount;
+                      setState(() => isLoading = true);
+                      await makePayment(totalAmount.toInt().toString());
+                      await bn.bookHotelRoom(
+                          hotelBooking: HotelBooking(
+                              bookingId: bookingId.toString(),
+                              bookingDate:
+                                  Constants.convertDate(DateTime.now()),
+                              travelerId: travelerId,
+                              hotelId: widget.property.id!,
+                              hotelRoomId: widget.unit.id!));
+                      setState(() => isLoading = false);
+                    },
+                    bgColor: Constants.primaryColor,
+                    txtColor: Colors.white,
+                  ),
+                ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Future<void> makePayment(String amount) async {
+    try {
+      //STEP 1: Create Payment Intent
+      paymentIntent = await createPaymentIntent(amount, 'USD');
+
+      //STEP 2: Initialize Payment Sheet
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+                  paymentIntentClientSecret: paymentIntent![
+                      'client_secret'], //Gotten from payment intent
+                  style: ThemeMode.system,
+                  googlePay: const PaymentSheetGooglePay(
+                      merchantCountryCode: 'US',
+                      currencyCode: 'USD',
+                      testEnv: true),
+                  applePay: const PaymentSheetApplePay(
+                      merchantCountryCode: 'US',
+                      buttonType: PlatformButtonType.book),
+                  appearance: const PaymentSheetAppearance(
+                    primaryButton: PaymentSheetPrimaryButtonAppearance(
+                        colors: PaymentSheetPrimaryButtonTheme(
+                      dark: PaymentSheetPrimaryButtonThemeColors(
+                          background: Constants.primaryColor),
+                      light: PaymentSheetPrimaryButtonThemeColors(
+                          background: Constants.primaryColor),
+                    )),
+                    shapes: PaymentSheetShape(
+                      borderRadius: 10.0,
+                    ),
+                  ),
+                  customFlow: true,
+                  merchantDisplayName: 'Ali Asghar'))
+          .then((value) {});
+
+      //STEP 3: Display Payment sheet
+      displayPaymentSheet();
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
+
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      //Request body
+      Map<String, dynamic> body = {
+        'amount': amount,
+        'currency': currency,
+        'payment_method_types[]': 'card'
+      };
+
+      //Make post request to Stripe
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization':
+              'Bearer sk_test_51MygtvITbvfdqJloHb08cW1oA7brS4P3VzR2mBkv8z1FPHhbfLFEMfgkKE5LrOPcA5A4dox6n6Zv8n4SZW51ru8500H751CCni',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body,
+      );
+      return json.decode(response.body);
+    } catch (err) {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          err.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            backgroundColor: Colors.white,
+            buttonPadding: EdgeInsets.zero,
+            titlePadding: EdgeInsets.zero,
+            actionsPadding: EdgeInsets.zero,
+            insetPadding: const EdgeInsets.only(left: 30, right: 30),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            content: Container(
+              height: 520,
+              width: Get.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 15),
+                  Container(
+                    height: 180,
+                    width: 180,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Constants.primaryColor),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      color: Colors.white,
+                      size: 150,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "Payment Successfull!",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.teal,
+                        ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "Successfully made payment and\nhotel booking",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 14,
+                          height: 1.6,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  TealButton(
+                    text: "Go to bookings",
+                    onPressed: () {
+                      Get.to(() => Bookings(), transition: Transition.downToUp);
+                    },
+                    bgColor: Constants.primaryColor,
+                    txtColor: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        paymentIntent = null;
+      }).onError((error, stackTrace) {
+        setState(() => isLoading = false);
+        print('Error is:---> $error');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            error.toString(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+      });
+    } on StripeException catch (e) {
+      setState(() => isLoading = false);
+      print('Error is:---> $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          e.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (e) {
+      print('$e');
+    }
+  }
+}
+
+class FlightPaymentLayout extends StatefulWidget {
+  const FlightPaymentLayout({super.key, required this.flight});
+
+  final Flight flight;
+
+  @override
+  State<FlightPaymentLayout> createState() => _FlightPaymentLayoutState();
+}
+
+class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
+  double discountedRate = 10.0;
+  double discountAmount = 0.0;
+  bool isLoading = false;
+  String travelerId = FirebaseAuth.instance.currentUser!.uid;
+  Map<String, dynamic>? paymentIntent;
+  UserProvider controller = Get.put(UserProvider());
+  BookingNetwork bn = BookingNetwork();
+
+  double calculateDiscountedPrice(double discountedRate) {
+    double discountedAmount =
+        (discountedRate / 100) * double.parse(widget.flight.price.total);
+    return discountedAmount;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    discountAmount = calculateDiscountedPrice(discountedRate);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var flightProvider = context.watch<FlightSearchProvider>();
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FlightCardView(
+                      flight: widget.flight,
+                      flightProvider: flightProvider,
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff04060F).withOpacity(0.05),
+                            blurRadius: 8,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      poppinsText(
+                                          text: 'Summary',
+                                          color: Constants.secondaryColor,
+                                          fontBold: FontWeight.w500,
+                                          size: 16.0),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        'Name',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        'Phone number',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Depart date",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      !widget.flight.oneWay
+                                          ? Text(
+                                              "Return date",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption!
+                                                  .copyWith(
+                                                    fontSize: 16,
+                                                  ),
+                                            )
+                                          : Container(),
+                                      !widget.flight.oneWay
+                                          ? const SizedBox(height: 20)
+                                          : const SizedBox(),
+                                      Text(
+                                        "Passengers",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 42),
+                                      Text(
+                                        controller.user!.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        controller.user!.phoneNumber,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        DateFormat('MMM dd, yyyy').format(
+                                            DateTime.parse(
+                                                flightProvider.departDate)),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      !widget.flight.oneWay
+                                          ? Text(
+                                              DateFormat('MMM dd, yyyy')
+                                                  .format(DateTime.parse(
+                                                      flightProvider
+                                                          .returnDate))
+                                                  .toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1!
+                                                  .copyWith(fontSize: 16),
+                                            )
+                                          : Container(),
+                                      !widget.flight.oneWay
+                                          ? const SizedBox(height: 20)
+                                          : Container(),
+                                      Text(
+                                        flightProvider.adults.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff04060F).withOpacity(0.05),
+                            blurRadius: 8,
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      poppinsText(
+                                          text: 'Charges',
+                                          color: Constants.secondaryColor,
+                                          fontBold: FontWeight.w500,
+                                          size: 16.0),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Package price",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Discount rate",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Discount amount",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "Total",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(
+                                              fontSize: 16,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 40),
+                                      Text(
+                                        "\$${double.parse(widget.flight.price.total)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "${discountedRate.round()}%",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "\$${discountAmount.toStringAsFixed(2)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(
+                                        "\$${(double.parse(widget.flight.price.total) - discountAmount).toStringAsFixed(2)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Constants.primaryColor,
+                  ),
+                )
+              : Center(
+                  child: TealButton(
+                    text: "Pay Now",
+                    onPressed: () async {
+                      var bookingId = Random().nextInt(900000000) + 100000000;
+                      var flightId = Random().nextInt(900000000) + 100000000;
+                      double totalAmount =
+                          double.parse(widget.flight.price.total) -
+                              discountAmount;
+                      setState(() => isLoading = true);
+                      await makePayment(totalAmount.toInt().toString());
+                      await bn.bookFlight(
+                          flightBooking: FlightBooking(
+                              bookingId: bookingId.toString(),
+                              bookingDate:
+                                  Constants.convertDate(DateTime.now()),
+                              travelerId: travelerId,
+                              flightId: flightId.toString()));
+                      setState(() => isLoading = false);
+                    },
+                    bgColor: Constants.primaryColor,
+                    txtColor: Colors.white,
+                  ),
+                ),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Future<void> makePayment(String amount) async {
+    try {
+      //STEP 1: Create Payment Intent
+      paymentIntent = await createPaymentIntent(amount, 'USD');
+
+      //STEP 2: Initialize Payment Sheet
+      await Stripe.instance
+          .initPaymentSheet(
+              paymentSheetParameters: SetupPaymentSheetParameters(
+                  paymentIntentClientSecret: paymentIntent![
+                      'client_secret'], //Gotten from payment intent
+                  style: ThemeMode.system,
+                  googlePay: const PaymentSheetGooglePay(
+                      merchantCountryCode: 'US',
+                      currencyCode: 'USD',
+                      testEnv: true),
+                  applePay: const PaymentSheetApplePay(
+                      merchantCountryCode: 'US',
+                      buttonType: PlatformButtonType.book),
+                  appearance: const PaymentSheetAppearance(
+                    primaryButton: PaymentSheetPrimaryButtonAppearance(
+                        colors: PaymentSheetPrimaryButtonTheme(
+                      dark: PaymentSheetPrimaryButtonThemeColors(
+                          background: Constants.primaryColor),
+                      light: PaymentSheetPrimaryButtonThemeColors(
+                          background: Constants.primaryColor),
+                    )),
+                    shapes: PaymentSheetShape(
+                      borderRadius: 10.0,
+                    ),
+                  ),
+                  customFlow: true,
+                  merchantDisplayName: 'Ali Asghar'))
+          .then((value) {});
+
+      //STEP 3: Display Payment sheet
+      displayPaymentSheet();
+    } catch (err) {
+      throw Exception(err);
+    }
+  }
+
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      //Request body
+      Map<String, dynamic> body = {
+        'amount': amount,
+        'currency': currency,
+        'payment_method_types[]': 'card'
+      };
+
+      //Make post request to Stripe
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization':
+              'Bearer sk_test_51MygtvITbvfdqJloHb08cW1oA7brS4P3VzR2mBkv8z1FPHhbfLFEMfgkKE5LrOPcA5A4dox6n6Zv8n4SZW51ru8500H751CCni',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body,
+      );
+      return json.decode(response.body);
+    } catch (err) {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          err.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet().then((value) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            backgroundColor: Colors.white,
+            buttonPadding: EdgeInsets.zero,
+            titlePadding: EdgeInsets.zero,
+            actionsPadding: EdgeInsets.zero,
+            insetPadding: const EdgeInsets.only(left: 30, right: 30),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            content: Container(
+              height: 520,
+              width: Get.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24),
+                color: Colors.white,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 15),
+                  Container(
+                    height: 180,
+                    width: 180,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Constants.primaryColor),
+                    child: Icon(
+                      Icons.check_circle_rounded,
+                      color: Colors.white,
+                      size: 150,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "Payment Successfull!",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.teal,
+                        ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    "Successfully made payment and\package booking",
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 14,
+                          height: 1.6,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  TealButton(
+                    text: "Go to bookings",
+                    onPressed: () {
+                      Get.to(() => BottomNavBar(),
+                          transition: Transition.downToUp);
+                    },
+                    bgColor: Constants.primaryColor,
+                    txtColor: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        paymentIntent = null;
+      }).onError((error, stackTrace) {
+        setState(() => isLoading = false);
+        print('Error is:---> $error');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            error.toString(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+      });
+    } on StripeException catch (e) {
+      setState(() => isLoading = false);
+      print('Error is:---> $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          e.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    } catch (e) {
+      print('$e');
+    }
+  }
+}
+
+class SuccessDialog extends StatefulWidget {
+  const SuccessDialog({super.key});
+
+  @override
+  State<SuccessDialog> createState() => _SuccessDialogState();
+}
+
+class _SuccessDialogState extends State<SuccessDialog> {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      buttonPadding: EdgeInsets.zero,
+      titlePadding: EdgeInsets.zero,
+      actionsPadding: EdgeInsets.zero,
+      insetPadding: const EdgeInsets.only(left: 30, right: 30),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      content: Container(
+        height: 520,
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 15),
+            SizedBox(
+              height: 180,
+              width: 185,
+              child: Icon(
+                Icons.check_circle_rounded,
+                color: Constants.primaryColor,
+                size: 150,
+              ),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              "Payment Successfull!",
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.teal,
+                  ),
+            ),
+            const SizedBox(height: 15),
+            Text(
+              "Successfully made payment and\npackage booking",
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                    fontSize: 14,
+                    height: 1.6,
+                  ),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 20),
+            TealButton(
+              text: "View Ticket",
+              onPressed: () {
+                // Get.to(
+                //   const TicketScreen(),
+                //   transition: Transition.rightToLeft,
+                // );
+              },
+              bgColor: Constants.primaryColor,
+              txtColor: Colors.white,
+            ),
+            TealButton(
+              text: "Cancel",
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              bgColor: Colors.red,
+              txtColor: Colors.white,
+            )
           ],
         ),
       ),

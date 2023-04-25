@@ -4,6 +4,7 @@ import 'package:fyp/Constants.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
+import 'package:fyp/screens/ConfirmPayment.dart';
 import 'package:fyp/screens/FullScreenImagePage.dart';
 import 'package:fyp/screens/HotelGallery.dart';
 import 'package:fyp/screens/Reviews.dart';
@@ -38,7 +39,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
   }
 
   bool isLoading = false;
-    callHotelInfo() async {
+  callHotelInfo() async {
     var s = DateTime.now();
     setState(() => isLoading = true);
     HotelRepository hotelRepository = HotelRepository();
@@ -73,7 +74,6 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
           'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -308,7 +308,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         const SizedBox(height: 20),
 
                         // Rooms
-                        hotelRooms2(hotelProvider),
+                        hotelRooms2(hotelProvider, widget.property),
 
                         // Reviews
                         InkWell(
@@ -362,7 +362,12 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    for (var i = 0; i < 3 && i < hotelProvider.hotelReviews.length; i++)
+                                    for (var i = 0;
+                                        i < 3 &&
+                                            i <
+                                                hotelProvider
+                                                    .hotelReviews.length;
+                                        i++)
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(bottom: 20),
@@ -447,7 +452,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
   }
 }
 
-Widget hotelRooms2(HotelSearchProvider hotelProvider) {
+Widget hotelRooms2(HotelSearchProvider hotelProvider, PropertySearchListing property) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -652,9 +657,10 @@ Widget hotelRooms2(HotelSearchProvider hotelProvider) {
                                                   .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     RoomDetails(
-                                                        details: hotelProvider
-                                                            .hotelRooms[index]
-                                                            .description!),
+                                                        unit: hotelProvider
+                                                            .hotelRooms[index],
+                                                        property: property,
+                                                            ),
                                               ));
                                             },
                                             child: Container(
@@ -673,7 +679,8 @@ Widget hotelRooms2(HotelSearchProvider hotelProvider) {
                                                 child: poppinsText(
                                                     text: 'Book Now',
                                                     color: Colors.white,
-                                                    fontBold: FontWeight.w500),
+                                                    fontBold:
+                                                        FontWeight.w500),
                                               ),
                                             ),
                                           )

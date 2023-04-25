@@ -263,7 +263,6 @@ class _SignUpState extends State<SignUp> {
                             final UserCredential? userCredential =
                                 await authNetwork.signInWithGoogle();
                             if (userCredential != null) {
-                              final User user = userCredential.user!;
                               final bool isNewUser = userCredential
                                       .additionalUserInfo?.isNewUser ??
                                   false;

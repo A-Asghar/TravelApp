@@ -253,7 +253,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                         const SizedBox(height: 20),
 
                         // Rooms
-                        hotelRooms1(homeProvider),
+                        hotelRooms1(homeProvider, widget.property),
 
                         // Reviews
                         InkWell(
@@ -392,7 +392,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
   }
 }
 
-Widget hotelRooms1(HomeProvider homeProvider) {
+Widget hotelRooms1(HomeProvider homeProvider, PropertySearchListing property) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -597,9 +597,10 @@ Widget hotelRooms1(HomeProvider homeProvider) {
                                                   .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     RoomDetails(
-                                                        details: homeProvider
-                                                            .hotelRooms[index]
-                                                            .description!),
+                                                        unit: homeProvider
+                                                            .hotelRooms[index],
+                                                        property: property,),
+                                                      
                                               ));
                                             },
                                             child: Container(

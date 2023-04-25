@@ -151,10 +151,7 @@ class _Home2State extends State<Home2> {
                     ),
                     const SizedBox(height: 10),
                     packageList(context.read<PackageHomeProvider>().packages,
-                        context, 300),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                        context, 310),
                   ],
                 ),
               ),
@@ -307,7 +304,7 @@ Widget summerEscapes(
                             children: [
                               const Icon(
                                 Icons.location_on,
-                                size: 12.0,
+                                size: 16.0,
                                 color: Constants.primaryColor,
                               ),
                               const SizedBox(
@@ -327,7 +324,7 @@ Widget summerEscapes(
                                 const Icon(
                                   Icons.star,
                                   color: Colors.amber,
-                                  size: 15,
+                                  size: 16,
                                 ),
                                 const SizedBox(
                                   width: 2,
@@ -646,7 +643,7 @@ Widget packageList(
                             ? 'https://www.iconsdb.com/icons/preview/gray/mountain-xxl.png'
                             : packages[index].imgUrls[0]),
                     Container(
-                      height: 130,
+                      height: 140,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 2),
                       child: Column(
@@ -654,7 +651,7 @@ Widget packageList(
                         children: [
                           poppinsText(
                               text: packages[index].packageName,
-                              size: 18.0,
+                              size: 16.0,
                               color: Constants.secondaryColor,
                               fontBold: FontWeight.w500),
                           Row(
@@ -696,9 +693,10 @@ Widget packageList(
                                                 .rating
                                                 .toStringAsFixed(1))
                                             .toString(),
-                                        size: 16.0,
                                         color: Constants.secondaryColor,
                                         fontBold: FontWeight.w400),
+                                    const SizedBox(width: 10),
+                                    poppinsText(text: "(${packages[index].packageReviews!.length} reviews)", size: 13.0),
                                   ],
                                 ),
                               ],
@@ -709,7 +707,7 @@ Widget packageList(
                             children: [
                               poppinsText(
                                   text:
-                                      '\$${double.parse(packages[index].packagePrice.toStringAsFixed(1)).toString()}',
+                                      '\$${double.parse(packages[index].packagePrice.toStringAsFixed(2)).toString()}',
                                   size: 20.0,
                                   color: Constants.primaryColor,
                                   fontBold: FontWeight.w500),

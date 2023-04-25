@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class PackageBooking {
+class HotelBooking {
   String bookingId;
   String bookingDate;
   String travelerId;
-  String travelAgencyId;
-  String packageId;
+  String hotelId;
+  String hotelRoomId;
 
-  PackageBooking(
+  HotelBooking(
       {required this.bookingId,
       required this.bookingDate,
       required this.travelerId,
-      required this.travelAgencyId,
-      required this.packageId});
+      required this.hotelId,
+      required this.hotelRoomId});
 
-  factory PackageBooking.fromJson(Map<String, dynamic> json) {
-    return PackageBooking(
+  factory HotelBooking.fromJson(Map<String, dynamic> json) {
+    return HotelBooking(
       bookingId: json['bookingId'],
       bookingDate: json['bookingDate'],
       travelerId: json['travelerId'],
-      travelAgencyId: json['travelAgencyId'],
-      packageId: json['packageId'],
+      hotelId: json['hotelId'],
+      hotelRoomId: json['hotelRoomId'],
     );
   }
 }

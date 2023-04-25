@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/models/PackageBooking.dart';
 
 import '../models/Package.dart';
@@ -38,7 +39,7 @@ class PackageRepository {
     await network.makePackageBooking(
         packageBooking: PackageBooking(
             bookingId: bookingId,
-            bookingDate: bookingDate,
+            bookingDate: Constants.convertDate(bookingDate),
             travelerId: FirebaseAuth.instance.currentUser!.uid,
             travelAgencyId: travelAgencyId,
             packageId: packageId));

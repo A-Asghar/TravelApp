@@ -233,6 +233,14 @@ class _EditProfileState extends State<EditProfile> {
                         if (validateTextFields()) {
                           setState(() => isLoading = true);
 
+                          String profilePhotoUrl = '';
+
+                          if (_image != null) {
+                            profilePhotoUrl = await uploadFile(_image!);
+                          } else {
+                            profilePhotoUrl = 'assets/images/user.png';
+                          }
+
                           await AuthNetwork.createUserProfile(
                             signedInUser: FirebaseAuth.instance.currentUser!,
                             user: Users(
@@ -251,7 +259,7 @@ class _EditProfileState extends State<EditProfile> {
                             setState(() => isLoading = false);
                             FirebaseAuth.instance.currentUser!.uid.isEmpty
                                 ? Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const BottomNavBar(),
+                                    builder: (context) => BottomNavBar(),
                                   ))
                                 : setState(() {});
                           });

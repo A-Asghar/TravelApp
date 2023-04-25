@@ -5,6 +5,7 @@ import 'package:fyp/screens/profile/EditProfile.dart';
 import 'package:fyp/widgets/tealButton.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../Constants.dart';
 import '../../providers/UserProvider.dart';
 import '../../widgets/poppinsText.dart';
@@ -196,6 +197,11 @@ class _ProfileState extends State<Profile> {
                                             const Login(),
                                             transition: Transition.rightToLeft,
                                           );
+                                          SharedPreferences.getInstance().then(
+                                    (prefs) {
+                                      prefs.setBool("remember_me", false);
+                                    },
+                                  );
                                           FirebaseAuth.instance.signOut();
                                           await GoogleSignIn().signOut();
                                         },
