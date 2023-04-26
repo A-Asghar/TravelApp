@@ -5,10 +5,11 @@ import 'package:fyp/models/Package.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
-import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
+
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';
+
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/screens/vacations/vacation_search.dart';
@@ -16,12 +17,19 @@ import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+
+import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../Constants.dart';
 import '../models/RecommendedCities.dart';
 import '../providers/RecommendationProvider.dart';
+
 import '../repository/FlightRepository.dart';
+
+import '../providers/UserProvider.dart';
+
 import '../repository/RecommendationRepository.dart';
 
 class Home2 extends StatefulWidget {
@@ -43,9 +51,15 @@ class _Home2State extends State<Home2> {
   fetchInfo() {
     setState(() => isLoading = true);
 
+
     if (context.read<RecommendationProvider>().recommendedCities == null) {
       fetchRecommended();
     }
+
+    // if (context.read<RecommendationProvider>().recommendedCities == null) {
+    fetchRecommended();
+    // }
+
     if (context.read<HomeProvider>().hotels.isEmpty) {
       fetchHotels();
     }
@@ -514,7 +528,9 @@ class sideBarRow extends StatelessWidget {
 Widget topPackages(List<Package> packages, BuildContext context) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
+
     height: 330,
+
     child: ListView.builder(
         itemCount: packages.length,
         shrinkWrap: true,
@@ -545,7 +561,7 @@ Widget topPackages(List<Package> packages, BuildContext context) {
                         children: [
                           poppinsText(
                               text: packages[index].packageName,
-                              size: 20.0,
+                              size: 16.0,
                               fontBold: FontWeight.w500),
                           Row(
                             children: [

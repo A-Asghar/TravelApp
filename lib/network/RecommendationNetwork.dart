@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 
 import '../Constants.dart';
 import '../Providers/AccessTokenProvider.dart';
-import '../providers/UserProvider.dart';
 import '../repository/AccessTokenRepository.dart';
 
 class RecommendationNetwork {

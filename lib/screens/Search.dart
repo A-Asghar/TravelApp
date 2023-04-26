@@ -4,7 +4,6 @@ import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
 import 'package:fyp/repository/HotelRepository.dart';
-import 'package:fyp/repository/RecommendationRepository.dart';
 import 'package:fyp/screens/SearchDestination.dart';
 import 'package:fyp/screens/flight/FlightSearchResult.dart';
 import 'package:fyp/screens/hotel/HotelSearchResults.dart';

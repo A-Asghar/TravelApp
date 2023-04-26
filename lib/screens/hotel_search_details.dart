@@ -560,29 +560,34 @@ Widget hotelRooms2(HotelSearchProvider hotelProvider, PropertySearchListing prop
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.arrow_right,
-                                            color: Colors.red,
-                                          ),
-                                          poppinsText(
-                                              text: hotelProvider
-                                                      .hotelRooms[index]
-                                                      .ratePlans![0]
-                                                      .priceDetails![0]
-                                                      .availability
-                                                      ?.scarcityMessage ??
-                                                  '',
-                                              fontBold: FontWeight.w400,
-                                              color: Colors.red,
-                                              size: 18.0),
-                                        ],
-                                      ),
-                                      // poppinsText(
-                                      //     text: 'Double Room, Balcony',
-                                      //     color: Constants.secondaryColor,
-                                      //     size: 14.0),
+                                      hotelProvider
+                                                  .hotelRooms[index]
+                                                  .ratePlans![0]
+                                                  .priceDetails![0]
+                                                  .availability
+                                                  ?.scarcityMessage !=
+                                              null
+                                          ? Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.arrow_right,
+                                                  color: Colors.red,
+                                                ),
+                                                poppinsText(
+                                                    text: hotelProvider
+                                                            .hotelRooms[index]
+                                                            .ratePlans![0]
+                                                            .priceDetails![0]
+                                                            .availability
+                                                            ?.scarcityMessage ??
+                                                        '',
+                                                    fontBold: FontWeight.w400,
+                                                    color: Colors.red,
+                                                    size: 18.0),
+                                              ],
+                                            )
+                                          : Container(),
+
                                       Row(
                                         children: [
                                           const Icon(

@@ -6,10 +6,7 @@ import 'package:fyp/screens/hotel_search_details.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
-
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-
 import 'package:provider/provider.dart';
 
 class HotelSearchResults extends StatefulWidget {
@@ -63,7 +60,9 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios,
+
                     size: 25, color: Constants.primaryColor),
+
                 onPressed: () {
                   Clear();
                   Navigator.of(context).pop();
@@ -317,6 +316,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
                                                 : Container(),
                                       );
                                     },
+
                                   ),
                                 ),
                                 // Expanded(
@@ -461,6 +461,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
                               ],
                             ),
                           )));
+
   }
 }
 
