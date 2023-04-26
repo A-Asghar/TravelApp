@@ -7,39 +7,29 @@ import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
-
-import 'package:fyp/screens/hotel/HotelSearchResults.dart';
-
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
 import 'package:fyp/screens/vacations/vacation_search.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
 import 'package:intl/intl.dart';
-
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+
 import '../Constants.dart';
 import '../models/RecommendedCities.dart';
 import '../providers/RecommendationProvider.dart';
-
-import '../repository/FlightRepository.dart';
-
 import '../providers/UserProvider.dart';
-
 import '../repository/RecommendationRepository.dart';
 
-class Home2 extends StatefulWidget {
-  const Home2({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<Home2> createState() => _Home2State();
+  State<Home> createState() => _HomeState();
 }
 
-class _Home2State extends State<Home2> {
+class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
@@ -48,13 +38,13 @@ class _Home2State extends State<Home2> {
   }
 
   bool isLoading = false;
+
   fetchInfo() {
     setState(() => isLoading = true);
 
-
-    if (context.read<RecommendationProvider>().recommendedCities == null) {
-      fetchRecommended();
-    }
+    // if (context.read<RecommendationProvider>().recommendedCities == null) {
+    //   fetchRecommended();
+    // }
 
     // if (context.read<RecommendationProvider>().recommendedCities == null) {
     fetchRecommended();
@@ -98,6 +88,7 @@ class _Home2State extends State<Home2> {
 
   @override
   Widget build(BuildContext context) {
+    print(Get.put(UserProvider()).user!.searchedCities);
     UserProvider controller = Get.put(UserProvider());
     return WillPopScope(
       onWillPop: () async {
@@ -194,7 +185,7 @@ Widget iconBox(icon, backgroundColor, text, VoidCallback onTap) {
           height: 60,
           width: 60,
           decoration: BoxDecoration(
-              boxShadow: <BoxShadow>[
+              boxShadow: const <BoxShadow>[
                 BoxShadow(
                     color: Constants.secondaryColor,
                     blurRadius: 5.0,
@@ -266,15 +257,6 @@ Widget heading(text, size) {
 
 Widget summerEscapes(
     context, List<PropertySearchListing> hotels, List<String> city) {
-  List images = [
-    'https://pix10.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?ca=6&ce=1&s=1024x768',
-    'https://media-cdn.tripadvisor.com/media/photo-s/1d/24/9b/85/hotel-exterior.jpg',
-    'https://cf.bstatic.com/xdata/images/hotel/max1024x768/321508463.jpg?k=b4d405dada3968a746c8988364236c165cf0d8985ede33aa304abf06f793ab6a&o=&hp=1',
-    'https://theenglishhotel.com/wp-content/uploads/2022/06/image002-2.png',
-    'https://www.murhotels.com/cache/40/b3/40b3566310d686be665d9775f59ca9cd.jpg',
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Cordoba_Center_Hotel_in_Cordoba%2C_Spain.jpg/1200px-Cordoba_Center_Hotel_in_Cordoba%2C_Spain.jpg',
-    'https://aff.bstatic.com/images/hotel/840x460/183/183065428.jpg'
-  ];
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     // width: MediaQuery.of(context).size.width * 0.95,
@@ -528,9 +510,7 @@ class sideBarRow extends StatelessWidget {
 Widget topPackages(List<Package> packages, BuildContext context) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 5),
-
     height: 330,
-
     child: ListView.builder(
         itemCount: packages.length,
         shrinkWrap: true,
@@ -712,7 +692,10 @@ Widget packageList(
                                         color: Constants.secondaryColor,
                                         fontBold: FontWeight.w400),
                                     const SizedBox(width: 10),
-                                    poppinsText(text: "(${packages[index].packageReviews!.length} reviews)", size: 13.0),
+                                    poppinsText(
+                                        text:
+                                            "(${packages[index].packageReviews!.length} reviews)",
+                                        size: 13.0),
                                   ],
                                 ),
                               ],

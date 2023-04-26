@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fyp/Constants.dart';
 import 'package:fyp/models/packageReview.dart';
 
 class Package {

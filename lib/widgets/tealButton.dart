@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 
-import '../Constants.dart';
-
 class TealButton extends StatelessWidget {
   const TealButton(
       {Key? key,

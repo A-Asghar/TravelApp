@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Constants.dart';
+import '../../models/Detail.dart';
+import '../../network/BookingNetwork.dart';
+import '../../network/HotelNetwork.dart';
 import '../../widgets/customButton.dart';
 import '../../widgets/poppinsText.dart';
 import 'CancelBookingScreen.dart';
@@ -14,6 +20,46 @@ class OnGoingView extends StatefulWidget {
 }
 
 class _OnGoingViewState extends State<OnGoingView> {
+  void initState() {
+    super.initState();
+    getTravelerBookings();
+  }
+
+  bool isLoading = false;
+  List bookingsFromFirebase = [];
+  List<Map<String, dynamic>> bookingsWithHotelDetail = [];
+
+  /** TODO : Moiz Cancel aur View Ticket k button hatado
+   * booking with detail wali list se cheeezein utha kar bas ui pe show karni hai
+   * buttons ki jagah pe date show kardena
+   * background color ko sahi kardena, Constants.secondaryColor.withOpacity(0.1)
+   * Check lagadena agar booking with hotel detail empty ho to No Bookings Yet! display karade
+   * isLoading true hai to Center(child:CircularProgressIndicator()) varna list empty check phir empty nae hai to list items show */
+
+  getTravelerBookings() async {
+    setState(() => isLoading = true);
+    BookingNetwork bookingNetwork = BookingNetwork();
+    var snapshot = await bookingNetwork.getTravelerHotelBooking(
+        travelerId: FirebaseAuth.instance.currentUser?.uid);
+    bookingsFromFirebase = snapshot.docs.map((doc) => doc.data()).toList();
+    await Future.forEach(bookingsFromFirebase, (booking) async {
+      var detail = await getHotelNameUsingBookingId(booking['hotelId']);
+      bookingsWithHotelDetail
+          .add({'bookingDate': booking['bookingDate'], 'detail': detail});
+    });
+    setState(() => isLoading = false);
+  }
+
+  getHotelNameUsingBookingId(propertyId) async {
+    HotelNetwork hotelNetwork = HotelNetwork();
+    var response = await hotelNetwork.detail(propertyId: propertyId);
+
+    response = jsonDecode(response);
+
+    Detail detail = Detail.fromJson(response);
+    return detail;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(

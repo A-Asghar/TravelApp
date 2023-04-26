@@ -6,11 +6,14 @@ import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/RecommendationProvider.dart';
-
+import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+/** TODO: Moiz assets folder me jo unused images hein vo delete kardena
+ * Confirm Payment me agar OneWay flight hai to return wali cheez hatadena - simple check
+ * lagadena k agar date DateTime.now() ki date hai to return wala show na karay*/
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'ExplorEase Traveler',
+      title: 'ExploreEase Traveler',
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),

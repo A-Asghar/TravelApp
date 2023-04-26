@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Package.dart';
-import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
-import 'package:fyp/screens/hotel_search_details.dart';
 import 'package:fyp/screens/package_details.dart';
-import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

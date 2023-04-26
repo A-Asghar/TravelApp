@@ -1,12 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/repository/PackageRepository.dart';
-
-import 'package:fyp/screens/BottomNavBar.dart';
-import 'package:fyp/screens/Home2.dart';
+import 'package:fyp/screens/Home.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
 import '../../network/AuthNetwork.dart';
-import '../../widgets/authErrorDialog.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
 import 'FillYourProfile.dart';
@@ -279,7 +274,7 @@ class _SignUpState extends State<SignUp> {
                                     await packageRepository.getAllPackages();
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                    builder: (context) => Home2(),
+                                    builder: (context) => Home(),
                                   ),
                                 );
                               }

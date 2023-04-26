@@ -14,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Constants.dart';
 import '../../providers/UserProvider.dart';
 import '../../widgets/poppinsText.dart';
-import '../Home2.dart';
+import '../Home.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -195,7 +195,7 @@ class _ProfileState extends State<Profile> {
                                         text: "Yes, Logout",
                                         onPressed: () async {
                                           Get.offAll(
-                                            const Home2(),
+                                            const Home(),
                                             transition: Transition.rightToLeft,
                                           );
                                           Get.offAll(

@@ -1,9 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Flight.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/widgets/poppinsText.dart';
-import 'dart:math' as math;
 
 class FlightCardView extends StatefulWidget {
   const FlightCardView(

@@ -48,7 +48,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        SystemNavigator.pop();
+        Navigator.pop(context);
         return true;
       },
       child: SafeArea(
@@ -420,11 +420,16 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                       await bn.bookPackage(
                           packageBooking: PackageBooking(
                               bookingId: bookingId.toString(),
-                              bookingDate:
-                                  Constants.convertDate(DateTime.now()),
+                              bookingDate: Constants.convertDate(DateTime.now()),
                               travelerId: travelerId,
                               travelAgencyId: widget.package.travelAgencyId,
-                              packageId: widget.package.packageId));
+                              packageId: widget.package.packageId,
+                              price: widget.package.packagePrice.toString(),
+                              adults: widget.package.adults.toString(),
+                              destination: widget.package.destination,
+                              imageUrl: widget.package.imgUrls[0],
+                          ),
+                      );
                       setState(() => isLoading = false);
                     },
                     bgColor: Constants.primaryColor,
@@ -446,8 +451,8 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
       await Stripe.instance
           .initPaymentSheet(
               paymentSheetParameters: SetupPaymentSheetParameters(
-                  paymentIntentClientSecret: paymentIntent![
-                      'client_secret'], //Gotten from payment intent
+                  paymentIntentClientSecret: paymentIntent!['client_secret'],
+                  //Gotten from payment intent
                   style: ThemeMode.system,
                   googlePay: const PaymentSheetGooglePay(
                       merchantCountryCode: 'US',
@@ -560,7 +565,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    "Successfully made payment and\package booking",
+                    "Successfully made payment and booking",
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                           fontSize: 14,
                           height: 1.6,
@@ -618,8 +623,10 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
 class HotelPaymentLayout extends StatefulWidget {
   const HotelPaymentLayout(
       {super.key, required this.unit, required this.property});
+
   final Unit unit;
   final PropertySearchListing property;
+
   @override
   State<HotelPaymentLayout> createState() => _HotelPaymentLayoutState();
 }
@@ -971,8 +978,8 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
       await Stripe.instance
           .initPaymentSheet(
               paymentSheetParameters: SetupPaymentSheetParameters(
-                  paymentIntentClientSecret: paymentIntent![
-                      'client_secret'], //Gotten from payment intent
+                  paymentIntentClientSecret: paymentIntent!['client_secret'],
+                  //Gotten from payment intent
                   style: ThemeMode.system,
                   googlePay: const PaymentSheetGooglePay(
                       merchantCountryCode: 'US',
@@ -994,7 +1001,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                     ),
                   ),
                   customFlow: true,
-                  merchantDisplayName: 'Ali Asghar'))
+                  merchantDisplayName: 'ExploreEase'))
           .then((value) {});
 
       //STEP 3: Display Payment sheet
@@ -1085,7 +1092,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    "Successfully made payment and\nhotel booking",
+                    "Successfully made payment and booking",
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                           fontSize: 14,
                           height: 1.6,
@@ -1482,12 +1489,20 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                       setState(() => isLoading = true);
                       await makePayment(totalAmount.toInt().toString());
                       await bn.bookFlight(
-                          flightBooking: FlightBooking(
-                              bookingId: bookingId.toString(),
-                              bookingDate:
-                                  Constants.convertDate(DateTime.now()),
-                              travelerId: travelerId,
-                              flightId: flightId.toString()));
+                        flightBooking: FlightBooking(
+                          bookingId: bookingId.toString(),
+                          bookingDate: Constants.convertDate(DateTime.now()),
+                          travelerId: travelerId,
+                          flightId: flightId.toString(),
+                          cabin: widget.flight.fareDetailsBySegment[0].cabin,
+                          flightDuration: widget.flight.itineraries[0].duration.replaceAll('PT', '').replaceAll('H', 'H ').toLowerCase(),
+                          fromCity: widget.flight.itineraries[0].segments[0].departure.iataCode,
+                          toCity: widget.flight.itineraries[0].segments[0].arrival.iataCode,
+                          fromTime: Constants.convertTime(widget.flight.itineraries[0].segments[0].departure.at),
+                          toTime: Constants.convertTime(widget.flight.itineraries[0].segments[0].arrival.at),
+                          price: widget.flight.price.total
+                        ),
+                      );
                       setState(() => isLoading = false);
                     },
                     bgColor: Constants.primaryColor,
@@ -1509,8 +1524,8 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
       await Stripe.instance
           .initPaymentSheet(
               paymentSheetParameters: SetupPaymentSheetParameters(
-                  paymentIntentClientSecret: paymentIntent![
-                      'client_secret'], //Gotten from payment intent
+                  paymentIntentClientSecret: paymentIntent!['client_secret'],
+                  //Gotten from payment intent
                   style: ThemeMode.system,
                   googlePay: const PaymentSheetGooglePay(
                       merchantCountryCode: 'US',
@@ -1623,7 +1638,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    "Successfully made payment and\package booking",
+                    "Successfully made payment and booking",
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                           fontSize: 14,
                           height: 1.6,
@@ -1720,18 +1735,18 @@ class _SuccessDialogState extends State<SuccessDialog> {
             Text(
               "Payment Successfull!",
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.teal,
-                  ),
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: Colors.teal,
+              ),
             ),
             const SizedBox(height: 15),
             Text(
-              "Successfully made payment and\npackage booking",
+              "Successfully made payment and booking",
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    fontSize: 14,
-                    height: 1.6,
-                  ),
+                fontSize: 14,
+                height: 1.6,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),

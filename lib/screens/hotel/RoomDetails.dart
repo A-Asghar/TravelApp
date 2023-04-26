@@ -5,7 +5,6 @@ import 'package:fyp/models/PropertyUnits.dart';
 import 'package:fyp/screens/ConfirmPayment.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
-import 'package:get/get.dart';
 import 'package:html/parser.dart' show parse;
 
 class RoomDetails extends StatelessWidget {

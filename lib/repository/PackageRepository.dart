@@ -29,21 +29,21 @@ class PackageRepository {
     await network.updatePackage(package: package);
   }
 
-  makePackageBooking(
-      {required travelerId,
-      required travelAgencyId,
-      required packageId}) async {
-    var now = DateTime.now();
-    String bookingId = 'booking_${now.millisecondsSinceEpoch}_$travelerId';
-    DateTime bookingDate = now;
-    await network.makePackageBooking(
-        packageBooking: PackageBooking(
-            bookingId: bookingId,
-            bookingDate: Constants.convertDate(bookingDate),
-            travelerId: FirebaseAuth.instance.currentUser!.uid,
-            travelAgencyId: travelAgencyId,
-            packageId: packageId));
-  }
+  // makePackageBooking(
+  //     {required travelerId,
+  //     required travelAgencyId,
+  //     required packageId}) async {
+  //   var now = DateTime.now();
+  //   String bookingId = 'booking_${now.millisecondsSinceEpoch}_$travelerId';
+  //   DateTime bookingDate = now;
+  //   await network.makePackageBooking(
+  //       packageBooking: PackageBooking(
+  //           bookingId: bookingId,
+  //           bookingDate: Constants.convertDate(bookingDate),
+  //           travelerId: FirebaseAuth.instance.currentUser!.uid,
+  //           travelAgencyId: travelAgencyId,
+  //           packageId: packageId));
+  // }
 
   getTravelerBookings({required travelerId}) async {
     List<PackageBooking> bookings = [];

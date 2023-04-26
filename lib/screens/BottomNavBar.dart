@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fyp/screens/bookings/OnGoingView.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
-import 'Home2.dart';
-import 'profile/profile.dart';
+import 'Home.dart';
 import 'bookings/Bookings.dart';
+import 'profile/profile.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   var _currentIndex = 0;
   late PageController _pageController;
   List<Widget> tabPages = [
-    const Home2(),
+    const Home(),
     const Bookings(),
     const Profile(),
   ];

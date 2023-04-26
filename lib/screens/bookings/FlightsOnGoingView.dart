@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Constants.dart';
+import '../../network/BookingNetwork.dart';
 import '../../widgets/customButton.dart';
 import '../../widgets/poppinsText.dart';
 import 'CancelBookingScreen.dart';
@@ -14,6 +16,31 @@ class FlightsOnGoingView extends StatefulWidget {
 }
 
 class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
+  void initState() {
+    super.initState();
+    getTravelerBookings();
+  }
+
+  bool isLoading = false;
+  List bookingsFromFirebase = [];
+
+  /** TODO : Moiz Cancel aur View Ticket k button hatado
+   * bookingsFromFirebase wali list se cheeezein utha kar bas ui pe show karni hai
+   * background color ko sahi kardena, Constants.secondaryColor.withOpacity(0.1)
+   * Check lagadena agar bookingsFromFirebase empty ho to No Bookings Yet! display karade
+   * isLoading true hai to Center(child:CircularProgressIndicator()) varna list empty check phir empty nae hai to list items show */
+
+  getTravelerBookings() async {
+    setState(() => isLoading = true);
+    BookingNetwork bookingNetwork = BookingNetwork();
+    var snapshot = await bookingNetwork.getTravelerFlightBooking(
+        travelerId: FirebaseAuth.instance.currentUser?.uid);
+    bookingsFromFirebase = snapshot.docs.map((doc) => doc.data()).toList();
+
+    print(bookingsFromFirebase);
+    setState(() => isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -41,7 +68,8 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Card(
-                      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 5),
                       elevation: 5,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
@@ -50,44 +78,48 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                           Container(
                             margin: const EdgeInsets.only(left: 10),
                             child: Row(
-                              mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-
                                 // Flight Carrier
-                            Container(
-                            margin: const EdgeInsets.only(top: 10),
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: poppinsText(
-                    text: 'Flight Duration',
-                    size: 16.0,
-                    fontBold: FontWeight.w500),
-              ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 10),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: poppinsText(
+                                      text: 'Flight Duration',
+                                      size: 16.0,
+                                      fontBold: FontWeight.w500),
+                                ),
 
                                 // Trip Duration
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                child: poppinsText(
-                  text: '2 hrs',
-                  // text: '${Constants.minutesToDuration(flight.segments.last.arrival.at.difference(flight.segments[0].departure.at).inMinutes)}',
-                  color: Constants.secondaryColor,
-                ),
-              )
+                                Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 2),
+                                  child: poppinsText(
+                                    text: '2 hrs',
+                                    // text: '${Constants.minutesToDuration(flight.segments.last.arrival.at.difference(flight.segments[0].departure.at).inMinutes)}',
+                                    color: Constants.secondaryColor,
+                                  ),
+                                )
                               ],
                             ),
                           ),
 
-                          const SizedBox(height: 10,),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal:10),
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children:[
-
-
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
                                   // Departure Time
-                                  poppinsText(text: '15:00',
-                                      size: 22.0,fontBold: FontWeight.w400),
+                                  poppinsText(
+                                      text: '15:00',
+                                      size: 22.0,
+                                      fontBold: FontWeight.w400),
                                   const Expanded(
                                     child: Divider(
                                       color: Constants.secondaryColor,
@@ -99,68 +131,83 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                   // Airplane Icon
                                   Transform.rotate(
                                     angle: 90 * 3.1415 / 180,
-                                    child: const Icon(Icons.flight,color: Constants.primaryColor,size: 25,),
+                                    child: const Icon(
+                                      Icons.flight,
+                                      color: Constants.primaryColor,
+                                      size: 25,
+                                    ),
                                   ),
 
                                   const Expanded(
                                       child: Divider(
-                                        color: Constants.secondaryColor,
-                                        indent: 10,
-                                        endIndent: 20,
-                                      )),
+                                    color: Constants.secondaryColor,
+                                    indent: 10,
+                                    endIndent: 20,
+                                  )),
 
                                   // Arrival Time
-                                  poppinsText(text: '17:00',
-                                      size: 22.0,fontBold: FontWeight.w400),
-                                ]
-                            ),
+                                  poppinsText(
+                                      text: '17:00',
+                                      size: 22.0,
+                                      fontBold: FontWeight.w400),
+                                ]),
                           ),
 
-
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal:10),
+                            margin: const EdgeInsets.symmetric(horizontal: 10),
                             child: Row(
-                              mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                poppinsText(text:'Khi',
+                                poppinsText(
+                                    text: 'Khi',
                                     color: Constants.secondaryColor),
-                                poppinsText(text:'Dubai',
+                                poppinsText(
+                                    text: 'Dubai',
                                     color: Constants.secondaryColor),
                               ],
                             ),
                           ),
 
-
                           // Number of connecting Flights
                           //connectingFlightsWidget(connectingFlights),
                           const SizedBox(height: 10),
-
 
                           Container(
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             child: Row(
                               children: [
-
                                 // Flight Class
-                            Row(
-                            children: [
-                            const Icon(Icons.event_seat,color: Constants.secondaryColor,size: 15,),
-                            const SizedBox(width: 5),
-                            poppinsText(text: 'cabin', color: Constants.secondaryColor, size: 14.0, fontBold: FontWeight.w500)
-                            ],
-                          ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.event_seat,
+                                      color: Constants.secondaryColor,
+                                      size: 15,
+                                    ),
+                                    const SizedBox(width: 5),
+                                    poppinsText(
+                                        text: 'cabin',
+                                        color: Constants.secondaryColor,
+                                        size: 14.0,
+                                        fontBold: FontWeight.w500)
+                                  ],
+                                ),
 
                                 const Spacer(),
 
-                                poppinsText(text: 'From',color: Constants.secondaryColor),
-                                const SizedBox(width: 10,),
+                                poppinsText(
+                                    text: 'From',
+                                    color: Constants.secondaryColor),
+                                const SizedBox(
+                                  width: 10,
+                                ),
                                 // Trip Price
-              poppinsText(
-                  text: '\$200  ',
-                  color: Constants.secondaryColor,
-                  fontBold: FontWeight.w600,
-                  size: 20.0),
+                                poppinsText(
+                                    text: '\$200  ',
+                                    color: Constants.secondaryColor,
+                                    fontBold: FontWeight.w600,
+                                    size: 20.0),
                               ],
                             ),
                           )
@@ -198,9 +245,9 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                               .textTheme
                                               .bodyText1!
                                               .copyWith(
-                                            fontSize: 24,
-                                            color: const Color(0xffF75555),
-                                          ),
+                                                fontSize: 24,
+                                                color: const Color(0xffF75555),
+                                              ),
                                         ),
                                         const SizedBox(height: 10),
                                         const Divider(color: Color(0xffEEEEEE)),
@@ -211,9 +258,9 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                               .textTheme
                                               .bodyText1!
                                               .copyWith(
-                                            fontSize: 16,
-                                            height: 1.6,
-                                          ),
+                                                fontSize: 16,
+                                                height: 1.6,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 10),
@@ -223,9 +270,9 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                               .textTheme
                                               .caption!
                                               .copyWith(
-                                            fontSize: 14,
-                                            height: 1.6,
-                                          ),
+                                                fontSize: 14,
+                                                height: 1.6,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 30),
@@ -253,7 +300,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                                 Get.to(
                                                   const CancelBookingScreen(),
                                                   transition:
-                                                  Transition.rightToLeft,
+                                                      Transition.rightToLeft,
                                                 );
                                               },
                                             ),
@@ -270,7 +317,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                               width: Get.width,
                               decoration: BoxDecoration(
                                 border:
-                                Border.all(color: Constants.primaryColor),
+                                    Border.all(color: Constants.primaryColor),
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               child: Center(

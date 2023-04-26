@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/screens/bookings/FlightsOnGoingView.dart';
+import 'package:fyp/screens/bookings/VacationsOnGoingView.dart';
 import 'package:get/get.dart';
 
 import '../../Constants.dart';
@@ -41,7 +43,7 @@ class _BookingsState extends State<Bookings> {
               builder: (documentController) => Row(
                 children: [
                   tapCard(
-                    "Ongoing",
+                    "Hotels",
                     documentController.isDocument.value == 0
                         ? Constants.primaryColor
                         : Colors.transparent,
@@ -51,7 +53,7 @@ class _BookingsState extends State<Bookings> {
                   ),
                   const SizedBox(width: 14),
                   tapCard(
-                    "Completed",
+                    "Flights",
                     documentController.isDocument.value == 1
                         ? Constants.primaryColor
                         : Colors.transparent,
@@ -61,7 +63,7 @@ class _BookingsState extends State<Bookings> {
                   ),
                   const SizedBox(width: 14),
                   tapCard(
-                    "Canceled",
+                    "Vacations",
                     documentController.isDocument.value == 2
                         ? Constants.primaryColor
                         : Colors.transparent,
@@ -79,8 +81,8 @@ class _BookingsState extends State<Bookings> {
                   documentController.isDocument.value == 0
                       ? const OnGoingView()
                       : documentController.isDocument.value == 1
-                          ? const CompletedView()
-                          : const CanceledView(),
+                          ? const FlightsOnGoingView()
+                          : const VacationsOnGoingView(),
             ),
           ],
         ),

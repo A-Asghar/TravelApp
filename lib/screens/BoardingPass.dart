@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/screens/Home2.dart';
+import 'package:fyp/screens/Home.dart';
 
 import '../Constants.dart';
 import '../widgets/poppinsText.dart';
@@ -269,7 +269,7 @@ class _BoardingPassState extends State<BoardingPass> {
                 text: "Back to home",
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Home2(),
+                    builder: (context) => Home(),
                   ));
                 },
                 bgColor: Constants.primaryColor,

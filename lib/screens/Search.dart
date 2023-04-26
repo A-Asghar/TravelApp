@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../Constants.dart';
+import '../repository/RecommendationRepository.dart';
 import '../widgets/errorSnackBar.dart';
 
 class Search extends StatefulWidget {

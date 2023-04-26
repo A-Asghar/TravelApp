@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Package.dart';
-import 'package:fyp/models/Review.dart';
-import 'package:fyp/models/packageReview.dart';
-import 'package:fyp/network/PackageNetwork.dart';
-import 'package:fyp/repository/HotelRepository.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-import '../models/PropertySearchListings.dart';
-import '../providers/HotelSearchProvider.dart';
 import '../widgets/poppinsText.dart';
 import '../widgets/ratingCard.dart';
 

@@ -3,6 +3,8 @@ import 'package:fyp/models/FlightBooking.dart';
 import 'package:fyp/models/HotelBooking.dart';
 import 'package:fyp/models/PackageBooking.dart';
 
+/** TODO : Moiz appbar me title ko center kardena */
+
 class BookingNetwork {
   CollectionReference packageBookings =
       FirebaseFirestore.instance.collection('packageBookings');
@@ -19,7 +21,11 @@ class BookingNetwork {
       "bookingDate": packageBooking.bookingDate,
       "travelerId": packageBooking.travelerId,
       "travelAgencyId": packageBooking.travelAgencyId,
-      "packageId": packageBooking.packageId
+      "packageId": packageBooking.packageId,
+      "price": packageBooking.price,
+      "adults": packageBooking.adults,
+      "destination": packageBooking.destination,
+      "imageUrl": packageBooking.imageUrl,
     });
 
     // increment number of sales for the package
@@ -44,6 +50,13 @@ class BookingNetwork {
       "bookingDate": flightBooking.bookingDate,
       "travelerId": flightBooking.travelerId,
       "flightId": flightBooking.flightId,
+      "cabin": flightBooking.cabin,
+      "flightDuration": flightBooking.flightDuration,
+      "fromCity": flightBooking.fromCity,
+      "toCity": flightBooking.toCity,
+      "fromTime": flightBooking.fromTime,
+      "toTime": flightBooking.toTime,
+      "price": flightBooking.price,
     });
   }
 

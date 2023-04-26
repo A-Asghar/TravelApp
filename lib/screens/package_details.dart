@@ -6,7 +6,6 @@ import 'package:fyp/screens/ConfirmPayment.dart';
 import 'package:fyp/screens/HotelGallery.dart';
 import 'package:fyp/screens/PackageReviews.dart';
 import 'package:fyp/widgets/back_button.dart';
-import 'package:fyp/widgets/detail_card.dart';
 import 'package:fyp/widgets/expandable_text.dart';
 import 'package:fyp/widgets/image_slider.dart';
 import 'package:fyp/widgets/poppinsText.dart';
