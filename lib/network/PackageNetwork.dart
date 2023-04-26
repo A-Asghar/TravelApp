@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:fyp/models/PackageBooking.dart';
 
 import '../models/Package.dart';
@@ -84,4 +85,32 @@ class PackageNetwork {
         .where('travelAgencyId', isEqualTo: travelAgencyId)
         .get();
   }
+
+    Future<double> calculateAverageRating(BuildContext context, packageId) async {
+    double totalRating = 0.0;
+    int totalReviews = 0;
+
+    Package package = await fetchPackageById(packageId: packageId);
+
+    package.packageReviews!.forEach((review) {
+      totalRating += review.reviewRating;
+      totalReviews += 1;
+    });
+
+    return totalRating / totalReviews;
+  }
+
+    Future<Package> fetchPackageById({required packageId}) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('packages')
+        .where('packageId', isEqualTo: packageId)
+        .get();
+
+    Map<String, dynamic> packageData =
+        snapshot.docs.first.data() as Map<String, dynamic>;
+    Package package = Package.fromJson(packageData);
+
+    return package;
+  }
+  
 }

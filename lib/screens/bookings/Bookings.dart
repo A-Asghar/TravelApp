@@ -28,6 +28,7 @@ class _BookingsState extends State<Bookings> {
         ),
             backgroundColor: Colors.white,
             elevation: 0,
+            centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),

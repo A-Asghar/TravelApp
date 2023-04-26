@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Constants.dart';
+import 'package:fyp/models/PropertySearchListings.dart';
+import 'package:fyp/models/PropertyUnits.dart';
+import 'package:fyp/screens/ConfirmPayment.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
+import 'package:get/get.dart';
 import 'package:html/parser.dart' show parse;
 
 class RoomDetails extends StatelessWidget {
-  const RoomDetails({Key? key, required this.details}) : super(key: key);
-  final String details;
+  const RoomDetails({Key? key, required this.unit, required this.property})
+      : super(key: key);
+  final Unit unit;
+  final PropertySearchListing property;
   @override
   Widget build(BuildContext context) {
-    List<String>? parsedDetails = parse(details).body?.text.split(' - ');
+    List<String>? parsedDetails =
+        parse(unit.description).body?.text.split(' - ');
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -44,7 +51,15 @@ class RoomDetails extends StatelessWidget {
           Center(
             child: TealButton(
               text: 'Book Now',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ConfirmPaymentScreen(
+                          unit: unit,
+                          property: property,
+                        )));
+              },
+              bgColor: Constants.primaryColor,
+              txtColor: Colors.white,
             ),
           )
         ],

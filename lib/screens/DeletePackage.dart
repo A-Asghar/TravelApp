@@ -27,7 +27,7 @@ class _DeletePackageState extends State<DeletePackage> {
               onPressed: () {
                 PackageRepository p = PackageRepository();
                 p.deletePackage(packageId: packageId.text);
-              })
+              }, bgColor: Colors.red, txtColor: Colors.white,)
         ],
       ),
     ));

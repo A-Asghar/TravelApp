@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Package.dart';
+import 'package:fyp/screens/ConfirmPayment.dart';
 import 'package:fyp/screens/HotelGallery.dart';
+import 'package:fyp/screens/PackageReviews.dart';
 import 'package:fyp/widgets/back_button.dart';
 import 'package:fyp/widgets/detail_card.dart';
 import 'package:fyp/widgets/expandable_text.dart';
 import 'package:fyp/widgets/image_slider.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/ratingCard.dart';
+import 'package:fyp/widgets/tealButton.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class PackageDetails extends StatefulWidget {
   const PackageDetails({super.key, required this.package});
@@ -26,6 +30,7 @@ class _PackageDetailsState extends State<PackageDetails> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
+        physics: BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
@@ -142,85 +147,25 @@ class _PackageDetailsState extends State<PackageDetails> {
                 ),
                 const SizedBox(height: 20),
 
-                // Facilities
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: poppinsText(text: "Facilities", size: 20.0),
-                ),
-                const SizedBox(height: 20),
-
-                //Put in GridView
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      detailCard("Swimming Pool"),
-                      detailCard("Elevator"),
-                      detailCard("Fitness Center"),
-                      detailCard("24-hours Open"),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      detailCard("Meeting Room"),
-                      detailCard("Elevator"),
-                      detailCard("Fitness Center"),
-                      detailCard("24-hours Open"),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-
                 //Day wise Details
                 widget.package.dayWiseDetails!.isEmpty
                     ? Container()
-                    : dayWiseDetail(widget.package.dayWiseDetails),
-
-                // Location Map
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: poppinsText(text: "Location", size: 20.0),
-                ),
-                const SizedBox(height: 20),
-                InkWell(
-                  onTap: () {
-                    // Get.to(
-                    //   const HotelLocationScreen(),
-                    //   transition: Transition.rightToLeft,
-                    // );
-                  },
-                  child: InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: SizedBox(
-                        height: 180,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/images/map.png',
-                          fit: BoxFit.fill,
-                        ),
+                    : DayWiseDetail(
+                        daywise: widget.package.dayWiseDetails,
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
 
+                const SizedBox(
+                  height: 20,
+                ),
                 // Reviews
                 InkWell(
                   onTap: () {
-                    // Get.to(
-                    //   Reviews(
-                    //     property: widget.property,
-                    //   ),
-                    //   transition: Transition.rightToLeft,
-                    // );
+                    Get.to(
+                      PackageReviews(
+                        package: widget.package,
+                      ),
+                      transition: Transition.rightToLeft,
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
@@ -238,7 +183,10 @@ class _PackageDetailsState extends State<PackageDetails> {
                           size: 14.0,
                           color: Constants.primaryColor,
                         ),
-                        poppinsText(text: '(4,567) reviews', size: 14.0),
+                        poppinsText(
+                            text:
+                                '(${widget.package.packageReviews!.length}) reviews',
+                            size: 14.0),
                         const Expanded(child: SizedBox()),
                         poppinsText(
                           text: "See All",
@@ -276,41 +224,44 @@ class _PackageDetailsState extends State<PackageDetails> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           poppinsText(
-                                              text: i == 0
-                                                  ? "Jenny Wilson"
-                                                  : i == 1
-                                                      ? "Guy Hawkins"
-                                                      : "Kristin Watson",
+                                              text: widget
+                                                  .package
+                                                  .packageReviews![i]
+                                                  .reviewerName,
                                               size: 16.0),
                                           const SizedBox(height: 5),
                                           poppinsText(
-                                              text: i == 0
-                                                  ? "Dec 10, 2024"
-                                                  : i == 1
-                                                      ? "Dec 10, 2024"
-                                                      : "Dec 09, 2024",
+                                              text: DateFormat('MMM dd, yyyy')
+                                                  .format(DateTime.parse(widget
+                                                      .package
+                                                      .packageReviews![i]
+                                                      .reviewDate)),
                                               size: 12.0)
                                         ],
                                       ),
                                       const Expanded(child: SizedBox()),
                                       ratingCard(
-                                          ' 4.8 ', Constants.primaryColor),
+                                          widget.package.packageReviews![i]
+                                              .reviewRating
+                                              .toString(),
+                                          Constants.primaryColor),
                                     ],
                                   ),
                                   const SizedBox(height: 15),
-                                  poppinsText(
-                                      text: i == 0
-                                          ? "Very nice and comfortable hotel, thank you for accompanying my vacation!"
-                                          : i == 0
-                                              ? "Very beautiful hotel, my family and I are very satisfied with the service!"
-                                              : "The rooms are very comfortable and the natural views are amazing, can't wait to come back again!",
-                                      size: 14.0),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0),
+                                    child: poppinsText(
+                                        text: widget.package.packageReviews![i]
+                                            .reviewText,
+                                        size: 14.0),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 70),
                     ],
                   ),
                 )
@@ -319,29 +270,82 @@ class _PackageDetailsState extends State<PackageDetails> {
           ),
         ],
       ),
+      bottomSheet: Material(
+          elevation: 10,
+          color: Colors.white,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 75,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+              child: TealButton(
+                bgColor: Constants.primaryColor,
+                txtColor: Colors.white,
+                text: 'Book Now',
+                onPressed: () =>
+                    Get.to(ConfirmPaymentScreen(package: widget.package,), transition: Transition.fade),
+              ),
+            ),
+          )),
     );
   }
 }
 
-Widget dayWiseDetail(List<String>? daywise) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: poppinsText(text: "Day wise Itinerary", size: 20.0),
-      ),
-      ListView.builder(
-          physics: const ScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: daywise!.length,
-          itemBuilder: (context, index) {
-            return Padding(
+class DayWiseDetail extends StatefulWidget {
+  final List<String>? daywise;
+
+  const DayWiseDetail({Key? key, this.daywise}) : super(key: key);
+
+  @override
+  _DayWiseDetailState createState() => _DayWiseDetailState();
+}
+
+class _DayWiseDetailState extends State<DayWiseDetail> {
+  bool showAllItems = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: poppinsText(text: "Day wise Itinerary", size: 20.0),
+        ),
+        ListView.builder(
+            physics: const ScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: showAllItems ? widget.daywise!.length : 1,
+            itemBuilder: (context, index) {
+              return Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: poppinsText(
+                      text: '${widget.daywise![index]} \n', size: 16.0));
+            }),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              showAllItems = !showAllItems;
+            });
+          },
+          child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
-              child: poppinsText(text: '${daywise[index]} \n', size: 14.0),
-            );
-          }),
-      const SizedBox(height: 20),
-    ],
-  );
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  poppinsText(
+                      text: showAllItems ? "Show less" : "Show more",
+                      color: Constants.primaryColor,
+                      size: 16.0),
+                  Icon(
+                    showAllItems ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                    color: Constants.primaryColor,
+                  )
+                ],
+              )),
+        ),
+      ],
+    );
+  }
 }

@@ -1,8 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fyp/providers/PackageHomeProvider.dart';
+import 'package:fyp/repository/PackageRepository.dart';
+
 import 'package:fyp/screens/BottomNavBar.dart';
+import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
@@ -13,7 +21,9 @@ import '../../widgets/tealButton.dart';
 import 'FillYourProfile.dart';
 
 class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+  SignUp({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -29,14 +39,13 @@ class _SignUpState extends State<SignUp> {
   bool validateConfirmPassword = true;
   bool isLoading = false;
   bool isLoadingGoogle = false;
+
+  AuthNetwork authNetwork = AuthNetwork();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: ListView(
         shrinkWrap: true,
         physics: const ClampingScrollPhysics(),
@@ -46,6 +55,7 @@ class _SignUpState extends State<SignUp> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 30),
                 poppinsText(
                   text: "Create your\nAccount",
                   size: 48.0,
@@ -123,33 +133,57 @@ class _SignUpState extends State<SignUp> {
                       )
                     : TealButton(
                         text: "Sign up",
+                        bgColor: Constants.primaryColor,
+                        txtColor: Colors.white,
                         onPressed: () async {
                           if (validateTextFields()) {
                             setState(() => isLoading = true);
-
+                            PackageRepository packageRepository =
+                                PackageRepository();
                             if ((_password.text.isNotEmpty &&
                                     _confirmPassword.text.isNotEmpty) &&
                                 (_password.text == _confirmPassword.text)) {
                               await AuthNetwork.createNewUser(
                                       email: _email.text,
-                                      password: _password.text)
-                                  .then((_) {
+                                      password: _password.text,
+                                      role: "Traveler")
+                                  .then((_) async {
+                                context.read<PackageHomeProvider>().packages =
+                                   await packageRepository.getAllPackages();
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => const FillYourProfile(),
                                 ));
                               }).catchError((e) {
-                                authErrorDialog(e.code, context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: poppinsText(
+                                        text: e.code,
+                                        color: Colors.white,
+                                        size: 16.0,
+                                        fontBold: FontWeight.w400),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
                                 setState(() => isLoading = false);
                               });
                             } else {
-                              authErrorDialog("passwords-not-match", context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: poppinsText(
+                                      text: 'Passwords-do-not-match',
+                                      color: Colors.white,
+                                      size: 16.0,
+                                      fontBold: FontWeight.w400),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             }
 
                             setState(() => isLoading = false);
 
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const FillYourProfile(),
-                            ));
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //   builder: (context) => const FillYourProfile(),
+                            // ));
                           }
                           // Navigator.of(context).push(MaterialPageRoute(
                           //   builder: (context) => const FillYourProfile(),
@@ -183,7 +217,9 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
 
-                const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
 
                 isLoadingGoogle
                     ? const Center(
@@ -216,15 +252,50 @@ class _SignUpState extends State<SignUp> {
                         onTap: () async {
                           setState(() => isLoadingGoogle = true);
 
-                          var exists = await AuthNetwork.signInWithGoogle();
+                          // var exists = await AuthNetwork.signInWithGoogle();
 
-                          exists
-                              ? Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const BottomNavBar(),
-                                ))
-                              : Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const FillYourProfile(),
-                                ));
+                          // exists
+                          //     ? Navigator.of(context).push(MaterialPageRoute(
+                          //         builder: (context) => const BottomNavBar(),
+                          //       ))
+                          //     : Navigator.of(context).push(MaterialPageRoute(
+                          //         builder: (context) => const FillYourProfile(),
+                          //       ));
+                          try {
+                            final UserCredential? userCredential =
+                                await authNetwork.signInWithGoogle();
+                            if (userCredential != null) {
+                              final bool isNewUser = userCredential
+                                      .additionalUserInfo?.isNewUser ??
+                                  false;
+
+                              if (isNewUser) {
+                                Get.to(FillYourProfile(),
+                                    transition: Transition.fade);
+                              } else {
+                                PackageRepository packageRepository =
+                                    PackageRepository();
+                                context.read<PackageHomeProvider>().packages =
+                                    await packageRepository.getAllPackages();
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => Home2(),
+                                  ),
+                                );
+                              }
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: poppinsText(
+                                    text: e.message,
+                                    color: Colors.white,
+                                    size: 16.0,
+                                    fontBold: FontWeight.w400),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                           setState(() => isLoadingGoogle = false);
                         },
                       ),

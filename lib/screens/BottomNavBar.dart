@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Home2.dart';
+import 'profile/profile.dart';
 import 'bookings/Bookings.dart';
-import 'profile/Profile.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -34,31 +35,40 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: SalomonBottomBar(
-          currentIndex: _currentIndex,
-          onTap: onTabTapped,
-          items: [
-            SalomonBottomBarItem(
-              icon: const Icon(Icons.home),
-              title: const Text("Home"),
-              selectedColor: Colors.teal,
-            ),
-            SalomonBottomBarItem(
-              icon: const Icon(Icons.library_books),
-              title: const Text("Bookings"),
-              selectedColor: Colors.teal,
-            ),
-            SalomonBottomBarItem(
-              icon: const Icon(Icons.person),
-              title: const Text("Profile"),
-              selectedColor: Colors.teal,
-            ),
-          ]),
-      body: PageView(
-        onPageChanged: onPageChanged,
-        controller: _pageController,
-        children: tabPages,
+    return WillPopScope(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: Scaffold(
+        bottomNavigationBar: SalomonBottomBar(
+            currentIndex: _currentIndex,
+            onTap: onTabTapped,
+            items: [
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.home),
+                title: const Text("Home"),
+                selectedColor: Colors.teal,
+                unselectedColor: Colors.teal
+              ),
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.library_books),
+                title: const Text("Bookings"),
+                selectedColor: Colors.teal,
+                unselectedColor: Colors.teal
+              ),
+              SalomonBottomBarItem(
+                icon: const Icon(Icons.person),
+                title: const Text("Profile"),
+                selectedColor: Colors.teal,
+                unselectedColor: Colors.teal
+              ),
+            ]),
+        body: PageView(
+          onPageChanged: onPageChanged,
+          controller: _pageController,
+          children: tabPages,
+        ),
       ),
     );
   }

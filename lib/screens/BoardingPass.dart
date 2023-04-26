@@ -108,7 +108,6 @@ class _BoardingPassState extends State<BoardingPass> {
                           ],
                         ),
                       ),
-
                       const SizedBox(
                         height: 10,
                       ),
@@ -154,7 +153,6 @@ class _BoardingPassState extends State<BoardingPass> {
                                   fontBold: FontWeight.w400),
                             ]),
                       ),
-
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 10),
                         child: Row(
@@ -167,9 +165,7 @@ class _BoardingPassState extends State<BoardingPass> {
                           ],
                         ),
                       ),
-
                       const SizedBox(height: 10),
-
                       Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
@@ -276,6 +272,8 @@ class _BoardingPassState extends State<BoardingPass> {
                     builder: (context) => Home2(),
                   ));
                 },
+                bgColor: Constants.primaryColor,
+                txtColor: Colors.white,
               ),
             ),
             const SizedBox(height: 20),

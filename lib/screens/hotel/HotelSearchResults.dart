@@ -60,7 +60,9 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios,
-                    size: 25, color: Colors.black87),
+
+                    size: 25, color: Constants.primaryColor),
+
                 onPressed: () {
                   Clear();
                   Navigator.of(context).pop();
@@ -92,228 +94,374 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
               centerTitle: true,
             ),
             key: scaffoldState,
-            body: (context.watch<HotelSearchProvider>().errorMessage == '' &&
-                    context.watch<HotelSearchProvider>().hotels.isEmpty)
-                ? lottieLoader()
-                : (context.watch<HotelSearchProvider>().errorMessage != '' &&
+            body:
+                (context.watch<HotelSearchProvider>().errorMessage == '' &&
                         context.watch<HotelSearchProvider>().hotels.isEmpty)
-                    ? Center(
-                        child: poppinsText(
-                            text: context
-                                .read<HotelSearchProvider>()
-                                .errorMessage,
-                            size: 20.0))
-                    : WillPopScope(
-                        onWillPop: () async {
-                          Clear();
-                          return true;
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 20,
-                                right: 20,
-                                top: 10,
-                              ),
-                              child: Row(
-                                children: [
-                                  poppinsText(
-                                      text: context
-                                              .read<HotelSearchProvider>()
-                                              .hotels
-                                              .isNotEmpty
-                                          ? 'Found (${filteredHotels.isEmpty ? hotelProvider.hotels.length.toString() : filteredHotels.length.toString()})'
-                                          : '',
-                                      color: Constants.secondaryColor,
-                                      fontBold: FontWeight.w500),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: filteredHotels.isEmpty
-                                    ? hotelProvider.hotels.length
-                                    : filteredHotels.length,
-                                physics: const ClampingScrollPhysics(),
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 20, bottom: 80),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Get.to(
-                                        HotelSearchDetails(
-                                          property: filteredHotels.isEmpty
-                                              ? hotelProvider.hotels[index]
-                                              : filteredHotels[index],
-                                        ),
-                                        transition: Transition.rightToLeft,
+                    ? lottieLoader()
+                    : (context.watch<HotelSearchProvider>().errorMessage !=
+                                '' &&
+                            context.watch<HotelSearchProvider>().hotels.isEmpty)
+                        ? Center(
+                            child: poppinsText(
+                                text: context
+                                    .read<HotelSearchProvider>()
+                                    .errorMessage,
+                                size: 20.0))
+                        : WillPopScope(
+                            onWillPop: () async {
+                              Clear();
+                              return true;
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 20,
+                                    right: 20,
+                                    top: 10,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      poppinsText(
+                                          text: context
+                                                  .read<HotelSearchProvider>()
+                                                  .hotels
+                                                  .isNotEmpty
+                                              ? 'Found (${filteredHotels.isEmpty ? hotelProvider.hotels.length.toString() : filteredHotels.length.toString()})'
+                                              : '',
+                                          color: Constants.secondaryColor,
+                                          fontBold: FontWeight.w500),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: filteredHotels.isEmpty
+                                        ? hotelProvider.hotels.length
+                                        : filteredHotels.length,
+                                    physics: const ClampingScrollPhysics(),
+                                    padding: const EdgeInsets.only(
+                                        left: 20, right: 20, bottom: 80),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Get.to(
+                                            HotelSearchDetails(
+                                              property: filteredHotels.isEmpty
+                                                  ? hotelProvider.hotels[index]
+                                                  : filteredHotels[index],
+                                            ),
+                                            transition: Transition.rightToLeft,
+                                          );
+                                        },
+                                        child:
+                                            hotelProvider.hotels[index]
+                                                        .propertyImage !=
+                                                    null && hotelProvider.hotels[index].price!.options!.isNotEmpty
+                                                ? Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 25),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey
+                                                            .withOpacity(0.1),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(16),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(14.0),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              height: 120,
+                                                              width: 120,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20.0),
+                                                                image:
+                                                                    DecorationImage(
+                                                                  image:
+                                                                      NetworkImage(
+                                                                    filteredHotels
+                                                                            .isEmpty
+                                                                        ? (hotelProvider.hotels[index].propertyImage != null && hotelProvider.hotels[index].propertyImage!.image != null
+                                                                            ? hotelProvider
+                                                                                .hotels[
+                                                                                    index]
+                                                                                .propertyImage!
+                                                                                .image!
+                                                                                .url!
+                                                                            : 'https://www.creativefabrica.com/wp-content/uploads/2021/03/20/Travel-icon-hotel-design-black-line-art-Graphics-9793034-1.jpg')
+                                                                        : (filteredHotels[index].propertyImage != null &&
+                                                                                filteredHotels[index].propertyImage!.image != null
+                                                                            ? filteredHotels[index].propertyImage!.image!.url!
+                                                                            : 'https://www.creativefabrica.com/wp-content/uploads/2021/03/20/Travel-icon-hotel-design-black-line-art-Graphics-9793034-1.jpg'),
+                                                                  ),
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 10),
+                                                            Expanded(
+                                                              flex: 4,
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  poppinsText(
+                                                                      text: filteredHotels
+                                                                              .isEmpty
+                                                                          ? hotelProvider
+                                                                              .hotels[
+                                                                                  index]
+                                                                              .name
+                                                                          : filteredHotels[index]
+                                                                              .name,
+                                                                      fontBold:
+                                                                          FontWeight
+                                                                              .w700,
+                                                                      size:
+                                                                          18.0),
+                                                                  poppinsText(
+                                                                      text: hotelProvider
+                                                                          .to
+                                                                          .city,
+                                                                      size:
+                                                                          14.0,
+                                                                      color: const Color(
+                                                                          0xff757575)),
+                                                                  Row(
+                                                                    children: [
+                                                                      const Icon(
+                                                                        Icons
+                                                                            .star,
+                                                                        color: Color(
+                                                                            0xffFFD300),
+                                                                        size:
+                                                                            15,
+                                                                      ),
+                                                                      poppinsText(
+                                                                          text: filteredHotels.isEmpty
+                                                                              ? hotelProvider.hotels[index].reviews!.score.toString()
+                                                                              : filteredHotels[index].reviews!.score.toString(),
+                                                                          size: 14.0,
+                                                                          color: Constants.primaryColor,
+                                                                          fontBold: FontWeight.w500),
+                                                                      poppinsText(
+                                                                          text:
+                                                                              ' (${filteredHotels.isEmpty ? hotelProvider.hotels[index].reviews!.total.toString() : filteredHotels[index].reviews!.total.toString()} reviews)'),
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .end,
+                                                                children: [
+                                                                  poppinsText(
+                                                                      text: filteredHotels
+                                                                              .isEmpty
+                                                                          ? hotelProvider.hotels[index].price!.options!.isEmpty
+                                                                              ? '\$XX'
+                                                                              : hotelProvider.hotels[index].price!.options![0].formattedDisplayPrice.toString()
+                                                                          : filteredHotels[index].price!.options!.isEmpty
+                                                                              ? '\$XX'
+                                                                              : filteredHotels[index].price!.options![0].formattedDisplayPrice.toString(),
+                                                                      size: 16.0,
+                                                                      color: Constants.primaryColor,
+                                                                      fontBold: FontWeight.w600),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          8),
+                                                                  poppinsText(
+                                                                      text:
+                                                                          "/night",
+                                                                      size:
+                                                                          10.0,
+                                                                      color: Color(
+                                                                          0xff757575),
+                                                                      fontBold:
+                                                                          FontWeight
+                                                                              .w400),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20),
+                                                                ],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
                                       );
                                     },
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 25),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(14.0),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                height: 120,
-                                                width: 120,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0),
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        filteredHotels.isEmpty
-                                                            ? hotelProvider
-                                                                .hotels[index]
-                                                                .propertyImage!
-                                                                .image!
-                                                                .url!
-                                                            : filteredHotels[
-                                                                    index]
-                                                                .propertyImage!
-                                                                .image!
-                                                                .url!),
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 10),
-                                              Expanded(
-                                                flex: 4,
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    poppinsText(
-                                                        text: filteredHotels
-                                                                .isEmpty
-                                                            ? hotelProvider
-                                                                .hotels[index]
-                                                                .name
-                                                            : filteredHotels[
-                                                                    index]
-                                                                .name,
-                                                        fontBold:
-                                                            FontWeight.w700,
-                                                        size: 18.0),
-                                                    poppinsText(
-                                                        text: hotelProvider
-                                                            .to.city,
-                                                        size: 14.0,
-                                                        color: const Color(
-                                                            0xff757575)),
-                                                    Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.star,
-                                                          color:
-                                                              Color(0xffFFD300),
-                                                          size: 15,
-                                                        ),
-                                                        poppinsText(
-                                                            text: filteredHotels
-                                                                    .isEmpty
-                                                                ? hotelProvider
-                                                                    .hotels[
-                                                                        index]
-                                                                    .reviews!
-                                                                    .score
-                                                                    .toString()
-                                                                : filteredHotels[
-                                                                        index]
-                                                                    .reviews!
-                                                                    .score
-                                                                    .toString(),
-                                                            size: 14.0,
-                                                            color: Constants
-                                                                .primaryColor,
-                                                            fontBold: FontWeight
-                                                                .w500),
-                                                        poppinsText(
-                                                            text:
-                                                                ' (${filteredHotels.isEmpty ? hotelProvider.hotels[index].reviews!.total.toString() : filteredHotels[index].reviews!.total.toString()} reviews)'),
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    poppinsText(
-                                                        text: filteredHotels
-                                                                .isEmpty
-                                                            ? hotelProvider
-                                                                    .hotels[
-                                                                        index]
-                                                                    .price!
-                                                                    .options!
-                                                                    .isEmpty
-                                                                ? '\$XX'
-                                                                : hotelProvider
-                                                                    .hotels[
-                                                                        index]
-                                                                    .price!
-                                                                    .options![0]
-                                                                    .formattedDisplayPrice
-                                                                    .toString()
-                                                            : filteredHotels[
-                                                                        index]
-                                                                    .price!
-                                                                    .options!
-                                                                    .isEmpty
-                                                                ? '\$XX'
-                                                                : filteredHotels[
-                                                                        index]
-                                                                    .price!
-                                                                    .options![0]
-                                                                    .formattedDisplayPrice
-                                                                    .toString(),
-                                                        size: 16.0,
-                                                        color: Constants
-                                                            .primaryColor,
-                                                        fontBold:
-                                                            FontWeight.w600),
-                                                    const SizedBox(height: 8),
-                                                    poppinsText(
-                                                        text: "/night",
-                                                        size: 10.0,
-                                                        color:
-                                                            Color(0xff757575),
-                                                        fontBold:
-                                                            FontWeight.w400),
-                                                    const SizedBox(height: 20),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+
+                                  ),
+                                ),
+                                // Expanded(
+                                //   child: (context.watch<HotelSearchProvider>().hotels.isEmpty)
+                                //       ? lottieLoader()
+                                //       : context.read<HotelSearchProvider>().hotels.length == 0
+                                //           ? Center(
+                                //               child:
+                                //                   poppinsText(text: 'Not Found', size: 30.0))
+                                //           : ListView.builder(
+                                //               itemCount: hotelProvider.hotels.length,
+                                //               physics: const ClampingScrollPhysics(),
+                                //               padding: const EdgeInsets.only(
+                                //                   left: 20, right: 20, bottom: 80),
+                                //               itemBuilder: (BuildContext context, int index) {
+                                //                 return InkWell(
+                                //                   onTap: () {
+                                //                     Get.to(
+                                //                       Details(
+                                //                         detailsType: 'hotel',
+                                //                         property: hotelProvider.hotels[index],
+                                //                       ),
+                                //                       transition: Transition.rightToLeft,
+                                //                     );
+                                //                   },
+                                //                   child: Padding(
+                                //                     padding:
+                                //                         const EdgeInsets.only(bottom: 25),
+                                //                     child: Container(
+                                //                       decoration: BoxDecoration(
+                                //                         color: Colors.grey.withOpacity(0.1),
+                                //                         borderRadius:
+                                //                             BorderRadius.circular(16),
+                                //                       ),
+                                //                       child: Padding(
+                                //                         padding: const EdgeInsets.all(14.0),
+                                //                         child: Row(
+                                //                           children: [
+                                //                             Container(
+                                //                               height: 100,
+                                //                               width: 100,
+                                //                               decoration: BoxDecoration(
+                                //                                 image: DecorationImage(
+                                //                                   image: NetworkImage(
+                                //                                       hotelProvider
+                                //                                           .hotels[index]
+                                //                                           .propertyImage!
+                                //                                           .image!
+                                //                                           .url!),
+                                //                                   fit: BoxFit.fill,
+                                //                                 ),
+                                //                               ),
+                                //                             ),
+                                //                             const SizedBox(width: 10),
+                                //                             Expanded(
+                                //                               flex: 4,
+                                //                               child: Column(
+                                //                                 mainAxisAlignment:
+                                //                                     MainAxisAlignment.center,
+                                //                                 crossAxisAlignment:
+                                //                                     CrossAxisAlignment.start,
+                                //                                 children: [
+                                //                                   poppinsText(
+                                //                                       text: hotelProvider
+                                //                                           .hotels[index].name,
+                                //                                       fontBold:
+                                //                                           FontWeight.w700,
+                                //                                       size: 18.0),
+                                //                                   const SizedBox(height: 15),
+                                //                                   poppinsText(
+                                //                                       text: hotelProvider
+                                //                                           .to.city,
+                                //                                       size: 14.0,
+                                //                                       color: const Color(
+                                //                                           0xff757575)),
+                                //                                   const SizedBox(height: 15),
+                                //                                   Row(
+                                //                                     children: [
+                                //                                       const Icon(
+                                //                                         Icons.star,
+                                //                                         color:
+                                //                                             Color(0xffFFD300),
+                                //                                         size: 15,
+                                //                                       ),
+                                //                                       poppinsText(
+                                //                                           text: hotelProvider
+                                //                                               .hotels[index]
+                                //                                               .reviews!
+                                //                                               .score
+                                //                                               .toString(),
+                                //                                           size: 14.0,
+                                //                                           color: Constants
+                                //                                               .primaryColor),
+                                //                                       poppinsText(
+                                //                                           text:
+                                //                                               ' ${hotelProvider.hotels[index].reviews!.total.toString()} reviews'),
+                                //                                     ],
+                                //                                   )
+                                //                                 ],
+                                //                               ),
+                                //                             ),
+                                //                             Expanded(
+                                //                               child: Column(
+                                //                                 crossAxisAlignment:
+                                //                                     CrossAxisAlignment.end,
+                                //                                 children: [
+                                //                                   poppinsText(
+                                //                                       text: hotelProvider
+                                //                                               .hotels[index]
+                                //                                               .price!
+                                //                                               .options!
+                                //                                               .isEmpty
+                                //                                           ? '\$XX'
+                                //                                           : hotelProvider
+                                //                                               .hotels[index]
+                                //                                               .price!
+                                //                                               .options![0]
+                                //                                               .formattedDisplayPrice
+                                //                                               .toString(),
+                                //                                       size: 16.0,
+                                //                                       color: Constants
+                                //                                           .primaryColor),
+                                //                                   const SizedBox(height: 8),
+                                //                                   poppinsText(
+                                //                                       text: "/night",
+                                //                                       size: 10.0,
+                                //                                       color:
+                                //                                           Color(0xff757575)),
+                                //                                   const SizedBox(height: 20),
+                                //                                 ],
+                                //                               ),
+                                //                             )
+                                //                           ],
+                                //                         ),
+                                //                       ),
+                                //                     ),
+                                //                   ),
+                                //                 );
+                                //               },
+                                //             ),
+                                // )
+                              ],
                             ),
-                          ],
-                        ),
-                      ),),);
+                          )));
+
   }
 }
 

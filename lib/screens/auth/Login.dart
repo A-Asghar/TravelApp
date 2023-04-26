@@ -1,9 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fyp/providers/PackageHomeProvider.dart';
+import 'package:fyp/providers/UserProvider.dart';
+import 'package:fyp/repository/PackageRepository.dart';
+
 import 'package:fyp/screens/BottomNavBar.dart';
+import 'package:fyp/screens/Home2.dart';
 import 'package:fyp/screens/auth/ForgotPassword.dart';
 import 'package:fyp/screens/auth/SignUp.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Constants.dart';
@@ -29,6 +39,8 @@ class _LoginState extends State<Login> {
   bool validateEmail = true;
   bool validatePassword = true;
 
+  AuthNetwork authNetwork = AuthNetwork();
+
   @override
   void initState() {
     super.initState();
@@ -39,10 +51,6 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: ListView(
         physics: const ClampingScrollPhysics(),
         children: [
@@ -51,6 +59,7 @@ class _LoginState extends State<Login> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 30),
                 // Heading
                 poppinsText(
                   text: "Login to your\nAccount",
@@ -139,28 +148,56 @@ class _LoginState extends State<Login> {
                       )
                     : TealButton(
                         text: "Sign in",
+                        bgColor: Constants.primaryColor,
+                        txtColor: Colors.white,
                         onPressed: () async {
-                          if (validateTextFields()) {
-                            setState(() => isLoading = true);
+                          final UserProvider controller =
+                              Get.put(UserProvider());
+                          PackageRepository packageRepository =
+                              PackageRepository();
+                          try {
+                            if (validateTextFields()) {
+                              setState(() => isLoading = true);
 
-                            await AuthNetwork.login(
-                                    email: _email.text,
-                                    password: _password.text)
-                                .then((_) {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const BottomNavBar(),
-                              ));
-                            }).catchError((e) {
-                              print(e.code);
-                              authErrorDialog(e.code, context);
-                              setState(() => isLoading = false);
-                            });
+                              await AuthNetwork.login(
+                                  email: _email.text, password: _password.text);
 
+                              print(controller.user);
+                              if (controller.user!.role == 'Traveler') {
+                                context.read<PackageHomeProvider>().packages =
+                                   await packageRepository.getAllPackages();
+                                setState(() => isLoading = false);
+                                Get.to(BottomNavBar(),
+                                    transition: Transition.fade);
+                              } else {
+                                setState(() => isLoading = false);
+                                FirebaseAuth.instance.signOut();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: poppinsText(
+                                        text:
+                                            "An agency is linked with this account. Please sign in with a different account or create a new one",
+                                        color: Colors.white,
+                                        size: 16.0,
+                                        fontBold: FontWeight.w400),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                Get.to(Login(), transition: Transition.fade);
+                              }
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: poppinsText(
+                                    text: e.message,
+                                    color: Colors.white,
+                                    size: 16.0,
+                                    fontBold: FontWeight.w400),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                             setState(() => isLoading = false);
-
-                            // Navigator.of(context).push(MaterialPageRoute(
-                            //   builder: (context) => const BottomNavBar(),
-                            // ));
                           }
                         },
                       ),
@@ -222,17 +259,79 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         onTap: () async {
+                          final UserProvider controller =
+                              Get.put(UserProvider());
                           setState(() => isLoadingGoogle = true);
 
-                          var exists = await AuthNetwork.signInWithGoogle();
+                          // var exists = await authNetwork.signInWithGoogle();
 
-                          exists
-                              ? Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const BottomNavBar(),
-                                ))
-                              : Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const FillYourProfile(),
-                                ));
+                          // if (exists && controller.user!.role == "Agency") {
+                          //   context.read<PackageProvider>().agencyPackages =
+                          //       await packageNetwork.fetchAgencyPackages(
+                          //           FirebaseAuth.instance.currentUser!.uid);
+                          //   context.read<PackageProvider>().allPackages =
+                          //       await packageNetwork.fetchPackages();
+                          //   Get.to(BottomNavBar(), transition: Transition.fade);
+                          // } else if (exists &&
+                          //     controller.user!.role == "Traveler") {
+                          //   FirebaseAuth.instance.signOut();
+                          //   Get.to(Login(), transition: Transition.fade);
+                          //   setState(() => isLoadingGoogle = false);
+                          // } else {
+                          //   Get.to(FillYourProfile(),
+                          //       transition: Transition.fade);
+                          // }
+                          try {
+                            final UserCredential? userCredential =
+                                await authNetwork.signInWithGoogle();
+                            if (userCredential != null) {
+                              final User user = userCredential.user!;
+                              final bool isNewUser = userCredential
+                                      .additionalUserInfo?.isNewUser ??
+                                  false;
+
+                              if (isNewUser) {
+                                Get.to(FillYourProfile(),
+                                    transition: Transition.fade);
+                              } else {
+                                PackageRepository packageRepository =
+                                    PackageRepository();
+                                if (controller.user!.role == "Traveler") {
+                                  context.read<PackageHomeProvider>().packages =
+                                     await packageRepository.getAllPackages();
+                                  Get.to(BottomNavBar(),
+                                      transition: Transition.fade);
+                                } else if (controller.user!.role == "Agency") {
+                                  FirebaseAuth.instance.signOut();
+                                  await GoogleSignIn().signOut();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: poppinsText(
+                                          text:
+                                              "An agency is linked with this account. Please sign in with a different account or create a new one",
+                                          color: Colors.white,
+                                          size: 16.0,
+                                          fontBold: FontWeight.w400),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  Get.to(Login(), transition: Transition.fade);
+                                  setState(() => isLoadingGoogle = false);
+                                }
+                              }
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: poppinsText(
+                                    text: e.message,
+                                    color: Colors.white,
+                                    size: 16.0,
+                                    fontBold: FontWeight.w400),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
                           setState(() => isLoadingGoogle = false);
                         },
                       ),
@@ -242,8 +341,8 @@ class _LoginState extends State<Login> {
                 // Don't have an account
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const SignUp()));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => SignUp()));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -319,6 +418,40 @@ class _LoginState extends State<Login> {
         });
         _email.text = _emailText;
         _password.text = _passwordText;
+
+        final UserProvider controller = Get.put(UserProvider());
+        PackageRepository packageRepository = PackageRepository();
+
+        setState(() => isLoading = true);
+        await AuthNetwork.login(email: _email.text, password: _password.text)
+            .then((_) async {
+          print(controller.user);
+          if (controller.user!.role == 'Traveler') {
+            setState(() => isLoading = false);
+            context.read<PackageHomeProvider>().packages =
+               await packageRepository.getAllPackages();
+            Get.to(BottomNavBar(), transition: Transition.fade);
+          } else {
+            setState(() => isLoading = false);
+            FirebaseAuth.instance.signOut();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: poppinsText(
+                    text:
+                        "An agency is linked with this account. Please sign in with a different account or create a new one",
+                    color: Colors.white,
+                    size: 16.0,
+                    fontBold: FontWeight.w400),
+                backgroundColor: Colors.red,
+              ),
+            );
+            Get.to(Login(), transition: Transition.fade);
+          }
+        }).catchError((e) {
+          setState(() => isLoading = false);
+          print(e.code);
+          authErrorDialog(e.code, context);
+        });
       }
     } catch (e) {
       print(e);

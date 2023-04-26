@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/models/Package.dart';
+import 'package:fyp/models/PropertySearchListings.dart';
+import 'package:fyp/models/PropertyUnits.dart';
+import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:provider/provider.dart';
 
 class CardView extends StatelessWidget {
-  const CardView({Key? key}) : super(key: key);
+  CardView({Key? key, this.package, this.unit, this.property})
+      : super(key: key);
+
+  Package? package;
+  Unit? unit;
+  PropertySearchListing? property;
 
   @override
   Widget build(BuildContext context) {
+    var hotelProvider = context.watch<HotelSearchProvider>();
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -23,10 +34,13 @@ class CardView extends StatelessWidget {
             Container(
               height: 100,
               width: 100,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
                 image: DecorationImage(
-                  image: AssetImage(
-                    "assets/images/d5.png",
+                  image: NetworkImage(
+                    package != null
+                        ? package!.imgUrls[0]
+                        : unit!.unitGallery!.gallery![0].image!.url!,
                   ),
                   fit: BoxFit.fill,
                 ),
@@ -40,19 +54,23 @@ class CardView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Palazzo Versace",
+                    package != null
+                        ? package!.packageName
+                        : unit!.header!.text!,
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
                   ),
                   const SizedBox(height: 15),
                   Text(
-                    "Rome, Italia",
+                    package != null
+                        ? package!.destination
+                        : hotelProvider.to.city,
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontSize: 14,
-                      color: const Color(0xff757575),
-                    ),
+                          fontSize: 14,
+                          color: const Color(0xff757575),
+                        ),
                   ),
                   const SizedBox(height: 15),
                   Row(
@@ -63,18 +81,20 @@ class CardView extends StatelessWidget {
                         size: 15,
                       ),
                       Text(
-                        "  4.8  ",
+                        package != null
+                            ? package!.rating.toString()
+                            : property!.reviews!.score.toString(),
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 14,
-                          color: Colors.teal,
-                        ),
+                              fontSize: 14,
+                              color: Colors.teal,
+                            ),
                       ),
-                      Text(
-                        "(3,672 reviews)",
+                      Text( package != null ?
+                        "(${package!.packageReviews!.length} reviews)" : "(${hotelProvider.hotelReviews.length} reviews)",
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 14,
-                          color: const Color(0xff757575),
-                        ),
+                              fontSize: 14,
+                              color: const Color(0xff757575),
+                            ),
                       ),
                     ],
                   )
