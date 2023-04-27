@@ -4,11 +4,9 @@ import 'package:fyp/Constants.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
-import 'package:fyp/screens/ConfirmPayment.dart';
 import 'package:fyp/screens/FullScreenImagePage.dart';
 import 'package:fyp/screens/HotelGallery.dart';
 import 'package:fyp/screens/Reviews.dart';
-import 'package:fyp/screens/WeatherScreen.dart';
 import 'package:fyp/screens/hotel/RoomDetails.dart';
 import 'package:fyp/widgets/back_button.dart';
 import 'package:fyp/widgets/errorSnackBar.dart';
@@ -19,7 +17,6 @@ import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/ratingCard.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class HotelSearchDetails extends StatefulWidget {

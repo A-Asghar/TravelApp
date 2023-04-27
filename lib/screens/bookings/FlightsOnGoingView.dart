@@ -1,12 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../Constants.dart';
 import '../../network/BookingNetwork.dart';
-import '../../widgets/customButton.dart';
 import '../../widgets/poppinsText.dart';
-import 'CancelBookingScreen.dart';
 
 class FlightsOnGoingView extends StatefulWidget {
   const FlightsOnGoingView({Key? key}) : super(key: key);
@@ -24,12 +21,6 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
   bool isLoading = false;
   List bookingsFromFirebase = [];
 
-  /** TODO : Moiz Cancel aur View Ticket k button hatado
-   * bookingsFromFirebase wali list se cheeezein utha kar bas ui pe show karni hai
-   * background color ko sahi kardena, Constants.secondaryColor.withOpacity(0.1)
-   * Check lagadena agar bookingsFromFirebase empty ho to No Bookings Yet! display karade
-   * isLoading true hai to Center(child:CircularProgressIndicator()) varna list empty check phir empty nae hai to list items show */
-
   getTravelerBookings() async {
     setState(() => isLoading = true);
     BookingNetwork bookingNetwork = BookingNetwork();
@@ -37,15 +28,17 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
         travelerId: FirebaseAuth.instance.currentUser?.uid);
     bookingsFromFirebase = snapshot.docs.map((doc) => doc.data()).toList();
 
-    print(bookingsFromFirebase);
     setState(() => isLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return isLoading
+        ? Center(child: CircularProgressIndicator(),)
+        : bookingsFromFirebase.isEmpty ? Center(
+        child: poppinsText(text: "No Bookings Yet!")) : Expanded(
       child: ListView.builder(
-        itemCount: 4,
+        itemCount: bookingsFromFirebase.length,
         padding: const EdgeInsets.only(bottom: 60),
         physics: const ClampingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
@@ -53,7 +46,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
             padding: const EdgeInsets.only(bottom: 20),
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).appBarTheme.backgroundColor,
+                color: Constants.secondaryColor.withOpacity(0.05) ,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -97,7 +90,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 2),
                                   child: poppinsText(
-                                    text: '2 hrs',
+                                    text: bookingsFromFirebase[index]['flightDuration'],
                                     // text: '${Constants.minutesToDuration(flight.segments.last.arrival.at.difference(flight.segments[0].departure.at).inMinutes)}',
                                     color: Constants.secondaryColor,
                                   ),
@@ -117,7 +110,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                 children: [
                                   // Departure Time
                                   poppinsText(
-                                      text: '15:00',
+                                      text: bookingsFromFirebase[index]['fromTime'],
                                       size: 22.0,
                                       fontBold: FontWeight.w400),
                                   const Expanded(
@@ -147,7 +140,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
 
                                   // Arrival Time
                                   poppinsText(
-                                      text: '17:00',
+                                      text: bookingsFromFirebase[index]['toTime'],
                                       size: 22.0,
                                       fontBold: FontWeight.w400),
                                 ]),
@@ -159,10 +152,10 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 poppinsText(
-                                    text: 'Khi',
+                                    text: bookingsFromFirebase[index]['fromCity'],
                                     color: Constants.secondaryColor),
                                 poppinsText(
-                                    text: 'Dubai',
+                                    text: bookingsFromFirebase[index]['toCity'],
                                     color: Constants.secondaryColor),
                               ],
                             ),
@@ -187,7 +180,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                                     ),
                                     const SizedBox(width: 5),
                                     poppinsText(
-                                        text: 'cabin',
+                                        text: bookingsFromFirebase[index]['cabin'],
                                         color: Constants.secondaryColor,
                                         size: 14.0,
                                         fontBold: FontWeight.w500)
@@ -196,15 +189,13 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
 
                                 const Spacer(),
 
-                                poppinsText(
-                                    text: 'From',
-                                    color: Constants.secondaryColor),
+
                                 const SizedBox(
                                   width: 10,
                                 ),
                                 // Trip Price
                                 poppinsText(
-                                    text: '\$200  ',
+                                    text: "\$" + bookingsFromFirebase[index]['price'],
                                     color: Constants.secondaryColor,
                                     fontBold: FontWeight.w600,
                                     size: 20.0),
@@ -219,138 +210,7 @@ class _FlightsOnGoingViewState extends State<FlightsOnGoingView> {
                     // const SizedBox(height: 15),
                     Row(
                       children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Get.bottomSheet(
-                                Container(
-                                  height: 310,
-                                  width: Get.width,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(40),
-                                      topRight: Radius.circular(40),
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20, right: 20),
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: 20),
-                                        Text(
-                                          "Cancel Booking",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(
-                                                fontSize: 24,
-                                                color: const Color(0xffF75555),
-                                              ),
-                                        ),
-                                        const SizedBox(height: 10),
-                                        const Divider(color: Color(0xffEEEEEE)),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          "Are you sure you want to cancel your flight\nbooking?",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1!
-                                              .copyWith(
-                                                fontSize: 16,
-                                                height: 1.6,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          "Only 80% of the money you can refund from your payment according to our policy",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption!
-                                              .copyWith(
-                                                fontSize: 14,
-                                                height: 1.6,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        const SizedBox(height: 30),
-                                        Row(
-                                          children: [
-                                            CustomButton(
-                                              text: "Cancel",
-                                              bgColor: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1!
-                                                  .color!
-                                                  .withOpacity(0.1),
-                                              textColor: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText1!
-                                                  .color,
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                            const SizedBox(width: 15),
-                                            CustomButton(
-                                              text: "Yes, Continue",
-                                              onTap: () {
-                                                Get.to(
-                                                  const CancelBookingScreen(),
-                                                  transition:
-                                                      Transition.rightToLeft,
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              height: 38,
-                              width: Get.width,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Constants.primaryColor),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Center(
-                                child: poppinsText(
-                                  text: "Cancel Booking",
-                                  size: 16.0,
-                                  color: Constants.primaryColor,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {},
-                            child: Container(
-                              height: 38,
-                              width: Get.width,
-                              decoration: BoxDecoration(
-                                color: Constants.primaryColor,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Center(
-                                child: poppinsText(
-                                  text: "View Ticket",
-                                  size: 16.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
+                        poppinsText(text: "   Booked On : ${bookingsFromFirebase[index]['bookingDate']}",size: 22.0, fontBold: FontWeight.w500)
                       ],
                     )
                   ],

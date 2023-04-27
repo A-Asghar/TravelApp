@@ -1,4 +1,5 @@
 class PackageBooking {
+  String packageName;
   String bookingId;
   String bookingDate;
   String travelerId;
@@ -10,6 +11,7 @@ class PackageBooking {
   String price;
 
   PackageBooking({
+    required this.packageName,
     required this.bookingId,
     required this.bookingDate,
     required this.travelerId,
@@ -23,6 +25,7 @@ class PackageBooking {
 
   factory PackageBooking.fromJson(Map<String, dynamic> json) {
     return PackageBooking(
+      packageName: json['packageName'],
       bookingId: json['bookingId'],
       bookingDate: json['bookingDate'],
       travelerId: json['travelerId'],

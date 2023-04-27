@@ -198,10 +198,12 @@ class Summary {
   Summary({
     this.amenities,
     this.location,
+    this.name,
   });
 
   Amenities? amenities;
   Location? location;
+  String? name;
 
   factory Summary.fromJson(Map<String, dynamic> json) => Summary(
         amenities: json["amenities"] == null
@@ -210,6 +212,9 @@ class Summary {
         location: json["location"] == null
             ? null
             : Location.fromJson(json["location"]),
+        name: json["name"] == null
+            ? null
+            : json["name"]
       );
 }
 

@@ -5,8 +5,6 @@ import 'package:get/get.dart';
 
 import '../../Constants.dart';
 import '../../widgets/poppinsText.dart';
-import 'CanceledView.dart';
-import 'CompletedView.dart';
 import 'OnGoingView.dart';
 
 class Bookings extends StatefulWidget {

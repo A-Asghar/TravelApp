@@ -11,10 +11,6 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
-/** TODO: Moiz assets folder me jo unused images hein vo delete kardena
- * Confirm Payment me agar OneWay flight hai to return wali cheez hatadena - simple check
- * lagadena k agar date DateTime.now() ki date hai to return wala show na karay*/
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

@@ -3,8 +3,6 @@ import 'package:fyp/models/FlightBooking.dart';
 import 'package:fyp/models/HotelBooking.dart';
 import 'package:fyp/models/PackageBooking.dart';
 
-/** TODO : Moiz appbar me title ko center kardena */
-
 class BookingNetwork {
   CollectionReference packageBookings =
       FirebaseFirestore.instance.collection('packageBookings');
@@ -17,6 +15,7 @@ class BookingNetwork {
 
   bookPackage({required PackageBooking packageBooking}) async {
     await packageBookings.doc(packageBooking.bookingId).set({
+      "packageName": packageBooking.packageName,
       "bookingId": packageBooking.bookingId,
       "bookingDate": packageBooking.bookingDate,
       "travelerId": packageBooking.travelerId,

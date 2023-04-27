@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Flight.dart';
 import 'package:fyp/models/FlightBooking.dart';
@@ -19,12 +19,11 @@ import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
 import 'package:fyp/screens/bookings/Bookings.dart';
 import 'package:fyp/widgets/card_view.dart';
+import 'package:fyp/widgets/flight_card_view.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:fyp/widgets/tealButton.dart';
 import 'package:get/get.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
-import 'package:fyp/widgets/flight_card_view.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -418,7 +417,8 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                       setState(() => isLoading = true);
                       await makePayment(totalAmount.toInt().toString());
                       await bn.bookPackage(
-                          packageBooking: PackageBooking(
+                              packageBooking: PackageBooking(
+                              packageName: widget.package.packageName,
                               bookingId: bookingId.toString(),
                               bookingDate: Constants.convertDate(DateTime.now()),
                               travelerId: travelerId,
@@ -1313,7 +1313,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                             .copyWith(fontSize: 16),
                                       ),
                                       const SizedBox(height: 20),
-                                      !widget.flight.oneWay
+                                      widget.flight.itineraries[0].segments.first.arrival.at.day!=DateTime.now().day
                                           ? Text(
                                               DateFormat('MMM dd, yyyy')
                                                   .format(DateTime.parse(

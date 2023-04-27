@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fyp/screens/bookings/OnGoingView.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'Home.dart';
