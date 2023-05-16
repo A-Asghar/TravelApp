@@ -24,6 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   void initState() {
     super.initState();
+    setState(() => _currentIndex = 0);
     _pageController = PageController(initialPage: _currentIndex);
   }
 

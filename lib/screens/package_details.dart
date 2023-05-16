@@ -108,7 +108,7 @@ class _PackageDetailsState extends State<PackageDetails> {
                   height: 100,
                   width: MediaQuery.of(context).size.width,
                   child: ListView.builder(
-                    itemCount: 5,
+                    itemCount: widget.package.imgUrls.length,
                     padding: const EdgeInsets.only(left: 20),
                     physics: const ClampingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
@@ -157,113 +157,128 @@ class _PackageDetailsState extends State<PackageDetails> {
                   height: 20,
                 ),
                 // Reviews
-                InkWell(
-                  onTap: () {
-                    Get.to(
-                      PackageReviews(
-                        package: widget.package,
-                      ),
-                      transition: Transition.rightToLeft,
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: Row(
-                      children: [
-                        poppinsText(text: "Reviews", size: 20.0),
-                        const SizedBox(width: 14),
-                        const Icon(
-                          Icons.star,
-                          color: Color(0xffFFD300),
-                          size: 15,
-                        ),
-                        poppinsText(
-                          text: widget.package.rating.toString(),
-                          size: 14.0,
-                          color: Constants.primaryColor,
-                        ),
-                        poppinsText(
-                            text:
-                                '(${widget.package.packageReviews!.length}) reviews',
-                            size: 14.0),
-                        const Expanded(child: SizedBox()),
-                        poppinsText(
-                          text: "See All",
-                          size: 16.0,
-                          color: Constants.primaryColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (var i = 0; i < 3; i++)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(16),
+                widget.package.packageReviews!.isNotEmpty
+                    ? InkWell(
+                        onTap: () {
+                          Get.to(
+                            PackageReviews(
+                              package: widget.package,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      const SizedBox(width: 14),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          poppinsText(
+                            transition: Transition.rightToLeft,
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20),
+                          child: Row(
+                            children: [
+                              poppinsText(text: "Reviews", size: 20.0),
+                              const SizedBox(width: 14),
+                              const Icon(
+                                Icons.star,
+                                color: Color(0xffFFD300),
+                                size: 15,
+                              ),
+                              poppinsText(
+                                text: widget.package.rating.toString(),
+                                size: 14.0,
+                                color: Constants.primaryColor,
+                              ),
+                              poppinsText(
+                                  text:
+                                      '(${widget.package.packageReviews!.length}) reviews',
+                                  size: 14.0),
+                              const Expanded(child: SizedBox()),
+                              poppinsText(
+                                text: "See All",
+                                size: 16.0,
+                                color: Constants.primaryColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
+                const SizedBox(height: 20),
+                widget.package.packageReviews!.length > 0
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            for (var i = 0; i < 3; i++)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 20),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const SizedBox(width: 14),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                poppinsText(
+                                                    text: widget
+                                                        .package
+                                                        .packageReviews![i]
+                                                        .reviewerName,
+                                                    size: 16.0),
+                                                const SizedBox(height: 5),
+                                                poppinsText(
+                                                    text: DateFormat(
+                                                            'MMM dd, yyyy')
+                                                        .format(DateTime.parse(
+                                                            widget
+                                                                .package
+                                                                .packageReviews![
+                                                                    i]
+                                                                .reviewDate)),
+                                                    size: 12.0)
+                                              ],
+                                            ),
+                                            const Expanded(child: SizedBox()),
+                                            ratingCard(
+                                                widget
+                                                    .package
+                                                    .packageReviews![i]
+                                                    .reviewRating
+                                                    .toString(),
+                                                Constants.primaryColor),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 15),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0),
+                                          child: poppinsText(
                                               text: widget
                                                   .package
                                                   .packageReviews![i]
-                                                  .reviewerName,
-                                              size: 16.0),
-                                          const SizedBox(height: 5),
-                                          poppinsText(
-                                              text: DateFormat('MMM dd, yyyy')
-                                                  .format(DateTime.parse(widget
-                                                      .package
-                                                      .packageReviews![i]
-                                                      .reviewDate)),
-                                              size: 12.0)
-                                        ],
-                                      ),
-                                      const Expanded(child: SizedBox()),
-                                      ratingCard(
-                                          widget.package.packageReviews![i]
-                                              .reviewRating
-                                              .toString(),
-                                          Constants.primaryColor),
-                                    ],
+                                                  .reviewText,
+                                              size: 14.0),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(height: 15),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0),
-                                    child: poppinsText(
-                                        text: widget.package.packageReviews![i]
-                                            .reviewText,
-                                        size: 14.0),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
+                            const SizedBox(height: 70),
+                          ],
                         ),
-                      const SizedBox(height: 70),
-                    ],
-                  ),
-                )
+                      )
+                    : Container(),
+                widget.package.packageReviews!.isEmpty
+                    ? const SizedBox(height: 50)
+                    : Container()
               ],
             ),
           ),
@@ -277,13 +292,17 @@ class _PackageDetailsState extends State<PackageDetails> {
             height: 75,
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
               child: TealButton(
                 bgColor: Constants.primaryColor,
                 txtColor: Colors.white,
                 text: 'Book Now',
-                onPressed: () =>
-                    Get.to(ConfirmPaymentScreen(package: widget.package,), transition: Transition.fade),
+                onPressed: () => Get.to(
+                    ConfirmPaymentScreen(
+                      package: widget.package,
+                    ),
+                    transition: Transition.fade),
               ),
             ),
           )),

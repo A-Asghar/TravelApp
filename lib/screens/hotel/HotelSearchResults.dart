@@ -58,7 +58,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
             appBar: AppBar(
               backgroundColor: Colors.white,
               elevation: 0,
-              leading: IconButton(
+              leading: context.read<HotelSearchProvider>().hotels.isNotEmpty ? IconButton(
                 icon: const Icon(Icons.arrow_back_ios,
 
                     size: 25, color: Constants.primaryColor),
@@ -67,7 +67,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
                   Clear();
                   Navigator.of(context).pop();
                 },
-              ),
+              ) : Container(),
               title: (context.watch<HotelSearchProvider>().errorMessage == '' &&
                       context.watch<HotelSearchProvider>().hotels.isEmpty)
                   ? Container()
@@ -97,7 +97,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
             body:
                 (context.watch<HotelSearchProvider>().errorMessage == '' &&
                         context.watch<HotelSearchProvider>().hotels.isEmpty)
-                    ? lottieLoader()
+                    ? lottieLoader(context)
                     : (context.watch<HotelSearchProvider>().errorMessage !=
                                 '' &&
                             context.watch<HotelSearchProvider>().hotels.isEmpty)
@@ -286,7 +286,7 @@ class _HotelSearchResultsState extends State<HotelSearchResults> {
                                                                           : filteredHotels[index].price!.options!.isEmpty
                                                                               ? '\$XX'
                                                                               : filteredHotels[index].price!.options![0].formattedDisplayPrice.toString(),
-                                                                      size: 16.0,
+                                                                      size: 15.0,
                                                                       color: Constants.primaryColor,
                                                                       fontBold: FontWeight.w600),
                                                                   const SizedBox(

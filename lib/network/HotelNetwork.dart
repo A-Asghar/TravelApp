@@ -36,6 +36,8 @@ class HotelNetwork {
       required checkInDate,
       required checkOutDate,
       required adults}) async {
+    print("propertiesList in network called");
+
     // Returns Hotel List for the regionId
     final url = Uri.parse('${Constants.hotels}${Constants.properties_v2_list}');
 

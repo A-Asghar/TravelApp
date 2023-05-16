@@ -6,6 +6,7 @@ import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/RecommendationProvider.dart';
+import 'package:fyp/providers/loading_provider.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -29,6 +30,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => PackageHomeProvider()),
         ChangeNotifierProvider(create: (_) => RecommendationProvider()),
+        ChangeNotifierProvider(create: (_) => LoadingProvider())
       ],
       child: const MyApp(),
     ),

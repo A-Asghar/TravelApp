@@ -32,7 +32,7 @@ class Package {
     required this.hotelPropertyId,
     this.dayWiseDetails,
     required this.destination,
-    this.packageReviews
+    required this.packageReviews
   });
 
   factory Package.fromJson(Map<String, dynamic> json) {

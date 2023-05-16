@@ -31,21 +31,46 @@ class CardView extends StatelessWidget {
         padding: const EdgeInsets.all(14.0),
         child: Row(
           children: [
-            Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    package != null
-                        ? package!.imgUrls[0]
-                        : unit!.unitGallery!.gallery![0].image!.url!,
-                  ),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
+            package != null
+                ? Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          package!.imgUrls[0],
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  )
+                : unit != null &&
+                        unit!.unitGallery!.gallery != null
+                    ? Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              unit!.unitGallery!.gallery![0].image!.url!,
+                            ),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
             const SizedBox(width: 10),
             Expanded(
               flex: 4,
@@ -89,8 +114,10 @@ class CardView extends StatelessWidget {
                               color: Colors.teal,
                             ),
                       ),
-                      Text( package != null ?
-                        "(${package!.packageReviews!.length} reviews)" : "(${hotelProvider.hotelReviews.length} reviews)",
+                      Text(
+                        package != null
+                            ? "(${package!.packageReviews!.length} reviews)"
+                            : "(${hotelProvider.hotelReviews.length} reviews)",
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
                               fontSize: 14,
                               color: const Color(0xff757575),

@@ -76,6 +76,11 @@ class BookingNetwork {
       "travelerId": hotelBooking.travelerId,
       "hotelId": hotelBooking.hotelId,
       "hotelRoomId": hotelBooking.hotelRoomId,
+      "hotelName":  hotelBooking.hotelName,
+      "hotelLocation": hotelBooking.hotelLocation,
+
+      "imageUrl": hotelBooking.imageUrl,
+
     });
   }
 

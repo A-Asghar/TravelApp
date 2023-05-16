@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fyp/models/Package.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
+import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HomeProvider.dart';
+import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
 import 'package:fyp/screens/hotel_home_details.dart';
 import 'package:fyp/screens/package_details.dart';
+import 'package:fyp/screens/recommended_results.dart';
 import 'package:fyp/screens/vacations/vacation_search.dart';
 import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 import '../Constants.dart';
 import '../models/RecommendedCities.dart';
@@ -104,7 +107,7 @@ class _HomeState extends State<Home> {
         ),
         // drawer: SideBar(),
         body: isLoading
-            ? lottieLoader()
+            ? lottieLoader(context)
             : SingleChildScrollView(
                 child: Column(
                   children: [
@@ -212,11 +215,11 @@ Widget topIcons(context) {
       children: [
         iconBox(Icons.flight, Constants.primaryColor, 'Flights', () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => Search(title: 'flight')));
+              MaterialPageRoute(builder: (context) => Search(title: 'flight', recommended: false,)));
         }),
         iconBox(Icons.location_city, Constants.primaryColor, 'Hotels', () {
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => Search(title: 'hotel')));
+              MaterialPageRoute(builder: (context) => Search(title: 'hotel', recommended: false,)));
         }),
         iconBox(Icons.beach_access, Constants.primaryColor, 'Vacations', () {
           Navigator.of(context).push(
@@ -419,19 +422,33 @@ Widget recommendedDestinations(BuildContext context) {
             scrollDirection: Axis.horizontal,
             itemCount: locations.length,
             itemBuilder: (context, index) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    roundedImage(100.0, 150.0, images[index]),
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        child: poppinsText(
-                            text: locations[index].name, size: 16.0))
-                  ],
-                ),
+              return GestureDetector(
+                onTap: () {
+                  context
+                      .read<HotelSearchProvider>()
+                      .to
+                      .city = locations[index].name!;
+                  context
+                      .read<FlightSearchProvider>()
+                      .to
+                      .city = locations[index].name!;
+                  Get.to(RecommendedResults(), transition: Transition.fade);
+                },
+                  child:
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        roundedImage(100.0, 150.0, images[index]),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            child: poppinsText(
+                                text: locations[index].name, size: 16.0))
+                      ],
+                    ),
+                  ),
               );
             },
           ),

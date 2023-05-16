@@ -34,6 +34,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
   }
 
   bool isLoading = false;
+
   fetchHotelData() async {
     var s = DateTime.now();
     setState(() => isLoading = true);
@@ -61,7 +62,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading
-          ? lottieLoader()
+          ? lottieLoader(context)
           : WillPopScope(
               child: CustomScrollView(
                 slivers: [
@@ -195,7 +196,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
 
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
-                          height: 200,
+                          height: 180,
                           child: GridView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: homeProvider.amenities!.length < 6
@@ -204,16 +205,15 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                mainAxisExtent: 60,
+                                mainAxisExtent: 50,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
                               ),
                               itemBuilder: (context, index) {
                                 return Container(
-                                  alignment: Alignment.bottomLeft,
+                                  alignment: Alignment.topLeft,
                                   child: poppinsText(
-                                    text: homeProvider.amenities![index].text!
-                                        .replaceAll(' ', '\n'),
+                                    text: "• ${homeProvider.amenities![index].text!.replaceAll(' ', ' \n  ')}",
                                   ),
                                 );
                               }),
@@ -501,30 +501,32 @@ Widget hotelRooms1(HomeProvider homeProvider, PropertySearchListing property) {
                                         CrossAxisAlignment.start,
                                     children: [
                                       homeProvider
-                                          .hotelRooms[index]
-                                          .ratePlans![0]
-                                          .priceDetails![0]
-                                          .availability
-                                          ?.scarcityMessage != null ?
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.arrow_right,
-                                            color: Colors.red,
-                                          ),
-                                          poppinsText(
-                                              text: homeProvider
-                                                      .hotelRooms[index]
-                                                      .ratePlans![0]
-                                                      .priceDetails![0]
-                                                      .availability
-                                                      ?.scarcityMessage ??
-                                                  '',
-                                              fontBold: FontWeight.w400,
-                                              color: Colors.red,
-                                              size: 18.0),
-                                        ],
-                                      ) : Container(),
+                                                  .hotelRooms[index]
+                                                  .ratePlans![0]
+                                                  .priceDetails![0]
+                                                  .availability
+                                                  ?.scarcityMessage !=
+                                              null
+                                          ? Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.arrow_right,
+                                                  color: Colors.red,
+                                                ),
+                                                poppinsText(
+                                                    text: homeProvider
+                                                            .hotelRooms[index]
+                                                            .ratePlans![0]
+                                                            .priceDetails![0]
+                                                            .availability
+                                                            ?.scarcityMessage ??
+                                                        '',
+                                                    fontBold: FontWeight.w400,
+                                                    color: Colors.red,
+                                                    size: 18.0),
+                                              ],
+                                            )
+                                          : Container(),
                                       // poppinsText(
                                       //     text: 'Double Room, Balcony',
                                       //     color: Constants.secondaryColor,
@@ -582,14 +584,8 @@ Widget hotelRooms1(HomeProvider homeProvider, PropertySearchListing property) {
                                       Row(
                                         children: [
                                           poppinsText(
-                                              text: homeProvider
-                                                  .hotelRooms[index]
-                                                  .ratePlans![0]
-                                                  .priceDetails![0]
-                                                  .price!
-                                                  .lead!
-                                                  .amount
-                                                  .toStringAsFixed(2),
+                                              text:
+                                                  "\$${homeProvider.hotelRooms[index].ratePlans![0].priceDetails![0].price!.lead!.amount.toStringAsFixed(2)}",
                                               color: Constants.primaryColor,
                                               size: 22.0),
                                           poppinsText(
@@ -603,10 +599,10 @@ Widget hotelRooms1(HomeProvider homeProvider, PropertySearchListing property) {
                                                   .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     RoomDetails(
-                                                        unit: homeProvider
-                                                            .hotelRooms[index],
-                                                        property: property,),
-                                                      
+                                                  unit: homeProvider
+                                                      .hotelRooms[index],
+                                                  property: property,
+                                                ),
                                               ));
                                             },
                                             child: Container(

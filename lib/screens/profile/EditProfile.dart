@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/providers/UserProvider.dart';
+import 'package:fyp/widgets/successSnackBar.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -263,9 +264,10 @@ class _EditProfileState extends State<EditProfile> {
                           });
                         }
 
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //   builder: (context) => const BottomNavBar(),
-                        // ));
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const BottomNavBar(),
+                        ));
+                        successSnackBar(context, "Profile Updated Sucessfully");
                       },
                       bgColor: Constants.primaryColor,
                       txtColor: Colors.white,

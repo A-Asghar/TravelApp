@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/models/Destination.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/providers/loading_provider.dart';
 import 'package:fyp/repository/FlightRepository.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/SearchDestination.dart';
@@ -17,8 +18,10 @@ import '../repository/RecommendationRepository.dart';
 import '../widgets/errorSnackBar.dart';
 
 class Search extends StatefulWidget {
-  const Search({Key? key, required this.title}) : super(key: key);
+  const Search({Key? key, required this.title, required this.recommended})
+      : super(key: key);
   final String title;
+  final bool recommended;
 
   @override
   State<Search> createState() => _SearchState();
@@ -56,24 +59,29 @@ class _SearchState extends State<Search> {
       },
       child: SafeArea(
         child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                color: Constants.secondaryColor,
-                iconSize: 25,
-                onPressed: () {
-                  clear();
-                  Navigator.pop(context);
-                },
-              ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              title: Text(
-                widget.title == 'hotel' ? 'Find your hotel' : 'Find a flight',
-                style: GoogleFonts.poppins(color: Constants.secondaryColor),
-              ),
-              centerTitle: true,
-            ),
+            appBar: widget.recommended == true
+                ? null
+                : AppBar(
+                    leading: IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      color: Constants.primaryColor,
+                      iconSize: 25,
+                      onPressed: () {
+                        clear();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    title: Text(
+                      widget.title == 'hotel'
+                          ? 'Find your hotel'
+                          : 'Find a flight',
+                      style:
+                          GoogleFonts.poppins(color: Constants.secondaryColor),
+                    ),
+                    centerTitle: true,
+                  ),
             body: returnLayout()),
       ),
     );
@@ -81,9 +89,13 @@ class _SearchState extends State<Search> {
 
   Widget returnLayout() {
     if (widget.title == 'flight') {
-      return const FlightLayout();
+      return FlightLayout(
+        recommended: widget.recommended,
+      );
     } else if (widget.title == 'hotel') {
-      return const HotelLayout();
+      return HotelLayout(
+        recommended: widget.recommended,
+      );
     } else {
       return Container();
     }
@@ -224,6 +236,7 @@ class DateTextfield extends StatefulWidget {
       required this.topText,
       required this.bottomText,
       required this.date});
+
   final String topText;
   final String bottomText;
   final String date;
@@ -376,7 +389,8 @@ Future adults_guests_alertbox(BuildContext context, title) {
 }
 
 class FlightLayout extends StatefulWidget {
-  const FlightLayout({Key? key}) : super(key: key);
+  const FlightLayout({Key? key, required this.recommended}) : super(key: key);
+  final bool recommended;
 
   @override
   State<FlightLayout> createState() => _FlightLayoutState();
@@ -400,129 +414,138 @@ class _FlightLayoutState extends State<FlightLayout> {
     String returnDate = context.watch<FlightSearchProvider>().returnDate;
     int adults = context.watch<FlightSearchProvider>().adults;
 
-    return Column(
-      children: [
-        // One Way / Round Trip
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.7,
-          height: 35,
-          child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: flightTrips.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    for (var e in flightTrips) {
-                      e.isSelected = false;
-                    }
-                    flightTrips[index].isSelected = true;
-                    setState(() {});
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          // One Way / Round Trip
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            height: 35,
+            child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: flightTrips.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      for (var e in flightTrips) {
+                        e.isSelected = false;
+                      }
+                      flightTrips[index].isSelected = true;
+                      setState(() {});
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                          color: flightTrips[index].isSelected
+                              ? Constants.primaryColor
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                              color: flightTrips[index].isSelected
+                                  ? Constants.primaryColor
+                                  : Constants.primaryColor)),
+                      child: poppinsText(
+                        text: flightTrips[index].text,
                         color: flightTrips[index].isSelected
-                            ? Constants.primaryColor
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                            color: flightTrips[index].isSelected
-                                ? Constants.primaryColor
-                                : Constants.primaryColor)),
-                    child: poppinsText(
-                      text: flightTrips[index].text,
-                      color: flightTrips[index].isSelected
-                          ? Colors.white
-                          : Constants.primaryColor,
+                            ? Colors.white
+                            : Constants.primaryColor,
+                      ),
                     ),
-                  ),
-                );
-              }),
-        ),
+                  );
+                }),
+          ),
 
-        // From
-        from_to_textfield(context, 'From', from, 'from', 'flight'),
+          // From
+          from_to_textfield(context, 'From', from, 'from', 'flight'),
 
-        //To
-        from_to_textfield(context, 'To', to, 'to', 'flight'),
+          //To
+          from_to_textfield(context, 'To', to, 'to', 'flight'),
 
-        // Depart / Return
-        Align(
-          alignment: Alignment.center,
-          child: Container(
+          // Depart / Return
+          Align(
             alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.85,
-            child: Row(
-              children: [
-                // Depart / Check In
-                checkin_checkout_textfield(
-                    context,
-                    'Depart',
-                    '${departDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(departDate.split('-')[1])]!}',
-                    'depart'),
-                const Spacer(),
+            child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width * 0.85,
+              child: Row(
+                children: [
+                  // Depart / Check In
+                  checkin_checkout_textfield(
+                      context,
+                      'Depart',
+                      '${departDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(departDate.split('-')[1])]!}',
+                      'depart'),
+                  const Spacer(),
 
-                // Return Check Out
-                flightTrips[1].isSelected
-                    ? checkin_checkout_textfield(
-                        context,
-                        'Return',
-                        '${returnDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(returnDate.split('-')[1])]!}',
-                        'return')
-                    : Container(),
-              ],
+                  // Return Check Out
+                  flightTrips[1].isSelected
+                      ? checkin_checkout_textfield(
+                          context,
+                          'Return',
+                          '${returnDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(returnDate.split('-')[1])]!}',
+                          'return')
+                      : Container(),
+                ],
+              ),
             ),
           ),
-        ),
 
-        // Adults
-        guests_adult_textfield(context, 'Adults', adults, 'flight'),
+          // Adults
+          guests_adult_textfield(context, 'Adults', adults, 'flight'),
 
-        const Spacer(),
+          const Spacer(),
 
-        // Search
-        searchButton(
-          context,
-          () async {
-            bool returnDateSelected = flightTrips[1].isSelected;
-            DateTime departDate =
-                DateTime.parse(context.read<FlightSearchProvider>().departDate);
-            DateTime returnDate =
-                DateTime.parse(context.read<FlightSearchProvider>().returnDate);
-            DateTime now = DateTime.now();
-            if (context.read<FlightSearchProvider>().from.city == '' ||
-                context.read<FlightSearchProvider>().to.city == '') {
-              errorSnackBar(context, 'You haven\'t selected a city');
-              return;
-            }
+          // Search
+          !widget.recommended
+              ? searchButton(
+                  context,
+                  () async {
+                    bool returnDateSelected = flightTrips[1].isSelected;
+                    DateTime departDate = DateTime.parse(
+                        context.read<FlightSearchProvider>().departDate);
+                    DateTime returnDate = DateTime.parse(
+                        context.read<FlightSearchProvider>().returnDate);
+                    DateTime now = DateTime.now();
+                    if (context.read<FlightSearchProvider>().from.city == '' ||
+                        context.read<FlightSearchProvider>().to.city == '') {
+                      errorSnackBar(context, 'You haven\'t selected a city');
+                      return;
+                    }
 
-            if (!returnDateSelected) {
-              if (departDate.isBefore(now) && departDate.day != now.day) {
-                errorSnackBar(context, 'Depart Date can\'t be before Today');
-                return;
-              }
-            }
+                    if (!returnDateSelected) {
+                      if (departDate.isBefore(now) &&
+                          departDate.day != now.day) {
+                        errorSnackBar(
+                            context, 'Depart Date can\'t be before Today');
+                        return;
+                      }
+                    }
 
-            if (returnDateSelected) {
-              if (departDate.isBefore(now) && departDate.day != now.day) {
-                errorSnackBar(context, 'Depart Date can\'t be before Today');
-                return;
-              }
-              if (returnDate.isBefore(departDate) &&
-                  returnDate.day != departDate.day) {
-                errorSnackBar(
-                    context, 'Return Date can\'t be before Depart Date');
-                return;
-              }
-            }
+                    if (returnDateSelected) {
+                      if (departDate.isBefore(now) &&
+                          departDate.day != now.day) {
+                        errorSnackBar(
+                            context, 'Depart Date can\'t be before Today');
+                        return;
+                      }
+                      if (returnDate.isBefore(departDate) &&
+                          returnDate.day != departDate.day) {
+                        errorSnackBar(context,
+                            'Return Date can\'t be before Depart Date');
+                        return;
+                      }
+                    }
 
-            searchFlight(flightTrips);
-          },
-        )
-      ],
+                    searchFlight(flightTrips);
+                  },
+                )
+              : searchButton(context, () {}),
+        ],
+      ),
     );
   }
 
@@ -551,7 +574,8 @@ class _FlightLayoutState extends State<FlightLayout> {
 }
 
 class HotelLayout extends StatefulWidget {
-  const HotelLayout({Key? key}) : super(key: key);
+  const HotelLayout({Key? key, required this.recommended}) : super(key: key);
+  final bool recommended;
 
   @override
   State<HotelLayout> createState() => _HotelLayoutState();
@@ -604,37 +628,43 @@ class _HotelLayoutState extends State<HotelLayout> {
 
         const Spacer(),
 
-        searchButton(context, () async {
-          if (context.read<HotelSearchProvider>().to.city == '') {
-            errorSnackBar(context, 'You haven\'t selected a city');
-            return;
-          }
+        !widget.recommended
+            ? searchButton(context, () async {
+                print("searchButton()");
+                context.read<LoadingProvider>().loadingUpdate =
+                    'Fetching Hotels';
+                if (context.read<HotelSearchProvider>().to.city == '') {
+                  errorSnackBar(context, 'You haven\'t selected a city');
+                  return;
+                }
 
-          DateTime checkOut =
-              DateTime.parse(context.read<HotelSearchProvider>().checkOut);
-          DateTime checkIn =
-              DateTime.parse(context.read<HotelSearchProvider>().checkIn);
-          DateTime now = DateTime.now();
+                DateTime checkOut = DateTime.parse(
+                    context.read<HotelSearchProvider>().checkOut);
+                DateTime checkIn =
+                    DateTime.parse(context.read<HotelSearchProvider>().checkIn);
+                DateTime now = DateTime.now();
 
-          if (checkOut.isBefore(checkIn)) {
-            errorSnackBar(
-                context, 'CheckOut date can\'t be before CheckIn Date');
-            return;
-          }
+                if (checkOut.isBefore(checkIn)) {
+                  errorSnackBar(
+                      context, 'CheckOut date can\'t be before CheckIn Date');
+                  return;
+                }
 
-          if ((checkOut.isBefore(now) && checkOut.day != now.day) ||
-              (checkIn.isBefore(now) && checkIn.day != now.day)) {
-            errorSnackBar(context,
-                'CheckIn date or CheckOut date can\'t be before Today');
-            return;
-          }
-          searchHotel();
-        })
+                if ((checkOut.isBefore(now) && checkOut.day != now.day) ||
+                    (checkIn.isBefore(now) && checkIn.day != now.day)) {
+                  errorSnackBar(context,
+                      'CheckIn date or CheckOut date can\'t be before Today');
+                  return;
+                }
+                searchHotel();
+              })
+            : searchButton(context, () {}),
       ],
     );
   }
 
   searchHotel() async {
+    print("searchHotel() called");
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => const HotelSearchResults()));
 

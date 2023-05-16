@@ -18,7 +18,7 @@ class HotelRepository {
       required int adults}) async {
     // Gets Hotels List
     // TODO: implement propertiesList params into hotelSearch
-
+  print("hotelSearch in repo called");
     var response = await network.hotelSearch(city);
     // print('from repo' + response);
 
@@ -39,6 +39,7 @@ class HotelRepository {
       adults: adults,
     );
 
+    print("response2 $response2}");
     String errorMessage = '';
     response2 = jsonDecode(response2);
     if (response2.containsKey('errors')) {
@@ -55,10 +56,13 @@ class HotelRepository {
       data = response2['data']['propertySearch']['propertySearchListings'];
       data.forEach((d) {
         if (d['__typename'] == 'Property') {
+          // print(d['neighborhood']['name']);
           hotels.add(PropertySearchListing.fromJson(d));
         }
       });
-    } catch (e) {}
+    } catch (e) {
+    print("Exception in try: $e");
+    }
 
     // print('HotelRepository errorMessage: $errorMessage}');
     // for (int i = 0; i < 6; i++) {

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
+import 'package:fyp/providers/loading_provider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/FullScreenImagePage.dart';
 import 'package:fyp/screens/HotelGallery.dart';
@@ -37,9 +38,11 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
 
   bool isLoading = false;
   callHotelInfo() async {
+    print("callHotelInfo()");
     var s = DateTime.now();
     setState(() => isLoading = true);
     HotelRepository hotelRepository = HotelRepository();
+    context.read<LoadingProvider>().loadingUpdate = 'Fetching Hotel Details';
     List detailResponse =
         await hotelRepository.detail(propertyId: widget.property.id!);
     if (mounted) {
@@ -49,10 +52,11 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
       context.read<HotelSearchProvider>().amenities = detailResponse[3];
       context.read<HotelSearchProvider>().description = detailResponse[4];
     }
-
     if (mounted) {
+      context.read<LoadingProvider>().loadingUpdate = 'Fetching Hotel Reviews';
       context.read<HotelSearchProvider>().hotelReviews =
           await hotelRepository.reviews(propertyId: widget.property.id!);
+      context.read<LoadingProvider>().loadingUpdate = 'Fetching Hotel Rooms';
       context.read<HotelSearchProvider>().hotelRooms =
           await hotelRepository.getOffers(
               adults: context.read<HotelSearchProvider>().adults,
@@ -70,6 +74,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
       print(
           'context.read<HotelSearchProvider>().hotelReviews.length: ${context.read<HotelSearchProvider>().hotelReviews.length}');
     }
+    // context.read<LoadingProvider>().clearLocationUpdate();
   }
 
   @override
@@ -78,7 +83,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading
-          ? lottieLoader()
+          ? lottieLoader(context)
           : WillPopScope(
               child: CustomScrollView(
                 slivers: [
@@ -247,7 +252,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
 
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
-                          height: 200,
+                          height: 180,
                           child: GridView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: hotelProvider.amenities!.length < 6
@@ -256,17 +261,14 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                mainAxisExtent: 60,
+                                mainAxisExtent: 50,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
                               ),
                               itemBuilder: (context, index) {
                                 return Container(
-                                  alignment: Alignment.bottomLeft,
-                                  child: poppinsText(
-                                      text: hotelProvider
-                                          .amenities![index].text!
-                                          .replaceAll(' ', '\n')),
+                                  alignment: Alignment.topLeft,
+                                  child: poppinsText(text:"• ${hotelProvider.amenities![index].text!.replaceAll(' ', ' \n  ')}"),
                                 );
                               }),
                         ),
@@ -638,14 +640,7 @@ Widget hotelRooms2(HotelSearchProvider hotelProvider, PropertySearchListing prop
                                       Row(
                                         children: [
                                           poppinsText(
-                                              text: hotelProvider
-                                                  .hotelRooms[index]
-                                                  .ratePlans![0]
-                                                  .priceDetails![0]
-                                                  .price!
-                                                  .lead!
-                                                  .amount
-                                                  .toStringAsFixed(2),
+                                              text: "\$${hotelProvider.hotelRooms[index].ratePlans![0].priceDetails![0].price!.lead!.amount.toStringAsFixed(2)}",
                                               color: Constants.primaryColor,
                                               size: 22.0),
                                           poppinsText(

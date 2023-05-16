@@ -18,6 +18,7 @@ class RecommendationNetwork {
     final url = Uri.parse(
         'https://${Constants.flight_uri}${Constants.city_similarity}?cityCodes=$cityCodes');
 
+    print("url: $url");
     var response = await http.get(
       url,
       headers: {
@@ -40,7 +41,7 @@ class RecommendationNetwork {
       );
     }
 
-    // print(response.body);
+    print(response.body);
     return response.body;
   }
 

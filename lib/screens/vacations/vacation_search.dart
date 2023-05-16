@@ -161,7 +161,7 @@ class _VacationSearchState extends State<VacationSearch> {
                                     ),
                                     const SizedBox(width: 10),
                                     Expanded(
-                                      flex: 4,
+                                      flex: 3,
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -190,7 +190,7 @@ class _VacationSearchState extends State<VacationSearch> {
                                                   fontBold: FontWeight.w500),
                                               poppinsText(
                                                   text:
-                                                      ' (${248} reviews)'),
+                                                      ' (${filteredPackages[index].packageReviews?.length} reviews)'),
                                             ],
                                           )
                                         ],
@@ -202,7 +202,7 @@ class _VacationSearchState extends State<VacationSearch> {
                                             CrossAxisAlignment.end,
                                         children: [
                                           poppinsText(
-                                              text:  filteredPackages[index].packagePrice.toStringAsFixed(0).toString(),
+                                              text:  "\$${filteredPackages[index].packagePrice.toStringAsFixed(0).toString()}",
                                               size: 16.0,
                                               color: Constants.primaryColor,
                                               fontBold: FontWeight.w600),

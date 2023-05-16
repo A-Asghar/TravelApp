@@ -24,7 +24,7 @@ class _BookingsState extends State<Bookings> {
         title: Padding(
           padding: const EdgeInsets.all(20.0),
           child: poppinsText(
-              text: 'My Bookings', size: 24.0, fontBold: FontWeight.w600),
+              text: 'My Bookings', size: 24.0, fontBold: FontWeight.w500),
         ),
             backgroundColor: Colors.white,
             elevation: 0,

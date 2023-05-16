@@ -4,6 +4,7 @@ class PropertySearchListing {
     this.typename,
     this.id,
     this.name,
+    this.neighborhood,
     this.availability,
     this.propertyImage,
     this.mapMarker,
@@ -23,12 +24,16 @@ class PropertySearchListing {
   PropertyReviews? reviews;
   String? regionId;
   PriceMetadata? priceMetadata;
+  Neighborhood? neighborhood;
 
   factory PropertySearchListing.fromJson(Map<String, dynamic> json) =>
       PropertySearchListing(
         typename: json["__typename"] == null ? null : json["__typename"],
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
+        neighborhood: json["neighborhood"] == null
+            ? null
+            : Neighborhood.fromJson(json["neighborhood"]),
         availability: json["availability"] == null
             ? null
             : Availability.fromJson(json["availability"]),
@@ -46,6 +51,16 @@ class PropertySearchListing {
         priceMetadata: json["priceMetadata"] == null
             ? null
             : PriceMetadata.fromJson(json["priceMetadata"]),
+      );
+}
+
+class Neighborhood {
+  Neighborhood({this.name});
+
+  String? name;
+
+  factory Neighborhood.fromJson(Map<String, dynamic> json) => Neighborhood(
+        name: json["name"] == null ? null : json["name"],
       );
 }
 

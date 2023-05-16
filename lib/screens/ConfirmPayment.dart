@@ -68,6 +68,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
               ),
               title: poppinsText(
                   text: 'Payment', size: 24.0, fontBold: FontWeight.w500),
+              centerTitle: true,
             ),
             body: widget.package != null
                 ? PackagePaymentLayout(package: widget.package!)
@@ -94,8 +95,8 @@ class PackagePaymentLayout extends StatefulWidget {
 }
 
 class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
-  double discountedRate = 10.0;
-  double discountAmount = 0.0;
+  double serviceFeeRate = 10.0;
+  double serviceFeeAmount = 0.0;
   bool isLoading = false;
   String travelerId = FirebaseAuth.instance.currentUser!.uid;
   Map<String, dynamic>? paymentIntent;
@@ -111,7 +112,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
   @override
   void initState() {
     super.initState();
-    discountAmount = calculateDiscountedPrice(discountedRate);
+    serviceFeeAmount = calculateDiscountedPrice(serviceFeeRate);
   }
 
   @override
@@ -201,7 +202,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "Guest",
+                                        "Guests",
                                         style: Theme.of(context)
                                             .textTheme
                                             .caption!
@@ -220,7 +221,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                     children: [
                                       const SizedBox(height: 42),
                                       Text(
-                                        controller.user!.name,
+                                        controller.user!.name ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -228,7 +229,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        controller.user!.phoneNumber,
+                                        controller.user!.phoneNumber ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -237,8 +238,9 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       const SizedBox(height: 20),
                                       Text(
                                         DateFormat('MMM dd, yyyy').format(
-                                            DateTime.parse(
-                                                widget.package.startDate)),
+                                                DateTime.parse(widget
+                                                    .package.startDate)) ??
+                                            "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -247,12 +249,13 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       const SizedBox(height: 20),
                                       Text(
                                         DateFormat('MMM dd, yyyy')
-                                            .format(DateTime.parse(
-                                                    widget.package.startDate)
-                                                .add(Duration(
-                                                    days: widget
-                                                        .package.numOfDays)))
-                                            .toString(),
+                                                .format(DateTime.parse(widget
+                                                        .package.startDate)
+                                                    .add(Duration(
+                                                        days: widget.package
+                                                            .numOfDays)))
+                                                .toString() ??
+                                            "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -260,7 +263,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        widget.package.adults.toString(),
+                                        widget.package.adults.toString() ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -317,7 +320,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "Discount rate",
+                                        "Service Charges",
                                         style: Theme.of(context)
                                             .textTheme
                                             .caption!
@@ -325,16 +328,16 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                               fontSize: 16,
                                             ),
                                       ),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "Discount amount",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .caption!
-                                            .copyWith(
-                                              fontSize: 16,
-                                            ),
-                                      ),
+                                      // const SizedBox(height: 20),
+                                      // Text(
+                                      //   "Discount amount",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .caption!
+                                      //       .copyWith(
+                                      //         fontSize: 16,
+                                      //       ),
+                                      // ),
                                       const SizedBox(height: 20),
                                       Text(
                                         "Total",
@@ -356,7 +359,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                     children: [
                                       const SizedBox(height: 40),
                                       Text(
-                                        "\$${widget.package.packagePrice}",
+                                        "\$${widget.package.packagePrice ?? ""}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -364,23 +367,23 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "${discountedRate.round()}%",
+                                        "${serviceFeeRate.round() ?? ""}%",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
                                             .copyWith(fontSize: 16),
                                       ),
+                                      // const SizedBox(height: 20),
+                                      // Text(
+                                      //   "\$$serviceFeeAmount",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .bodyText1!
+                                      //       .copyWith(fontSize: 16),
+                                      // ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "\$$discountAmount",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1!
-                                            .copyWith(fontSize: 16),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "\$${widget.package.packagePrice - discountAmount}",
+                                        "\$${widget.package.packagePrice + serviceFeeAmount}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -413,22 +416,22 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                     onPressed: () async {
                       var bookingId = Random().nextInt(900000000) + 100000000;
                       double totalAmount =
-                          widget.package.packagePrice - discountAmount;
+                          widget.package.packagePrice + serviceFeeAmount;
                       setState(() => isLoading = true);
                       await makePayment(totalAmount.toInt().toString());
                       await bn.bookPackage(
-                              packageBooking: PackageBooking(
-                              packageName: widget.package.packageName,
-                              bookingId: bookingId.toString(),
-                              bookingDate: Constants.convertDate(DateTime.now()),
-                              travelerId: travelerId,
-                              travelAgencyId: widget.package.travelAgencyId,
-                              packageId: widget.package.packageId,
-                              price: widget.package.packagePrice.toString(),
-                              adults: widget.package.adults.toString(),
-                              destination: widget.package.destination,
-                              imageUrl: widget.package.imgUrls[0],
-                          ),
+                        packageBooking: PackageBooking(
+                          packageName: widget.package.packageName,
+                          bookingId: bookingId.toString(),
+                          bookingDate: Constants.convertDate(DateTime.now()),
+                          travelerId: travelerId,
+                          travelAgencyId: widget.package.travelAgencyId,
+                          packageId: widget.package.packageId,
+                          price: widget.package.packagePrice.toString(),
+                          adults: widget.package.adults.toString(),
+                          destination: widget.package.destination,
+                          imageUrl: widget.package.imgUrls[0],
+                        ),
                       );
                       setState(() => isLoading = false);
                     },
@@ -470,7 +473,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                           background: Constants.primaryColor),
                     )),
                     shapes: PaymentSheetShape(
-                      borderRadius: 10.0,
+                      borderRadius: 10,
                     ),
                   ),
                   customFlow: true,
@@ -508,7 +511,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          err.toString(),
+          "Something went wrong!",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -574,7 +577,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                   ),
                   const SizedBox(height: 20),
                   TealButton(
-                    text: "Go to bookings",
+                    text: "Continue",
                     onPressed: () {
                       Get.to(() => BottomNavBar(),
                           transition: Transition.downToUp);
@@ -594,7 +597,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
         print('Error is:---> $error');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            error.toString(),
+            "Something went wrong!",
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -668,10 +671,19 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CardView(
-                      unit: widget.unit,
-                      property: widget.property,
-                    ),
+                    widget.unit.unitGallery!.gallery != null
+                        ? CardView(
+                            unit: widget.unit,
+                            property: widget.property,
+                          )
+                        : Container(
+                            height: 100,
+                            width: 100,
+                            child: Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            ),
+                          ),
                     const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
@@ -762,7 +774,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                     children: [
                                       const SizedBox(height: 40),
                                       Text(
-                                        controller.user!.name,
+                                        controller.user?.name ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -770,7 +782,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        controller.user!.phoneNumber,
+                                        controller.user?.phoneNumber ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -778,7 +790,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        hotelProvider.checkIn,
+                                        hotelProvider.checkIn ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -786,7 +798,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        hotelProvider.checkOut,
+                                        hotelProvider.checkOut ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -794,7 +806,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        hotelProvider.adults.toString(),
+                                        hotelProvider.adults.toString() ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -851,7 +863,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "Discount rate",
+                                        "Service Charges",
                                         style: Theme.of(context)
                                             .textTheme
                                             .caption!
@@ -859,16 +871,16 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                               fontSize: 16,
                                             ),
                                       ),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "Discounted amount",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .caption!
-                                            .copyWith(
-                                              fontSize: 16,
-                                            ),
-                                      ),
+                                      // const SizedBox(height: 20),
+                                      // Text(
+                                      //   "Discounted amount",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .caption!
+                                      //       .copyWith(
+                                      //         fontSize: 16,
+                                      //       ),
+                                      // ),
                                       const SizedBox(height: 20),
                                       Text(
                                         "Total",
@@ -904,17 +916,17 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                                             .bodyText1!
                                             .copyWith(fontSize: 16),
                                       ),
+                                      // const SizedBox(height: 20),
+                                      // Text(
+                                      //   "\$${discountAmount.toStringAsFixed(2)}",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .bodyText1!
+                                      //       .copyWith(fontSize: 16),
+                                      // ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "\$${discountAmount.toStringAsFixed(2)}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1!
-                                            .copyWith(fontSize: 16),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "\$${(hotelCharges - discountAmount).toStringAsFixed(2)}",
+                                        "\$${(hotelCharges + discountAmount).toStringAsFixed(2)}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -950,13 +962,19 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                       setState(() => isLoading = true);
                       await makePayment(totalAmount.toInt().toString());
                       await bn.bookHotelRoom(
-                          hotelBooking: HotelBooking(
-                              bookingId: bookingId.toString(),
-                              bookingDate:
-                                  Constants.convertDate(DateTime.now()),
-                              travelerId: travelerId,
-                              hotelId: widget.property.id!,
-                              hotelRoomId: widget.unit.id!));
+                        hotelBooking: HotelBooking(
+                          bookingId: bookingId.toString(),
+                          bookingDate: Constants.convertDate(DateTime.now()),
+                          travelerId: travelerId,
+                          hotelId: widget.property.id!,
+                          hotelRoomId: widget.unit.id!,
+                          hotelName: widget.property.name ?? "",
+                          hotelLocation:
+                              widget.property.neighborhood?.name ?? "",
+                          imageUrl:
+                              widget.property.propertyImage?.image?.url ?? "",
+                        ),
+                      );
                       setState(() => isLoading = false);
                     },
                     bgColor: Constants.primaryColor,
@@ -997,7 +1015,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                           background: Constants.primaryColor),
                     )),
                     shapes: PaymentSheetShape(
-                      borderRadius: 10.0,
+                      borderRadius: 10,
                     ),
                   ),
                   customFlow: true,
@@ -1033,12 +1051,15 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
       return json.decode(response.body);
     } catch (err) {
       setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text(
-          err.toString(),
+          "Something went wrong!",
           textAlign: TextAlign.center,
           style: TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.red,
       ));
@@ -1101,9 +1122,9 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                   ),
                   const SizedBox(height: 20),
                   TealButton(
-                    text: "Go to bookings",
+                    text: "Continue",
                     onPressed: () {
-                      Get.to(() => Bookings(), transition: Transition.downToUp);
+                      Get.to(() => BottomNavBar(), transition: Transition.downToUp);
                     },
                     bgColor: Constants.primaryColor,
                     txtColor: Colors.white,
@@ -1118,9 +1139,9 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
       }).onError((error, stackTrace) {
         setState(() => isLoading = false);
         print('Error is:---> $error');
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
-            error.toString(),
+            "Something went wrong!",
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -1254,7 +1275,12 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                             ),
                                       ),
                                       const SizedBox(height: 20),
-                                      !widget.flight.oneWay
+                                      DateTime.parse(context
+                                                      .read<
+                                                          FlightSearchProvider>()
+                                                      .returnDate)
+                                                  .day !=
+                                              DateTime.now().day
                                           ? Text(
                                               "Return date",
                                               style: Theme.of(context)
@@ -1265,7 +1291,12 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                                   ),
                                             )
                                           : Container(),
-                                      !widget.flight.oneWay
+                                      DateTime.parse(context
+                                                      .read<
+                                                          FlightSearchProvider>()
+                                                      .returnDate)
+                                                  .day !=
+                                              DateTime.now().day
                                           ? const SizedBox(height: 20)
                                           : const SizedBox(),
                                       Text(
@@ -1288,7 +1319,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                     children: [
                                       const SizedBox(height: 42),
                                       Text(
-                                        controller.user!.name,
+                                        controller.user?.name ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -1296,7 +1327,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        controller.user!.phoneNumber,
+                                        controller.user?.phoneNumber ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -1305,32 +1336,44 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                       const SizedBox(height: 20),
                                       Text(
                                         DateFormat('MMM dd, yyyy').format(
-                                            DateTime.parse(
-                                                flightProvider.departDate)),
+                                                DateTime.parse(flightProvider
+                                                    .departDate)) ??
+                                            "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
                                             .copyWith(fontSize: 16),
                                       ),
                                       const SizedBox(height: 20),
-                                      widget.flight.itineraries[0].segments.first.arrival.at.day!=DateTime.now().day
+                                      DateTime.parse(context
+                                                      .read<
+                                                          FlightSearchProvider>()
+                                                      .returnDate)
+                                                  .day !=
+                                              DateTime.now().day
                                           ? Text(
                                               DateFormat('MMM dd, yyyy')
-                                                  .format(DateTime.parse(
-                                                      flightProvider
-                                                          .returnDate))
-                                                  .toString(),
+                                                      .format(DateTime.parse(
+                                                          flightProvider
+                                                              .returnDate))
+                                                      .toString() ??
+                                                  "",
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1!
                                                   .copyWith(fontSize: 16),
                                             )
                                           : Container(),
-                                      !widget.flight.oneWay
+                                      DateTime.parse(context
+                                                      .read<
+                                                          FlightSearchProvider>()
+                                                      .returnDate)
+                                                  .day !=
+                                              DateTime.now().day
                                           ? const SizedBox(height: 20)
                                           : Container(),
                                       Text(
-                                        flightProvider.adults.toString(),
+                                        flightProvider.adults.toString() ?? "",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -1387,7 +1430,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                       ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "Discount rate",
+                                        "Service Charges",
                                         style: Theme.of(context)
                                             .textTheme
                                             .caption!
@@ -1395,16 +1438,16 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                               fontSize: 16,
                                             ),
                                       ),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "Discount amount",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .caption!
-                                            .copyWith(
-                                              fontSize: 16,
-                                            ),
-                                      ),
+                                      // const SizedBox(height: 20),
+                                      // Text(
+                                      //   "Discount amount",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .caption!
+                                      //       .copyWith(
+                                      //         fontSize: 16,
+                                      //       ),
+                                      // ),
                                       const SizedBox(height: 20),
                                       Text(
                                         "Total",
@@ -1426,7 +1469,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                     children: [
                                       const SizedBox(height: 40),
                                       Text(
-                                        "\$${double.parse(widget.flight.price.total)}",
+                                        "\$${double.parse(widget.flight.price.total ?? "0.0")}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -1440,17 +1483,17 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                             .bodyText1!
                                             .copyWith(fontSize: 16),
                                       ),
+                                      // const SizedBox(height: 20),
+                                      // Text(
+                                      //   "\$${discountAmount.toStringAsFixed(2)}",
+                                      //   style: Theme.of(context)
+                                      //       .textTheme
+                                      //       .bodyText1!
+                                      //       .copyWith(fontSize: 16),
+                                      // ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "\$${discountAmount.toStringAsFixed(2)}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1!
-                                            .copyWith(fontSize: 16),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Text(
-                                        "\$${(double.parse(widget.flight.price.total) - discountAmount).toStringAsFixed(2)}",
+                                        "\$${(double.parse(widget.flight.price.total ?? "0.0") + discountAmount).toStringAsFixed(2)}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -1490,18 +1533,25 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                       await makePayment(totalAmount.toInt().toString());
                       await bn.bookFlight(
                         flightBooking: FlightBooking(
-                          bookingId: bookingId.toString(),
-                          bookingDate: Constants.convertDate(DateTime.now()),
-                          travelerId: travelerId,
-                          flightId: flightId.toString(),
-                          cabin: widget.flight.fareDetailsBySegment[0].cabin,
-                          flightDuration: widget.flight.itineraries[0].duration.replaceAll('PT', '').replaceAll('H', 'H ').toLowerCase(),
-                          fromCity: widget.flight.itineraries[0].segments[0].departure.iataCode,
-                          toCity: widget.flight.itineraries[0].segments[0].arrival.iataCode,
-                          fromTime: Constants.convertTime(widget.flight.itineraries[0].segments[0].departure.at),
-                          toTime: Constants.convertTime(widget.flight.itineraries[0].segments[0].arrival.at),
-                          price: widget.flight.price.total
-                        ),
+                            bookingId: bookingId.toString(),
+                            bookingDate: Constants.convertDate(DateTime.now()),
+                            travelerId: travelerId,
+                            flightId: flightId.toString(),
+                            cabin: widget.flight.fareDetailsBySegment[0].cabin,
+                            flightDuration: widget
+                                .flight.itineraries[0].duration
+                                .replaceAll('PT', '')
+                                .replaceAll('H', 'H ')
+                                .toLowerCase(),
+                            fromCity: widget.flight.itineraries[0].segments[0]
+                                .departure.iataCode,
+                            toCity: widget.flight.itineraries[0].segments[0]
+                                .arrival.iataCode,
+                            fromTime: Constants.convertTime(widget.flight
+                                .itineraries[0].segments[0].departure.at),
+                            toTime: Constants.convertTime(widget
+                                .flight.itineraries[0].segments[0].arrival.at),
+                            price: widget.flight.price.total),
                       );
                       setState(() => isLoading = false);
                     },
@@ -1543,7 +1593,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                           background: Constants.primaryColor),
                     )),
                     shapes: PaymentSheetShape(
-                      borderRadius: 10.0,
+                      borderRadius: 10,
                     ),
                   ),
                   customFlow: true,
@@ -1581,7 +1631,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
       setState(() => isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          err.toString(),
+          "Something went wrong!",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -1647,7 +1697,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                   ),
                   const SizedBox(height: 20),
                   TealButton(
-                    text: "Go to bookings",
+                    text: "Continue",
                     onPressed: () {
                       Get.to(() => BottomNavBar(),
                           transition: Transition.downToUp);
@@ -1667,7 +1717,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
         print('Error is:---> $error');
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
-            error.toString(),
+            "Something went wrong!",
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -1735,18 +1785,18 @@ class _SuccessDialogState extends State<SuccessDialog> {
             Text(
               "Payment Successfull!",
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Colors.teal,
-              ),
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.teal,
+                  ),
             ),
             const SizedBox(height: 15),
             Text(
               "Successfully made payment and booking",
               style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                fontSize: 14,
-                height: 1.6,
-              ),
+                    fontSize: 14,
+                    height: 1.6,
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
