@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/providers/HomeProvider.dart';
+import 'package:fyp/providers/loading_provider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/FullScreenImagePage.dart';
 import 'package:fyp/screens/HotelGallery.dart';
@@ -29,7 +30,9 @@ class HotelHomeDetails extends StatefulWidget {
 }
 
 class _HotelHomeDetailsState extends State<HotelHomeDetails> {
+  @override
   void initState() {
+    super.initState();
     fetchHotelData();
   }
 
@@ -37,21 +40,42 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
 
   fetchHotelData() async {
     var s = DateTime.now();
-    setState(() => isLoading = true);
     HotelRepository hotelRepository = HotelRepository();
+
+    Future.microtask(() {
+      context.read<LoadingProvider>().loadingUpdate = 'Fetching Hotel Details';
+    });
+
+    setState(() => isLoading = true);
+
     context.read<HomeProvider>().hotelRooms =
         await hotelRepository.getHotelRooms(
             propertyId: widget.property.id, regionId: widget.property.regionId);
+
+    // Future.microtask(() {
+    //   context.read<LoadingProvider>().loadingUpdate = 'Fetching Hotel Reviews';
+    // });
+
     List detailResponse =
         await hotelRepository.getHotelDetails(propertyId: widget.property.id);
-    context.read<HomeProvider>().hotelImages = detailResponse[0];
-    context.read<HomeProvider>().amenities = detailResponse[1];
-    context.read<HomeProvider>().coordinates = detailResponse[2];
-    context.read<HomeProvider>().description = detailResponse[3];
-    context.read<HomeProvider>().address = detailResponse[4];
+    if (mounted) {
+      context.read<HomeProvider>().hotelImages = detailResponse[0];
+      context.read<HomeProvider>().amenities = detailResponse[1];
+      context.read<HomeProvider>().coordinates = detailResponse[2];
+      context.read<HomeProvider>().description = detailResponse[3];
+      context.read<HomeProvider>().address = detailResponse[4];
+      context.read<HomeProvider>().mapImage = detailResponse[5];
+    }
+
+    // Future.microtask(() {
+    //   context.read<LoadingProvider>().loadingUpdate = 'Fetching Hotel Rooms';
+    // });
+
     context.read<HomeProvider>().hotelReviews =
         await hotelRepository.getHotelReviews(propertyId: widget.property.id);
-    setState(() => isLoading = false);
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
     var e = DateTime.now();
     print(e.difference(s).inSeconds);
   }
@@ -196,7 +220,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
 
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
-                          height: 180,
+                          height: 200,
                           child: GridView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: homeProvider.amenities!.length < 6
@@ -205,7 +229,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                               gridDelegate:
                                   const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                mainAxisExtent: 50,
+                                mainAxisExtent: 70,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
                               ),
@@ -213,7 +237,8 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                                 return Container(
                                   alignment: Alignment.topLeft,
                                   child: poppinsText(
-                                    text: "• ${homeProvider.amenities![index].text!.replaceAll(' ', ' \n  ')}",
+                                    text:
+                                        "• ${homeProvider.amenities![index].text!.replaceAll(' ', ' \n  ')}",
                                   ),
                                 );
                               }),
@@ -239,13 +264,21 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                             child: Padding(
                               padding:
                                   const EdgeInsets.only(left: 20, right: 20),
-                              child: SizedBox(
+                              child: Container(
                                 height: 180,
                                 width: MediaQuery.of(context).size.width,
-                                child: Image.asset(
-                                  'assets/images/map.png',
-                                  fit: BoxFit.fill,
-                                ),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                        image: homeProvider.mapImage!.isEmpty ||
+                                                homeProvider.mapImage == null
+                                            ? AssetImage(
+                                                'assets/images/map.png',
+                                              )
+                                            : NetworkImage(
+                                                homeProvider.mapImage!,
+                                              ) as ImageProvider<Object>,
+                                        fit: BoxFit.cover)),
                               ),
                             ),
                           ),

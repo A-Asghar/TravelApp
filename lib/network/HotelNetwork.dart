@@ -152,6 +152,7 @@ class HotelNetwork {
     );
 
     print('network.detail().statusCode: ${response.statusCode}');
+    print("From network: $response");
 
     return response.body;
   }
@@ -257,6 +258,7 @@ class HotelNetwork {
     Coordinates coordinates = Coordinates(latitude: 0.0, longitude: 0.0);
     String description = '';
     String address = '';
+    String mapImage = '';
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection('propertyDetails')
@@ -276,8 +278,9 @@ class HotelNetwork {
       coordinates = Coordinates.fromJson(data['coordinates']);
       description = data['description'];
       address = data['address'];
+      mapImage = data['mapImage'];
     });
 
-    return [hotelImages, amenities, coordinates, description, address];
+    return [hotelImages, amenities, coordinates, description, address, mapImage];
   }
 }

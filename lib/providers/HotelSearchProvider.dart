@@ -98,6 +98,13 @@ class HotelSearchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  StaticImage? _mapImage = StaticImage(url: "");
+  StaticImage? get mapImage => _mapImage;
+  set mapImage(img) {
+    _mapImage = img;
+    notifyListeners();
+  }
+
   clearHotels() {
     _hotels = [];
     notifyListeners();
