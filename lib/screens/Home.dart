@@ -488,7 +488,9 @@ class SideBar extends StatelessWidget {
           ),
           sideBarRow(icon: Icons.person, text: 'Profile', onTap: () {}),
           sideBarRow(icon: Icons.settings, text: 'Settings', onTap: () {}),
-          sideBarRow(icon: Icons.help, text: 'Help Center', onTap: () {}),
+          sideBarRow(icon: Icons.help, text: 'Help Center', onTap: () {
+
+          }),
           sideBarRow(icon: Icons.help_outline, text: 'FAQs', onTap: () {}),
           sideBarRow(
               icon: Icons.interpreter_mode_sharp,

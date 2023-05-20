@@ -10,7 +10,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../Constants.dart';
 import '../../providers/UserProvider.dart';
 import '../../widgets/poppinsText.dart';
+import '../Help.dart';
 import '../Home.dart';
+import '../Security.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -134,10 +136,10 @@ class _ProfileState extends State<Profile> {
                           Icons.security,
                           "Security",
                           () {
-                            // Get.to(
-                            //   const SecurityScreen(),
-                            //   transition: Transition.rightToLeft,
-                            // );
+                             Get.to(
+                              SecurityPolicyScreen(),
+                              transition: Transition.rightToLeft,
+                            );
                           },
                         ),
                         const SizedBox(height: 30),
@@ -146,7 +148,12 @@ class _ProfileState extends State<Profile> {
                         rowData(
                           Icons.help,
                           "Help",
-                          () {},
+                          () {
+                            Get.to(
+                              HelpScreen(),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
                         ),
                         const SizedBox(height: 30),
 
