@@ -11,6 +11,9 @@ import 'package:travel_agency/screens/profile/EditProfile.dart';
 import 'package:travel_agency/widgets/poppinsText.dart';
 import 'package:travel_agency/widgets/tealButton.dart';
 
+import '../screens/HelpScreen.dart';
+import '../screens/Security.dart';
+
 class SideDrawer extends StatefulWidget {
   const SideDrawer({super.key});
 
@@ -86,12 +89,15 @@ class _SideDrawerState extends State<SideDrawer> {
           ListTile(
             leading: Icon(Icons.security, color: Constants.primaryColor),
             title: poppinsText(text: 'Security', size: 20.0),
-          ),
+              onTap: () {
+                Get.to(SecurityPolicyScreen(), transition: Transition.fade);
+              }),
           ListTile(
             leading: Icon(Icons.help, color: Constants.primaryColor),
             title: poppinsText(text: 'Help', size: 20.0),
-            onTap: () => null,
-          ),
+              onTap: () {
+                Get.to(HelpScreen(), transition: Transition.fade);
+              }),
           Divider(),
           ListTile(
             title: poppinsText(text: 'Logout', size: 20.0, color: Colors.red),

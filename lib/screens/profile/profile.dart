@@ -9,6 +9,7 @@ import 'package:travel_agency/widgets/tealButton.dart';
 import '../../Constants.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/poppinsText.dart';
+import '../Security.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -127,10 +128,12 @@ class _ProfileState extends State<Profile> {
                           Icons.security,
                           "Security",
                           () {
-                            // Get.to(
-                            //   const SecurityScreen(),
-                            //   transition: Transition.rightToLeft,
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => SecurityPolicyScreen()),
                             // );
+                            print("error");
+
                           },
                         ),
                         const SizedBox(height: 30),
