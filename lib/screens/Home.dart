@@ -7,6 +7,7 @@ import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HomeProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
+import 'package:fyp/providers/loading_provider.dart';
 import 'package:fyp/repository/HotelRepository.dart';
 import 'package:fyp/screens/Search.dart';
 import 'package:fyp/screens/hotel_home_details.dart';
@@ -214,12 +215,18 @@ Widget topIcons(context) {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         iconBox(Icons.flight, Constants.primaryColor, 'Flights', () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => Search(title: 'flight', recommended: false,)));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Search(
+                    title: 'flight',
+                    recommended: false,
+                  )));
         }),
         iconBox(Icons.location_city, Constants.primaryColor, 'Hotels', () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => Search(title: 'hotel', recommended: false,)));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => Search(
+                    title: 'hotel',
+                    recommended: false,
+                  )));
         }),
         iconBox(Icons.beach_access, Constants.primaryColor, 'Vacations', () {
           Navigator.of(context).push(
@@ -381,15 +388,24 @@ Widget roundedImage(height, width, src) {
     height: height,
     width: width,
     child: ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(15),
-        topRight: Radius.circular(15),
-      ),
-      child: Image.network(
-        '$src',
-        fit: BoxFit.fill,
-      ),
-    ),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(15),
+        ),
+        child: Image.network(
+          '$src',
+          fit: BoxFit.cover,
+          loadingBuilder: ((context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Constants.primaryColor,
+              ),
+            );
+          }),
+        )),
   );
 }
 
@@ -424,31 +440,30 @@ Widget recommendedDestinations(BuildContext context) {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  context
-                      .read<HotelSearchProvider>()
-                      .to
-                      .city = locations[index].name!;
-                  context
-                      .read<FlightSearchProvider>()
-                      .to
-                      .city = locations[index].name!;
+                  context.read<HotelSearchProvider>().to.city =
+                      locations[index].name!;
+                  context.read<HotelSearchProvider>().to.iata =
+                      locations[index].iataCode!;
+                  context.read<FlightSearchProvider>().to.city =
+                      locations[index].name!;
+                  context.read<FlightSearchProvider>().to.iata =
+                      locations[index].iataCode!;
                   Get.to(RecommendedResults(), transition: Transition.fade);
                 },
-                  child:
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        roundedImage(100.0, 150.0, images[index]),
-                        Container(
-                            padding: const EdgeInsets.all(5),
-                            child: poppinsText(
-                                text: locations[index].name, size: 16.0))
-                      ],
-                    ),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      roundedImage(100.0, 150.0, images[index]),
+                      Container(
+                          padding: const EdgeInsets.all(5),
+                          child: poppinsText(
+                              text: locations[index].name, size: 16.0))
+                    ],
                   ),
+                ),
               );
             },
           ),

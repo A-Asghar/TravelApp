@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:fyp/providers/FlightSearchProvider.dart';
+import 'package:fyp/widgets/lottie_loader.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -62,7 +63,7 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
             Expanded(
               child: (context.watch<FlightSearchProvider>().flights.isEmpty &&
                       context.watch<FlightSearchProvider>().count == null)
-                  ? lottieLoader()
+                  ? lottieLoader(context)
                   : context.read<FlightSearchProvider>().count == 0
                       ? Center(child: poppinsText(text: 'Not Found', size: 30.0))
                       : ListView.builder(
@@ -188,12 +189,6 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget lottieLoader(){
-    return Center(
-      child: Lottie.asset('assets/lf30_editor_pdzneexn.json',height: 100),
     );
   }
 

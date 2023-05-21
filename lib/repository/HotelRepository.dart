@@ -18,7 +18,7 @@ class HotelRepository {
       required int adults}) async {
     // Gets Hotels List
     // TODO: implement propertiesList params into hotelSearch
-  print("hotelSearch in repo called");
+    print("hotelSearch in repo called");
     var response = await network.hotelSearch(city);
     // print('from repo' + response);
 
@@ -61,7 +61,7 @@ class HotelRepository {
         }
       });
     } catch (e) {
-    print("Exception in try: $e");
+      print("Exception in try: $e");
     }
 
     // print('HotelRepository errorMessage: $errorMessage}');
@@ -142,13 +142,17 @@ class HotelRepository {
         .items![0]
         .content
         ?.text;
+
+    StaticImage? mapImage =
+        detail.data?.propertyInfo?.summary?.location?.staticImage;
+    print("From repo:${mapImage!.url!}");
     // print('Hotel Images:');
     // images.forEach((i) {
     //   print(i!.url);
     // });
     // print(
     //     "Hotel Images: ${images!.length}\n Hotel Address: ${address}, \n Coordinates: ${coordinates}");
-    return [images, address, coordinates, amenities, description];
+    return [images, address, coordinates, amenities, description, mapImage];
   }
 
   reviews({required String propertyId, startingIndex = 0}) async {
@@ -213,8 +217,16 @@ class HotelRepository {
     Coordinates coordinates = response[2];
     String description = response[3];
     String address = response[4];
+    String mapImage = response[5];
 
-    return [hotelImages, amenities, coordinates, description, address];
+    return [
+      hotelImages,
+      amenities,
+      coordinates,
+      description,
+      address,
+      mapImage
+    ];
   }
 }
 

@@ -8,6 +8,7 @@ class LoadingProvider extends ChangeNotifier {
     _loadingUpdate = loadingUpdate;
     notifyListeners();
   }
+  
   clearLocationUpdate() {
     _loadingUpdate = '';
     notifyListeners();

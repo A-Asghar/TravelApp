@@ -7,6 +7,7 @@ import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/PackageHomeProvider.dart';
 import 'package:fyp/providers/RecommendationProvider.dart';
 import 'package:fyp/providers/loading_provider.dart';
+import 'package:fyp/screens/SplashScreen.dart';
 import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -48,7 +49,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: const Login(),
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: SplashScreen(),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }

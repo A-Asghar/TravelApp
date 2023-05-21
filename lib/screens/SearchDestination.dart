@@ -111,50 +111,53 @@ class _SearchDestinationState extends State<SearchDestination> {
                       future: listCities,
                       builder: (context, AsyncSnapshot snapshot) {
                         return (snapshot.hasData)
-                            ? ListView.builder(
-                          shrinkWrap: true,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, index) {
-                                  Destination destination =
-                                      snapshot.data[index] as Destination;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      if (widget.option == 'flight') {
-                                        widget.title == 'from'
-                                            ? context
-                                                .read<FlightSearchProvider>()
-                                                .from = destination
-                                            : context
-                                                .read<FlightSearchProvider>()
-                                                .to = destination;
-                                      } else if (widget.option == 'hotel') {
-                                        context.read<HotelSearchProvider>().to =
-                                            destination;
-                                      }
-
-                                      controller.clear();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Card(
-                                      child: Container(
-                                        margin: const EdgeInsets.all(10),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                locationIcon(),
-                                                destinationCity(destination),
-                                              ],
-                                            ),
-                                            widget.option == 'flight'
-                                                ? airport(destination)
-                                                : Container()
-                                          ],
+                            ? Expanded(
+                              child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                                      shrinkWrap: true,
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    Destination destination =
+                                        snapshot.data[index] as Destination;
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (widget.option == 'flight') {
+                                          widget.title == 'from'
+                                              ? context
+                                                  .read<FlightSearchProvider>()
+                                                  .from = destination
+                                              : context
+                                                  .read<FlightSearchProvider>()
+                                                  .to = destination;
+                                        } else if (widget.option == 'hotel') {
+                                          context.read<HotelSearchProvider>().to =
+                                              destination;
+                                        }
+                            
+                                        controller.clear();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Card(
+                                        child: Container(
+                                          margin: const EdgeInsets.all(10),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  locationIcon(),
+                                                  destinationCity(destination),
+                                                ],
+                                              ),
+                                              widget.option == 'flight'
+                                                  ? airport(destination)
+                                                  : Container()
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                })
+                                    );
+                                  }),
+                            )
                             : const Center(
                                 child: CircularProgressIndicator(
                                   color: Constants.primaryColor,

@@ -68,6 +68,13 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? _mapImage = "";
+  String? get mapImage => _mapImage;
+  set mapImage(img) {
+    _mapImage = img;
+    notifyListeners();
+  }
+
   clearHotelDetail() {
     _hotelRooms = [];
     _hotelReviews = [];

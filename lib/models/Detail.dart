@@ -206,16 +206,12 @@ class Summary {
   String? name;
 
   factory Summary.fromJson(Map<String, dynamic> json) => Summary(
-        amenities: json["amenities"] == null
-            ? null
-            : Amenities.fromJson(json["amenities"]),
-        location: json["location"] == null
-            ? null
-            : Location.fromJson(json["location"]),
-        name: json["name"] == null
-            ? null
-            : json["name"]
-      );
+      amenities: json["amenities"] == null
+          ? null
+          : Amenities.fromJson(json["amenities"]),
+      location:
+          json["location"] == null ? null : Location.fromJson(json["location"]),
+      name: json["name"] == null ? null : json["name"]);
 }
 
 class Amenities {
@@ -276,13 +272,11 @@ class AmnetyIcon {
 }
 
 class Location {
-  Location({
-    this.address,
-    this.coordinates,
-  });
+  Location({this.address, this.coordinates, this.staticImage});
 
   Address? address;
   Coordinates? coordinates;
+  StaticImage? staticImage;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
         address:
@@ -290,6 +284,7 @@ class Location {
         coordinates: json["coordinates"] == null
             ? null
             : Coordinates.fromJson(json["coordinates"]),
+        staticImage: json["staticImage"] == null ? null : StaticImage.fromJson(json["staticImage"]),
       );
 }
 
@@ -333,4 +328,16 @@ class Coordinates {
         latitude: json["latitude"]?.toDouble(),
         longitude: json["longitude"]?.toDouble(),
       );
+}
+
+class StaticImage {
+  StaticImage({
+    this.url,
+  });
+
+  String? url;
+
+  factory StaticImage.fromJson(Map<String, dynamic> json) => StaticImage(
+    url: json["url"],
+  );
 }

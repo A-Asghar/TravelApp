@@ -416,135 +416,144 @@ class _FlightLayoutState extends State<FlightLayout> {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          // One Way / Round Trip
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: 35,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: flightTrips.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      for (var e in flightTrips) {
-                        e.isSelected = false;
-                      }
-                      flightTrips[index].isSelected = true;
-                      setState(() {});
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                          color: flightTrips[index].isSelected
-                              ? Constants.primaryColor
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
+      child: SingleChildScrollView(
+        child: Container(
+          height: widget.recommended == true
+              ? MediaQuery.of(context).size.height * 0.815
+              : MediaQuery.of(context).size.height * 0.87,
+          child: Column(
+            children: [
+              // One Way / Round Trip
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: 35,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: 35,
+                  child: Wrap(
+                    spacing: 90,
+                    children: List.generate(flightTrips.length, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          for (var e in flightTrips) {
+                            e.isSelected = false;
+                          }
+                          flightTrips[index].isSelected = true;
+                          setState(() {});
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: flightTrips[index].isSelected
+                                ? Constants.primaryColor
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
                               color: flightTrips[index].isSelected
                                   ? Constants.primaryColor
-                                  : Constants.primaryColor)),
-                      child: poppinsText(
-                        text: flightTrips[index].text,
-                        color: flightTrips[index].isSelected
-                            ? Colors.white
-                            : Constants.primaryColor,
-                      ),
-                    ),
-                  );
-                }),
-          ),
-
-          // From
-          from_to_textfield(context, 'From', from, 'from', 'flight'),
-
-          //To
-          from_to_textfield(context, 'To', to, 'to', 'flight'),
-
-          // Depart / Return
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Row(
-                children: [
-                  // Depart / Check In
-                  checkin_checkout_textfield(
-                      context,
-                      'Depart',
-                      '${departDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(departDate.split('-')[1])]!}',
-                      'depart'),
-                  const Spacer(),
-
-                  // Return Check Out
-                  flightTrips[1].isSelected
-                      ? checkin_checkout_textfield(
-                          context,
-                          'Return',
-                          '${returnDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(returnDate.split('-')[1])]!}',
-                          'return')
-                      : Container(),
-                ],
+                                  : Constants.primaryColor,
+                            ),
+                          ),
+                          child: poppinsText(
+                            text: flightTrips[index].text,
+                            color: flightTrips[index].isSelected
+                                ? Colors.white
+                                : Constants.primaryColor,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
               ),
-            ),
-          ),
 
-          // Adults
-          guests_adult_textfield(context, 'Adults', adults, 'flight'),
+              // From
+              from_to_textfield(context, 'From', from, 'from', 'flight'),
 
-          const Spacer(),
+              //To
+              from_to_textfield(context, 'To', to, 'to', 'flight'),
 
-          // Search
-          !widget.recommended
-              ? searchButton(
-                  context,
-                  () async {
-                    bool returnDateSelected = flightTrips[1].isSelected;
-                    DateTime departDate = DateTime.parse(
-                        context.read<FlightSearchProvider>().departDate);
-                    DateTime returnDate = DateTime.parse(
-                        context.read<FlightSearchProvider>().returnDate);
-                    DateTime now = DateTime.now();
-                    if (context.read<FlightSearchProvider>().from.city == '' ||
-                        context.read<FlightSearchProvider>().to.city == '') {
-                      errorSnackBar(context, 'You haven\'t selected a city');
+              // Depart / Return
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: Row(
+                    children: [
+                      // Depart / Check In
+                      checkin_checkout_textfield(
+                          context,
+                          'Depart',
+                          '${departDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(departDate.split('-')[1])]!}',
+                          'depart'),
+                      const Spacer(),
+
+                      // Return Check Out
+                      flightTrips[1].isSelected
+                          ? checkin_checkout_textfield(
+                              context,
+                              'Return',
+                              '${returnDate.split('-')[2]}\t${Constants.integerToMonth[int.parse(returnDate.split('-')[1])]!}',
+                              'return')
+                          : Container(),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Adults
+              guests_adult_textfield(context, 'Adults', adults, 'flight'),
+
+              const Spacer(),
+
+              // Search
+              searchButton(
+                context,
+                () async {
+                  context.read<LoadingProvider>().loadingUpdate =
+                      'Fetching Flights';
+                  bool returnDateSelected = flightTrips[1].isSelected;
+                  DateTime departDate = DateTime.parse(
+                      context.read<FlightSearchProvider>().departDate);
+                  DateTime returnDate = DateTime.parse(
+                      context.read<FlightSearchProvider>().returnDate);
+                  DateTime now = DateTime.now();
+                  if (context.read<FlightSearchProvider>().from.city == '' ||
+                      context.read<FlightSearchProvider>().to.city == '') {
+                    errorSnackBar(context, 'You haven\'t selected a city');
+                    return;
+                  }
+
+                  if (!returnDateSelected) {
+                    if (departDate.isBefore(now) && departDate.day != now.day) {
+                      errorSnackBar(
+                          context, 'Depart Date can\'t be before Today');
                       return;
                     }
+                  }
 
-                    if (!returnDateSelected) {
-                      if (departDate.isBefore(now) &&
-                          departDate.day != now.day) {
-                        errorSnackBar(
-                            context, 'Depart Date can\'t be before Today');
-                        return;
-                      }
+                  if (returnDateSelected) {
+                    if (departDate.isBefore(now) && departDate.day != now.day) {
+                      errorSnackBar(
+                          context, 'Depart Date can\'t be before Today');
+                      return;
                     }
-
-                    if (returnDateSelected) {
-                      if (departDate.isBefore(now) &&
-                          departDate.day != now.day) {
-                        errorSnackBar(
-                            context, 'Depart Date can\'t be before Today');
-                        return;
-                      }
-                      if (returnDate.isBefore(departDate) &&
-                          returnDate.day != departDate.day) {
-                        errorSnackBar(context,
-                            'Return Date can\'t be before Depart Date');
-                        return;
-                      }
+                    if (returnDate.isBefore(departDate) &&
+                        returnDate.day != departDate.day) {
+                      errorSnackBar(
+                          context, 'Return Date can\'t be before Depart Date');
+                      return;
                     }
+                  }
 
-                    searchFlight(flightTrips);
-                  },
-                )
-              : searchButton(context, () {}),
-        ],
+                  searchFlight(flightTrips);
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -628,37 +637,34 @@ class _HotelLayoutState extends State<HotelLayout> {
 
         const Spacer(),
 
-        !widget.recommended
-            ? searchButton(context, () async {
-                print("searchButton()");
-                context.read<LoadingProvider>().loadingUpdate =
-                    'Fetching Hotels';
-                if (context.read<HotelSearchProvider>().to.city == '') {
-                  errorSnackBar(context, 'You haven\'t selected a city');
-                  return;
-                }
+        searchButton(context, () async {
+          print("searchButton()");
+          context.read<LoadingProvider>().loadingUpdate = 'Fetching Hotels';
+          if (context.read<HotelSearchProvider>().to.city == '') {
+            errorSnackBar(context, 'You haven\'t selected a city');
+            return;
+          }
 
-                DateTime checkOut = DateTime.parse(
-                    context.read<HotelSearchProvider>().checkOut);
-                DateTime checkIn =
-                    DateTime.parse(context.read<HotelSearchProvider>().checkIn);
-                DateTime now = DateTime.now();
+          DateTime checkOut =
+              DateTime.parse(context.read<HotelSearchProvider>().checkOut);
+          DateTime checkIn =
+              DateTime.parse(context.read<HotelSearchProvider>().checkIn);
+          DateTime now = DateTime.now();
 
-                if (checkOut.isBefore(checkIn)) {
-                  errorSnackBar(
-                      context, 'CheckOut date can\'t be before CheckIn Date');
-                  return;
-                }
+          if (checkOut.isBefore(checkIn)) {
+            errorSnackBar(
+                context, 'CheckOut date can\'t be before CheckIn Date');
+            return;
+          }
 
-                if ((checkOut.isBefore(now) && checkOut.day != now.day) ||
-                    (checkIn.isBefore(now) && checkIn.day != now.day)) {
-                  errorSnackBar(context,
-                      'CheckIn date or CheckOut date can\'t be before Today');
-                  return;
-                }
-                searchHotel();
-              })
-            : searchButton(context, () {}),
+          if ((checkOut.isBefore(now) && checkOut.day != now.day) ||
+              (checkIn.isBefore(now) && checkIn.day != now.day)) {
+            errorSnackBar(context,
+                'CheckIn date or CheckOut date can\'t be before Today');
+            return;
+          }
+          searchHotel();
+        })
       ],
     );
   }
@@ -681,6 +687,7 @@ class _HotelLayoutState extends State<HotelLayout> {
     context.read<HotelSearchProvider>().hotels = response[0];
     context.read<HotelSearchProvider>().regionId = response[1];
     context.read<HotelSearchProvider>().errorMessage = response[2];
+    context.read<LoadingProvider>().clearLocationUpdate();
   }
 }
 
