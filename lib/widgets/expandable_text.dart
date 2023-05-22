@@ -37,7 +37,7 @@ class _ExpandableTextState extends State<ExpandableText> {
       child: secondHalf.isEmpty
           ? poppinsText(
               text: firstHalf,
-              color: Colors.grey,
+              color: Constants.secondaryColor,
             )
           : Column(
               children: <Widget>[

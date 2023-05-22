@@ -25,6 +25,8 @@ class BookingNetwork {
       "adults": packageBooking.adults,
       "destination": packageBooking.destination,
       "imageUrl": packageBooking.imageUrl,
+      "vacationStartDate": packageBooking.vacationStartDate,
+      "vacationEndDate": packageBooking.vacationEndDate,
     });
 
     // increment number of sales for the package
@@ -56,8 +58,38 @@ class BookingNetwork {
       "fromTime": flightBooking.fromTime,
       "toTime": flightBooking.toTime,
       "price": flightBooking.price,
+      "flightDepartureDate": flightBooking.flightDepartureDate,
+      "flightReturnDate": flightBooking.flightReturnDate,
+      "returnFlightExists": flightBooking.returnFlightExists,
+      "returnFlightDuration": flightBooking.returnFlightDuration,
+      "returnFromCity": flightBooking.returnFromCity,
+      "returnToCity": flightBooking.returnToCity,
+      "returnFromTime": flightBooking.returnFromTime,
+      "returnToTime": flightBooking.returnToTime,
     });
+
+    // Print all the values in the flightBooking object
+    print("bookingId: ${flightBooking.bookingId}");
+    print("bookingDate: ${flightBooking.bookingDate}");
+    print("travelerId: ${flightBooking.travelerId}");
+    print("flightId: ${flightBooking.flightId}");
+    print("cabin: ${flightBooking.cabin}");
+    print("flightDuration: ${flightBooking.flightDuration}");
+    print("fromCity: ${flightBooking.fromCity}");
+    print("toCity: ${flightBooking.toCity}");
+    print("fromTime: ${flightBooking.fromTime}");
+    print("toTime: ${flightBooking.toTime}");
+    print("price: ${flightBooking.price}");
+    print("flightDepartureDate: ${flightBooking.flightDepartureDate}");
+    print("flightReturnDate: ${flightBooking.flightReturnDate}");
+    print("returnFlightExists: ${flightBooking.returnFlightExists}");
+    print("returnFlightDuration: ${flightBooking.returnFlightDuration}");
+    print("returnFromCity: ${flightBooking.returnFromCity}");
+    print("returnToCity: ${flightBooking.returnToCity}");
+    print("returnFromTime: ${flightBooking.returnFromTime}");
+    print("returnToTime: ${flightBooking.returnToTime}");
   }
+
 
   deleteFlightBooking({required bookingId}) async {
     await flightBookings.doc(bookingId).delete();
@@ -76,11 +108,11 @@ class BookingNetwork {
       "travelerId": hotelBooking.travelerId,
       "hotelId": hotelBooking.hotelId,
       "hotelRoomId": hotelBooking.hotelRoomId,
-      "hotelName":  hotelBooking.hotelName,
+      "hotelName": hotelBooking.hotelName,
       "hotelLocation": hotelBooking.hotelLocation,
-
       "imageUrl": hotelBooking.imageUrl,
-
+      "hotelCheckInDate": hotelBooking.hotelCheckInDate,
+      "hotelCheckOutDate": hotelBooking.hotelCheckOutDate,
     });
   }
 

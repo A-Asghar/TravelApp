@@ -40,6 +40,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
   }
 
   bool isLoading = false;
+
   callHotelInfo() async {
     var s = DateTime.now();
     setState(() => isLoading = true);
@@ -237,8 +238,9 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10.0)),
                                     image: DecorationImage(
-                                      image: NetworkImage(hotelProvider
-                                          .hotelImages[index]!.url!,),
+                                      image: NetworkImage(
+                                        hotelProvider.hotelImages[index]!.url!,
+                                      ),
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -321,7 +323,8 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     image: DecorationImage(
-                                        image: hotelProvider.mapImage!.url!.isEmpty ||
+                                        image: hotelProvider
+                                                    .mapImage!.url!.isEmpty ||
                                                 hotelProvider.mapImage == null
                                             ? AssetImage(
                                                 'assets/images/map.png',
@@ -617,70 +620,14 @@ Widget hotelRooms2(
                                               ],
                                             )
                                           : Container(),
-
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.info,
-                                            color: Colors.amber,
-                                          ),
-                                          Container(
-                                            margin:
-                                                const EdgeInsets.only(left: 5),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.8,
-                                            child: InkWell(
-                                              onTap: () {
-                                                errorSnackBar(
-                                                    context,
-                                                    hotelProvider
-                                                            .hotelRooms[index]
-                                                            .ratePlans![0]
-                                                            .highlightedMessages![
-                                                                0]
-                                                            .content!
-                                                            .join(' ') ??
-                                                        '');
-                                              },
-                                              child: poppinsText(
-                                                  text: hotelProvider
-                                                      .hotelRooms[index]
-                                                      .ratePlans![0]
-                                                      .priceDetails![0]
-                                                      .cancellationPolicy
-                                                      ?.type,
-                                                  color: Colors.amber),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      // Row(
-                                      //   children: [
-                                      //     const Icon(
-                                      //       Icons.info,
-                                      //       color: Constants.primaryColor,
-                                      //     ),
-                                      //     poppinsText(
-                                      //         text: ' Free-cancellation',
-                                      //         color:
-                                      //             Constants.primaryColor)
-                                      //   ],
-                                      // ),
                                       Row(
                                         children: [
                                           poppinsText(
-                                              text: hotelProvider
-                                                  .hotelRooms[index]
-                                                  .ratePlans![0]
-                                                  .priceDetails![0]
-                                                  .price!
-                                                  .lead!
-                                                  .amount
-                                                  .toStringAsFixed(2),
+                                              text:
+                                                  "\$${hotelProvider.hotelRooms[index].ratePlans![0].priceDetails![0].price!.lead!.amount.toStringAsFixed(2)}",
                                               color: Constants.primaryColor,
-                                              size: 22.0),
+                                              size: 22.0,
+                                              fontBold: FontWeight.w500),
                                           poppinsText(
                                               text: ' /night',
                                               color: Constants.secondaryColor,

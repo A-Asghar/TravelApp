@@ -9,6 +9,8 @@ class PackageBooking {
   String destination;
   String adults;
   String price;
+  String vacationStartDate;
+  String vacationEndDate;
 
   PackageBooking({
     required this.packageName,
@@ -21,6 +23,8 @@ class PackageBooking {
     required this.destination,
     required this.adults,
     required this.price,
+    required this.vacationStartDate,
+    required this.vacationEndDate,
   });
 
   factory PackageBooking.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class PackageBooking {
       destination: json['destination'],
       adults: json['adults'],
       price: json['price'],
+      vacationStartDate: json['vacationStartDate'],
+      vacationEndDate: json['vacationEndDate'],
     );
   }
 }

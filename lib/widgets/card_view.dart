@@ -66,7 +66,7 @@ class CardView extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.error,
                           color: Colors.red,
                         ),
@@ -124,7 +124,7 @@ class CardView extends StatelessWidget {
                             ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

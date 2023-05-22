@@ -10,6 +10,14 @@ class FlightBooking {
   String toTime;
   String cabin;
   String price;
+  String flightDepartureDate;
+  String flightReturnDate;
+  String returnFlightDuration;
+  String returnFromCity;
+  String returnToCity;
+  String returnFromTime;
+  String returnToTime;
+  bool returnFlightExists;
 
   FlightBooking({
     required this.bookingId,
@@ -23,6 +31,14 @@ class FlightBooking {
     required this.toTime,
     required this.cabin,
     required this.price,
+    required this.flightDepartureDate,
+    required this.flightReturnDate,
+    required this.returnFlightDuration,
+    required this.returnFromCity,
+    required this.returnToCity,
+    required this.returnFromTime,
+    required this.returnToTime,
+    required this.returnFlightExists,
   });
 
   factory FlightBooking.fromJson(Map<String, dynamic> json) {
@@ -38,6 +54,14 @@ class FlightBooking {
       toTime: json['toTime'],
       cabin: json['cabin'],
       price: json['price'],
+      flightDepartureDate: json['flightDepartureDate'],
+      flightReturnDate: json['flightReturnDate'],
+      returnFlightDuration: json['returnFlightDuration'],
+      returnFromCity: json['returnFromCity'],
+      returnToCity: json['returnToCity'],
+      returnFromTime: json['returnFromTime'],
+      returnToTime: json['returnToTime'],
+      returnFlightExists: json['returnFlightExists'],
     );
   }
 }

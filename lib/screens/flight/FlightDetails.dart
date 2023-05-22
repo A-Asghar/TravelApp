@@ -132,7 +132,9 @@ class _FlightDetailsState extends State<FlightDetails> {
                   CustomButton(
                     text: 'Confirm',
                     onTap: () {
-                      Get.to(() => ConfirmPaymentScreen(flight: widget.trip,));
+                      Get.to(() => ConfirmPaymentScreen(
+                            flight: widget.trip,
+                          ));
                     },
                     bgColor: Constants.primaryColor,
                     textColor: Colors.white,
@@ -252,7 +254,10 @@ class _FlightDetailsState extends State<FlightDetails> {
                               .arrival
                               .iataCode]![0],
                           style: GoogleFonts.poppins(
-                              fontSize: 13.0, color: Constants.secondaryColor),
+                            fontSize: 13.0,
+                            color: Constants.secondaryColor,
+                            fontWeight: FontWeight.w300
+                          ),
                           textAlign: TextAlign.right,
                         ),
                       ),

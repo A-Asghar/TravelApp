@@ -50,9 +50,9 @@ class _HomeState extends State<Home> {
     //   fetchRecommended();
     // }
 
-    // if (context.read<RecommendationProvider>().recommendedCities == null) {
+    if (context.read<RecommendationProvider>().recommendedCities == null) {
     fetchRecommended();
-    // }
+    }
 
     if (context.read<HomeProvider>().hotels.isEmpty) {
       fetchHotels();

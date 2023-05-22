@@ -46,6 +46,9 @@ dependencies:
   dropdown_button2:
   flutter_stripe: ^9.1.1
   animated_text_kit: ^4.2.2
+  collection: ^1.15.0
+  easy_stepper:
+  flutter_localization:
   flutter:
     sdk: flutter
 

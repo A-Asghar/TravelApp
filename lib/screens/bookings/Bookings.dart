@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../Constants.dart';
 import '../../widgets/poppinsText.dart';
+import 'NewView.dart';
 import 'OnGoingView.dart';
 
 class Bookings extends StatefulWidget {
@@ -45,7 +46,7 @@ class _BookingsState extends State<Bookings> {
                     documentController.isDocument.value == 0
                         ? Constants.primaryColor
                         : Colors.transparent,
-                    () {
+                        () {
                       documentController.isDocument.value = 0;
                     },
                   ),
@@ -55,7 +56,7 @@ class _BookingsState extends State<Bookings> {
                     documentController.isDocument.value == 1
                         ? Constants.primaryColor
                         : Colors.transparent,
-                    () {
+                        () {
                       documentController.isDocument.value = 1;
                     },
                   ),
@@ -65,8 +66,18 @@ class _BookingsState extends State<Bookings> {
                     documentController.isDocument.value == 2
                         ? Constants.primaryColor
                         : Colors.transparent,
-                    () {
+                        () {
                       documentController.isDocument.value = 2;
+                    },
+                  ),
+                  const SizedBox(width: 14),
+                  tapCard(
+                    "NewView",
+                    documentController.isDocument.value == 3
+                        ? Constants.primaryColor
+                        : Colors.transparent,
+                        () {
+                      documentController.isDocument.value = 3;
                     },
                   ),
                 ],
@@ -76,15 +87,18 @@ class _BookingsState extends State<Bookings> {
             GetX<DocumentController>(
               init: documentController,
               builder: (documentController) =>
-                  documentController.isDocument.value == 0
-                      ? const OnGoingView()
-                      : documentController.isDocument.value == 1
-                          ? const FlightsOnGoingView()
-                          : const VacationsOnGoingView(),
+              documentController.isDocument.value == 0
+                  ? const OnGoingView()
+                  : documentController.isDocument.value == 1
+                  ? const FlightsOnGoingView()
+                  : documentController.isDocument.value == 2
+                  ? const VacationsOnGoingView()
+                  : const NewView(),
             ),
           ],
         ),
       ),
+
     );
   }
 

@@ -17,7 +17,6 @@ import 'package:fyp/providers/FlightSearchProvider.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
 import 'package:fyp/providers/UserProvider.dart';
 import 'package:fyp/screens/BottomNavBar.dart';
-import 'package:fyp/screens/bookings/Bookings.dart';
 import 'package:fyp/widgets/card_view.dart';
 import 'package:fyp/widgets/flight_card_view.dart';
 import 'package:fyp/widgets/poppinsText.dart';
@@ -421,17 +420,23 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                       await makePayment(totalAmount.toInt().toString());
                       await bn.bookPackage(
                         packageBooking: PackageBooking(
-                          packageName: widget.package.packageName,
-                          bookingId: bookingId.toString(),
-                          bookingDate: Constants.convertDate(DateTime.now()),
-                          travelerId: travelerId,
-                          travelAgencyId: widget.package.travelAgencyId,
-                          packageId: widget.package.packageId,
-                          price: widget.package.packagePrice.toString(),
-                          adults: widget.package.adults.toString(),
-                          destination: widget.package.destination,
-                          imageUrl: widget.package.imgUrls[0],
-                        ),
+                            packageName: widget.package.packageName,
+                            bookingId: bookingId.toString(),
+                            bookingDate: Constants.convertDate(DateTime.now()),
+                            travelerId: travelerId,
+                            travelAgencyId: widget.package.travelAgencyId,
+                            packageId: widget.package.packageId,
+                            price: widget.package.packagePrice.toString(),
+                            adults: widget.package.adults.toString(),
+                            destination: widget.package.destination,
+                            imageUrl: widget.package.imgUrls[0],
+                            vacationStartDate:
+                                formatDate(widget.package.startDate),
+                            vacationEndDate: DateFormat('MMM dd, yyyy')
+                                .format(DateTime.parse(widget.package.startDate)
+                                    .add(Duration(
+                                        days: widget.package.numOfDays)))
+                                .toString()),
                       );
                       setState(() => isLoading = false);
                     },
@@ -973,6 +978,10 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                               widget.property.neighborhood?.name ?? "",
                           imageUrl:
                               widget.property.propertyImage?.image?.url ?? "",
+                          hotelCheckInDate: formatDate(
+                              context.read<HotelSearchProvider>().checkIn),
+                          hotelCheckOutDate: formatDate(
+                              context.read<HotelSearchProvider>().checkOut),
                         ),
                       );
                       setState(() => isLoading = false);
@@ -1124,7 +1133,8 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                   TealButton(
                     text: "Continue",
                     onPressed: () {
-                      Get.to(() => BottomNavBar(), transition: Transition.downToUp);
+                      Get.to(() => BottomNavBar(),
+                          transition: Transition.downToUp);
                     },
                     bgColor: Constants.primaryColor,
                     txtColor: Colors.white,
@@ -1438,16 +1448,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                               fontSize: 16,
                                             ),
                                       ),
-                                      // const SizedBox(height: 20),
-                                      // Text(
-                                      //   "Discount amount",
-                                      //   style: Theme.of(context)
-                                      //       .textTheme
-                                      //       .caption!
-                                      //       .copyWith(
-                                      //         fontSize: 16,
-                                      //       ),
-                                      // ),
+
                                       const SizedBox(height: 20),
                                       Text(
                                         "Total",
@@ -1533,25 +1534,34 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                       await makePayment(totalAmount.toInt().toString());
                       await bn.bookFlight(
                         flightBooking: FlightBooking(
-                            bookingId: bookingId.toString(),
-                            bookingDate: Constants.convertDate(DateTime.now()),
-                            travelerId: travelerId,
-                            flightId: flightId.toString(),
-                            cabin: widget.flight.fareDetailsBySegment[0].cabin,
-                            flightDuration: widget
-                                .flight.itineraries[0].duration
-                                .replaceAll('PT', '')
-                                .replaceAll('H', 'H ')
-                                .toLowerCase(),
-                            fromCity: widget.flight.itineraries[0].segments[0]
-                                .departure.iataCode,
-                            toCity: widget.flight.itineraries[0].segments[0]
-                                .arrival.iataCode,
-                            fromTime: Constants.convertTime(widget.flight
-                                .itineraries[0].segments[0].departure.at),
-                            toTime: Constants.convertTime(widget
-                                .flight.itineraries[0].segments[0].arrival.at),
-                            price: widget.flight.price.total),
+                          bookingId: bookingId.toString(),
+                          bookingDate: Constants.convertDate(DateTime.now()),
+                          travelerId: travelerId,
+                          flightId: flightId.toString(),
+                          cabin: widget.flight.fareDetailsBySegment[0].cabin,
+                          flightDuration: widget.flight.itineraries[0].duration
+                              .replaceAll('PT', '')
+                              .replaceAll('H', 'H ')
+                              .toLowerCase(),
+                          fromCity: widget.flight.itineraries[0].segments[0]
+                              .departure.iataCode,
+                          toCity: widget.flight.itineraries[0].segments.last
+                              .arrival.iataCode,
+                          fromTime: Constants.convertTime(widget
+                              .flight.itineraries[0].segments[0].departure.at),
+                          toTime: Constants.convertTime(widget
+                              .flight.itineraries[0].segments[0].arrival.at),
+                          price: widget.flight.price.total,
+                          flightDepartureDate: formatDate(context.read<FlightSearchProvider>().departDate),
+                          flightReturnDate: formatDate(context.read<FlightSearchProvider>().returnDate),
+                          returnFlightExists: widget.flight.itineraries.length > 1,
+                          returnFlightDuration: widget.flight.itineraries.length > 1 ? widget.flight.itineraries[1]?.duration?.replaceAll('PT', '')?.replaceAll('H', 'H ')?.toLowerCase() ?? '' : '',
+                          returnFromCity: widget.flight.itineraries.length > 1 ? widget.flight.itineraries[1]?.segments[0]?.departure?.iataCode ?? '' : '',
+                          returnToCity: widget.flight.itineraries.length > 1 ? widget.flight.itineraries[1]?.segments.last?.arrival?.iataCode ?? '' : '',
+                          returnFromTime: widget.flight.itineraries.length > 1 ? Constants.convertTime(widget.flight.itineraries[1]?.segments[0]?.departure?.at) ?? '' : '',
+                          returnToTime: widget.flight.itineraries.length > 1 ? Constants.convertTime(widget.flight.itineraries[1]?.segments.last?.arrival?.at) ?? '' : '',
+
+                        ),
                       );
                       setState(() => isLoading = false);
                     },
@@ -1824,4 +1834,10 @@ class _SuccessDialogState extends State<SuccessDialog> {
       ),
     );
   }
+}
+
+String formatDate(String date) {
+  final DateTime parsedDate = DateTime.parse(date);
+  final formattedDate = DateFormat('MMM dd, yyyy').format(parsedDate);
+  return formattedDate;
 }
