@@ -33,7 +33,7 @@ class _ProfileState extends State<Profile> {
           title: Padding(
             padding: EdgeInsets.all(20),
             child: poppinsText(
-                text: 'Profile', size: 24.0, fontBold: FontWeight.w600),
+                text: 'Profile', size: 24.0, fontBold: FontWeight.w500),
           ),
           centerTitle: true,
           backgroundColor: Colors.white,

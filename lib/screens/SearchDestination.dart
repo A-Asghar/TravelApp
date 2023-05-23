@@ -43,7 +43,7 @@ class _SearchDestinationState extends State<SearchDestination> {
               icon: const Icon(
                 Icons.arrow_back_ios,
                 size: 25,
-                color: Colors.black,
+                color: Constants.secondaryColor,
               ),
               onPressed: () {
                 Navigator.of(context).pop();

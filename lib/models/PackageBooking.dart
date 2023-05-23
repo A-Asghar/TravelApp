@@ -11,6 +11,8 @@ class PackageBooking {
   String price;
   String vacationStartDate;
   String vacationEndDate;
+  String rating;
+  String numOfReviews;
 
   PackageBooking({
     required this.packageName,
@@ -25,6 +27,8 @@ class PackageBooking {
     required this.price,
     required this.vacationStartDate,
     required this.vacationEndDate,
+    required this.rating,
+    required this.numOfReviews,
   });
 
   factory PackageBooking.fromJson(Map<String, dynamic> json) {
@@ -41,6 +45,8 @@ class PackageBooking {
       price: json['price'],
       vacationStartDate: json['vacationStartDate'],
       vacationEndDate: json['vacationEndDate'],
+      rating: json['rating'],
+      numOfReviews: json['numOfReviews']
     );
   }
 }

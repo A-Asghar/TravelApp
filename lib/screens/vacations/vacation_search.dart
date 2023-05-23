@@ -63,7 +63,7 @@ class _VacationSearchState extends State<VacationSearch> {
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios,
-                    size: 25, color: Colors.black87),
+                    size: 25, color: Constants.secondaryColor),
                 onPressed: () {
                   Clear();
                   Navigator.of(context).pop();
