@@ -12,6 +12,7 @@ import 'package:travel_agency/widgets/poppinsText.dart';
 import 'package:travel_agency/widgets/tealButton.dart';
 
 import '../screens/HelpScreen.dart';
+import '../screens/Notifications.dart';
 import '../screens/Security.dart';
 
 class SideDrawer extends StatefulWidget {
@@ -84,7 +85,9 @@ class _SideDrawerState extends State<SideDrawer> {
           ListTile(
             leading: Icon(Icons.notifications, color: Constants.primaryColor),
             title: poppinsText(text: 'Notifications', size: 20.0),
-            onTap: () => null,
+            onTap: () {
+              Get.to(TravelAgencyNotificationsPage(), transition: Transition.fade);
+            },
           ),
           ListTile(
             leading: Icon(Icons.security, color: Constants.primaryColor),
