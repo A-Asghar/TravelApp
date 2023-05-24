@@ -22,135 +22,137 @@ class FlightDetails extends StatefulWidget {
 class _FlightDetailsState extends State<FlightDetails> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios,
-              size: 25, color: Constants.primaryColor),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios,
+                size: 25, color: Constants.secondaryColor),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: poppinsText(text: "Trip Details", size: 24.0, fontBold: FontWeight.w500),
+          centerTitle: true,
         ),
-        title: poppinsText(text: 'Trip Details', size: 18.0),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  poppinsText(
-                      text: Constants.iataList[widget.trip.itineraries[0]
-                          .segments[0].departure.iataCode]![1],
-                      fontBold: FontWeight.w500),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Lottie.asset('assets/lf30_editor_my7jjxvm.json', height: 20),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  poppinsText(
-                      text: Constants.iataList[widget.trip.itineraries[0]
-                          .segments.last.arrival.iataCode]![1],
-                      fontBold: FontWeight.w500),
-                ],
-              ),
-
-              flightDetailsList(0),
-
-              widget.trip.itineraries.length > 1
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        poppinsText(
-                            text: Constants.iataList[widget.trip.itineraries[1]
-                                .segments.last.arrival.iataCode]![1],
-                            fontBold: FontWeight.w500),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Transform.rotate(
-                          angle: 180 * math.pi / 180,
-                          child: Lottie.asset(
-                              'assets/lf30_editor_my7jjxvm.json',
-                              height: 20),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        poppinsText(
-                            text: Constants.iataList[widget.trip.itineraries[1]
-                                .segments[0].departure.iataCode]![1],
-                            fontBold: FontWeight.w500),
-                      ],
-                    )
-                  : Container(),
-              widget.trip.itineraries.length > 1
-                  ? flightDetailsList(1)
-                  : Container(),
-
-              const SizedBox(
-                height: 10,
-              ),
-              // Price
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  poppinsText(text: 'Total', size: 30.0),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  poppinsText(
-                      text: '\$${widget.trip.price.grandTotal}',
-                      size: 30.0,
-                      fontBold: FontWeight.w500)
-                ],
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-              // Buttons
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  CustomButton(
-                      text: 'Cancel',
-                      textColor: Constants.primaryColor,
-                      bgColor: Colors.teal.withOpacity(0.1),
-                      onTap: () => Navigator.pop(context)),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  CustomButton(
-                    text: 'Confirm',
-                    onTap: () {
-                      Get.to(() => ConfirmPaymentScreen(
-                            flight: widget.trip,
-                          ));
-                    },
-                    bgColor: Constants.primaryColor,
-                    textColor: Colors.white,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                ],
-              ),
-
-              const SizedBox(
-                height: 20,
-              )
-            ],
-          )
-        ],
+        body: ListView(
+          children: [
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    poppinsText(
+                        text: Constants.iataList[widget.trip.itineraries[0]
+                            .segments[0].departure.iataCode]![1],
+                        fontBold: FontWeight.w500),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Lottie.asset('assets/lf30_editor_my7jjxvm.json', height: 20),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    poppinsText(
+                        text: Constants.iataList[widget.trip.itineraries[0]
+                            .segments.last.arrival.iataCode]![1],
+                        fontBold: FontWeight.w500),
+                  ],
+                ),
+    
+                flightDetailsList(0),
+    
+                widget.trip.itineraries.length > 1
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          poppinsText(
+                              text: Constants.iataList[widget.trip.itineraries[1]
+                                  .segments.last.arrival.iataCode]![1],
+                              fontBold: FontWeight.w500),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Transform.rotate(
+                            angle: 180 * math.pi / 180,
+                            child: Lottie.asset(
+                                'assets/lf30_editor_my7jjxvm.json',
+                                height: 20),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          poppinsText(
+                              text: Constants.iataList[widget.trip.itineraries[1]
+                                  .segments[0].departure.iataCode]![1],
+                              fontBold: FontWeight.w500),
+                        ],
+                      )
+                    : Container(),
+                widget.trip.itineraries.length > 1
+                    ? flightDetailsList(1)
+                    : Container(),
+    
+                const SizedBox(
+                  height: 10,
+                ),
+                // Price
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    poppinsText(text: 'Total', size: 30.0),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    poppinsText(
+                        text: '\$${widget.trip.price.grandTotal}',
+                        size: 30.0,
+                        fontBold: FontWeight.w500)
+                  ],
+                ),
+    
+                const SizedBox(
+                  height: 10,
+                ),
+                // Buttons
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    CustomButton(
+                        text: 'Cancel',
+                        textColor: Constants.primaryColor,
+                        bgColor: Colors.teal.withOpacity(0.1),
+                        onTap: () => Navigator.pop(context)),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    CustomButton(
+                      text: 'Confirm',
+                      onTap: () {
+                        Get.to(() => ConfirmPaymentScreen(
+                              flight: widget.trip,
+                            ));
+                      },
+                      bgColor: Constants.primaryColor,
+                      textColor: Colors.white,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+    
+                const SizedBox(
+                  height: 20,
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

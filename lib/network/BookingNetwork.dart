@@ -27,6 +27,8 @@ class BookingNetwork {
       "imageUrl": packageBooking.imageUrl,
       "vacationStartDate": packageBooking.vacationStartDate,
       "vacationEndDate": packageBooking.vacationEndDate,
+      "rating": packageBooking.rating,
+      "numOfReviews": packageBooking.numOfReviews,
     });
 
     // increment number of sales for the package
@@ -66,6 +68,9 @@ class BookingNetwork {
       "returnToCity": flightBooking.returnToCity,
       "returnFromTime": flightBooking.returnFromTime,
       "returnToTime": flightBooking.returnToTime,
+      "carrierName": flightBooking.carrierName,
+      "adults": flightBooking.adults,
+      "connectingFlights": flightBooking.connectingFlights
     });
 
     // Print all the values in the flightBooking object
@@ -113,6 +118,10 @@ class BookingNetwork {
       "imageUrl": hotelBooking.imageUrl,
       "hotelCheckInDate": hotelBooking.hotelCheckInDate,
       "hotelCheckOutDate": hotelBooking.hotelCheckOutDate,
+      "price": hotelBooking.price,
+      "rating": hotelBooking.rating,
+      "numOfReviews": hotelBooking.numOfReviews,
+      "adults": hotelBooking.adults,
     });
   }
 

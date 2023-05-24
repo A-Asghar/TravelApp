@@ -118,7 +118,8 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                           child: poppinsText(
                               text: /* Shelton's Rezidor*/
                                   widget.property.name,
-                              size: 30.0),
+                              size: 30.0,
+                              fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 15),
 
@@ -160,7 +161,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                poppinsText(text: "Gallery Photos", size: 20.0),
+                                poppinsText(text: "Gallery Photos", size: 20.0, fontBold: FontWeight.w500),
                                 poppinsText(
                                     text: "See All",
                                     size: 16.0,
@@ -203,7 +204,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                         // Description
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Description", size: 20.0),
+                          child: poppinsText(text: "Description", size: 20.0, fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 20),
                         Padding(
@@ -215,12 +216,13 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                         // Facilities
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Facilities", size: 20.0),
+                          child: poppinsText(text: "Facilities", size: 20.0, fontBold: FontWeight.w500),
                         ),
 
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                           height: 200,
+                          alignment: Alignment.topLeft,
                           child: GridView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: homeProvider.amenities!.length < 6
@@ -247,7 +249,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                         // Location Map
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Location", size: 20.0),
+                          child: poppinsText(text: "Location", size: 20.0, fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 20),
                         InkWell(
@@ -304,7 +306,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: Row(
                               children: [
-                                poppinsText(text: "Reviews", size: 20.0),
+                                poppinsText(text: "Reviews", size: 20.0, fontBold: FontWeight.w500),
                                 const SizedBox(width: 14),
                                 const Icon(
                                   Icons.star,
@@ -431,7 +433,7 @@ Widget hotelRooms1(HomeProvider homeProvider, PropertySearchListing property) {
     children: [
       Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
-        child: poppinsText(text: "Rooms", size: 20.0),
+        child: poppinsText(text: "Rooms", size: 20.0, fontBold: FontWeight.w500),
       ),
       homeProvider.hotelRooms.isEmpty
           ? Container(

@@ -9,19 +9,26 @@ class HotelBooking {
   String imageUrl;
   String hotelCheckInDate;
   String hotelCheckOutDate;
+  String price;
+  String rating;
+  String numOfReviews;
+  String adults;
 
-  HotelBooking({
-    required this.bookingId,
-    required this.bookingDate,
-    required this.travelerId,
-    required this.hotelId,
-    required this.hotelRoomId,
-    required this.hotelName,
-    required this.hotelLocation,
-    required this.imageUrl,
-    required this.hotelCheckInDate,
-    required this.hotelCheckOutDate,
-  });
+  HotelBooking(
+      {required this.bookingId,
+      required this.bookingDate,
+      required this.travelerId,
+      required this.hotelId,
+      required this.hotelRoomId,
+      required this.hotelName,
+      required this.hotelLocation,
+      required this.imageUrl,
+      required this.hotelCheckInDate,
+      required this.hotelCheckOutDate,
+      required this.price,
+      required this.rating,
+      required this.numOfReviews,
+      required this.adults});
 
   factory HotelBooking.fromJson(Map<String, dynamic> json) {
     return HotelBooking(
@@ -35,6 +42,10 @@ class HotelBooking {
       imageUrl: json['imageUrl'],
       hotelCheckInDate: json['hotelCheckInDate'],
       hotelCheckOutDate: json['hotelCheckOutDate'],
+      price: json['price'],
+      rating: json['rating'],
+      numOfReviews: json['numOfReviews'],
+      adults: json['adults'],
     );
   }
 }

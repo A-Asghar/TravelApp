@@ -17,6 +17,9 @@ class FlightBooking {
   String returnToCity;
   String returnFromTime;
   String returnToTime;
+  String carrierName;
+  String connectingFlights;
+  String adults;
   bool returnFlightExists;
 
   FlightBooking({
@@ -38,7 +41,10 @@ class FlightBooking {
     required this.returnToCity,
     required this.returnFromTime,
     required this.returnToTime,
+    required this.carrierName,
+    required this.connectingFlights,
     required this.returnFlightExists,
+    required this.adults,
   });
 
   factory FlightBooking.fromJson(Map<String, dynamic> json) {
@@ -61,7 +67,10 @@ class FlightBooking {
       returnToCity: json['returnToCity'],
       returnFromTime: json['returnFromTime'],
       returnToTime: json['returnToTime'],
+      carrierName: json['carrierName'],
+      connectingFlights: json['connectingFlights'],
       returnFlightExists: json['returnFlightExists'],
+      adults: json['adults'],
     );
   }
 }

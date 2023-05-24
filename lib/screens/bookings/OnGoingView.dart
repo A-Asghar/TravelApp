@@ -32,7 +32,9 @@ class _OnGoingViewState extends State<OnGoingView> {
         travelerId: FirebaseAuth.instance.currentUser?.uid);
     bookingsFromFirebase = snapshot.docs.map((doc) => doc.data()).toList();
     print(bookingsFromFirebase);
-    setState(() => isLoading = false);
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
   }
 
   getHotelNameUsingBookingId(propertyId) async {
@@ -49,25 +51,25 @@ class _OnGoingViewState extends State<OnGoingView> {
   Widget build(BuildContext context) {
     return isLoading
         ? const Center(
-      child: CircularProgressIndicator(),
-    )
+            child: CircularProgressIndicator(),
+          )
         : bookingsFromFirebase.isEmpty
-        ? Center(child: poppinsText(text: "No Bookings Yet!"))
-        : Expanded(
-      child: ListView.builder(
-        itemCount: bookingsFromFirebase.length,
-        padding: const EdgeInsets.only(bottom: 60),
-        physics: const ClampingScrollPhysics(),
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: HotelCard(
-              bookingData: bookingsFromFirebase[index],
-            ),
-          );
-        },
-      ),
-    );
+            ? Center(child: poppinsText(text: "No Bookings Yet!"))
+            : Expanded(
+                child: ListView.builder(
+                  itemCount: bookingsFromFirebase.length,
+                  padding: const EdgeInsets.only(bottom: 60),
+                  physics: const ClampingScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: HotelCard(
+                        bookingData: bookingsFromFirebase[index],
+                      ),
+                    );
+                  },
+                ),
+              );
   }
 }
 

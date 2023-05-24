@@ -134,7 +134,8 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                           child: poppinsText(
                               text: /* Shelton's Rezidor*/
                                   widget.property.name,
-                              size: 30.0),
+                              size: 30.0,
+                              fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 15),
 
@@ -210,7 +211,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                poppinsText(text: "Gallery Photos", size: 20.0),
+                                poppinsText(text: "Gallery Photos", size: 20.0, fontBold: FontWeight.w500),
                                 poppinsText(
                                     text: "See All",
                                     size: 16.0,
@@ -254,7 +255,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         // Description
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Description", size: 20.0),
+                          child: poppinsText(text: "Description", size: 20.0, fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 20),
                         Padding(
@@ -267,7 +268,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         // Facilities
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Facilities", size: 20.0),
+                          child: poppinsText(text: "Facilities", size: 20.0, fontBold: FontWeight.w500),
                         ),
 
                         Container(
@@ -300,7 +301,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         // Location Map
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Location", size: 20.0),
+                          child: poppinsText(text: "Location", size: 20.0, fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 20),
                         InkWell(
@@ -358,7 +359,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: Row(
                               children: [
-                                poppinsText(text: "Reviews", size: 20.0),
+                                poppinsText(text: "Reviews", size: 20.0, fontBold: FontWeight.w500),
                                 const SizedBox(width: 14),
                                 const Icon(
                                   Icons.star,
@@ -491,7 +492,7 @@ Widget hotelRooms2(
     children: [
       Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
-        child: poppinsText(text: "Rooms", size: 20.0),
+        child: poppinsText(text: "Rooms", size: 20.0, fontBold: FontWeight.w500),
       ),
       hotelProvider.hotelRooms.isEmpty
           ? Container(
@@ -587,8 +588,8 @@ Widget hotelRooms2(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15)),
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10),
+                                  // padding: const EdgeInsets.symmetric(
+                                  //     horizontal: 10),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -620,52 +621,55 @@ Widget hotelRooms2(
                                               ],
                                             )
                                           : Container(),
-                                      Row(
-                                        children: [
-                                          poppinsText(
-                                              text:
-                                                  "\$${hotelProvider.hotelRooms[index].ratePlans![0].priceDetails![0].price!.lead!.amount.toStringAsFixed(2)}",
-                                              color: Constants.primaryColor,
-                                              size: 22.0,
-                                              fontBold: FontWeight.w500),
-                                          poppinsText(
-                                              text: ' /night',
-                                              color: Constants.secondaryColor,
-                                              size: 12.0),
-                                          const Spacer(),
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RoomDetails(
-                                                  unit: hotelProvider
-                                                      .hotelRooms[index],
-                                                  property: property,
-                                                ),
-                                              ));
-                                            },
-                                            child: Container(
-                                              width: 150,
-                                              height: 40,
-                                              margin:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 20,
-                                                      vertical: 10),
-                                              decoration: BoxDecoration(
+                                      Container(
+                                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                        child: Row(
+                                          children: [
+                                            poppinsText(
+                                                text:
+                                                    "\$${hotelProvider.hotelRooms[index].ratePlans![0].priceDetails![0].price!.lead!.amount.toStringAsFixed(2)}",
                                                 color: Constants.primaryColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
+                                                size: 22.0,
+                                                fontBold: FontWeight.w500),
+                                            poppinsText(
+                                                text: ' /night',
+                                                color: Constants.secondaryColor,
+                                                size: 12.0),
+                                            const Spacer(),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RoomDetails(
+                                                    unit: hotelProvider
+                                                        .hotelRooms[index],
+                                                    property: property,
+                                                  ),
+                                                ));
+                                              },
+                                              child: Container(
+                                                width: 150,
+                                                height: 40,
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 10),
+                                                decoration: BoxDecoration(
+                                                  color: Constants.primaryColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                child: Center(
+                                                  child: poppinsText(
+                                                      text: 'Book Now',
+                                                      color: Colors.white,
+                                                      fontBold: FontWeight.w500),
+                                                ),
                                               ),
-                                              child: Center(
-                                                child: poppinsText(
-                                                    text: 'Book Now',
-                                                    color: Colors.white,
-                                                    fontBold: FontWeight.w500),
-                                              ),
-                                            ),
-                                          )
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

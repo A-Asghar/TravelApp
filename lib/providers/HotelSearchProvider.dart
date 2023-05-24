@@ -107,6 +107,7 @@ class HotelSearchProvider extends ChangeNotifier {
 
   clearHotels() {
     _hotels = [];
+    _to = Destination(city: '', iata: '');
     notifyListeners();
   }
 

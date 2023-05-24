@@ -1,5 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/models/FlightBooking.dart';
+import 'package:fyp/models/HotelBooking.dart';
+import 'package:fyp/models/PackageBooking.dart';
+import 'package:fyp/screens/ViewBooking.dart';
+import 'package:get/get.dart';
 
 import '../../Constants.dart';
 import '../../network/BookingNetwork.dart';
@@ -61,68 +66,70 @@ class _NewViewState extends State<NewView> {
         dates.add(e['vacationStartDate']);
       }
     });
-
-    setState(() => isLoading = false);
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
   }
 
   int _currentStep = 0;
 
   @override
-  Widget build(BuildContext context) {
-    return isLoading
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : (hotelBookings.isEmpty &&
-                flightBookings.isEmpty &&
-                vacationBookings.isEmpty)
-            ? Center(child: poppinsText(text: "No Bookings Yet!"))
-            : Expanded(
-                child: ListView.builder(
-                  itemCount: dates.length,
-                  padding: const EdgeInsets.only(bottom: 60),
-                  physics: const ClampingScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    List<Widget> bookingCards = [];
+Widget build(BuildContext context) {
+  return isLoading
+      ? const Center(
+          child: CircularProgressIndicator(),
+        )
+      : (hotelBookings.isEmpty &&
+              flightBookings.isEmpty &&
+              vacationBookings.isEmpty)
+          ? Center(child: poppinsText(text: "No Bookings Yet!"))
+          : ListView.builder(
+              itemCount: dates.length,
+              padding: const EdgeInsets.only(bottom: 60),
+              physics: const ClampingScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                List<Widget> bookingCards = [];
 
-                    var flightsOnDate = flightBookings.where((booking) =>
-                        booking['flightDepartureDate'] == dates[index]);
-                    var flightsOnReturnDate = flightBookings.where((booking) =>
-                        booking['flightReturnDate'] == dates[index]);
-                    var hotelsOnDate = hotelBookings.where((booking) =>
-                        booking['hotelCheckInDate'] == dates[index]);
-                    var vacationsOnDate = vacationBookings.where((booking) =>
-                        booking['vacationStartDate'] == dates[index]);
+                var flightsOnDate = flightBookings.where((booking) =>
+                    booking['flightDepartureDate'] == dates[index]);
+                var flightsOnReturnDate = flightBookings.where((booking) =>
+                    booking['flightReturnDate'] == dates[index]);
+                var hotelsOnDate = hotelBookings.where((booking) =>
+                    booking['hotelCheckInDate'] == dates[index]);
+                var vacationsOnDate = vacationBookings.where((booking) =>
+                    booking['vacationStartDate'] == dates[index]);
 
-                    flightsOnDate.forEach((booking) {
-                      bookingCards.add(FlightCard(bookingData: booking));
-                    });
+                flightsOnDate.forEach((booking) {
+                  bookingCards.add(FlightCard(bookingData: booking));
+                });
 
-                    flightsOnReturnDate.forEach((booking) {
-                      bookingCards.add(FlightReturnCard(bookingData: booking));
-                    });
+                flightsOnReturnDate.forEach((booking) {
+                  bookingCards.add(FlightReturnCard(bookingData: booking));
+                });
 
-                    hotelsOnDate.forEach((booking) {
-                      bookingCards.add(HotelCard(bookingData: booking));
-                    });
+                hotelsOnDate.forEach((booking) {
+                  bookingCards.add(HotelCard(bookingData: booking));
+                });
 
-                    vacationsOnDate.forEach((booking) {
-                      bookingCards.add(VacationCard(bookingData: booking));
-                    });
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomStepper(
-                            date: dates[index],
-                            widget: Column(
-                              children: bookingCards,
-                            ))
-                      ],
-                    );
-                  },
-                ),
-              );
-  }
+                vacationsOnDate.forEach((booking) {
+                  bookingCards.add(VacationCard(bookingData: booking));
+                });
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomStepper(
+                      date: dates[index],
+                      widget: Column(
+                        children: bookingCards,
+                      ),
+                    )
+                  ],
+                );
+              },
+            );
+}
+
 
   List<Step> _buildSteps() {
     List<Step> steps = [];
@@ -189,58 +196,66 @@ class HotelCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Container(
-        margin: EdgeInsets.all(10),
-        child: Row(
-          children: [
-            Container(
-              height: 80,
-              width: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                image: DecorationImage(
-                  image: NetworkImage(bookingData['imageUrl']),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            const SizedBox(width: 14),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  // color: Colors.red,
-                  width: MediaQuery.of(context).size.width * 0.49,
-                  child: poppinsText(
-                    text: bookingData['hotelName'],
-                    size: 14.0,
-                    fontBold: FontWeight.w700,
+    return InkWell(
+      onTap: () {
+        HotelBooking hotelBooking = HotelBooking.fromJson(bookingData);
+        Get.to(() => ViewBooking(
+              hotelBooking: hotelBooking,
+            ));
+      },
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Container(
+          margin: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Container(
+                height: 80,
+                width: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  image: DecorationImage(
+                    image: NetworkImage(bookingData['imageUrl']),
+                    fit: BoxFit.fill,
                   ),
                 ),
-                const SizedBox(height: 10),
-                poppinsText(
-                  text: bookingData['hotelLocation'],
-                  size: 12.0,
-                  color: const Color(0xff616161),
-                ),
-                const SizedBox(height: 5),
-                Container(
-                  alignment: Alignment.bottomRight,
-                  width: MediaQuery.of(context).size.width * 0.49,
-                  child: poppinsText(
-                      text: "Checkout: ${bookingData['hotelCheckOutDate']}",
-                      size: 12.0,
-                      color: Constants.primaryColor,
-                      fontBold: FontWeight.w500),
-                )
-              ],
-            )
-          ],
+              ),
+              const SizedBox(width: 14),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    // color: Colors.red,
+                    width: MediaQuery.of(context).size.width * 0.49,
+                    child: poppinsText(
+                      text: bookingData['hotelName'],
+                      size: 14.0,
+                      fontBold: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  poppinsText(
+                    text: bookingData['hotelLocation'],
+                    size: 12.0,
+                    color: const Color(0xff616161),
+                  ),
+                  const SizedBox(height: 5),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    width: MediaQuery.of(context).size.width * 0.49,
+                    child: poppinsText(
+                        text: "Checkout: ${bookingData['hotelCheckOutDate']}",
+                        size: 12.0,
+                        color: Constants.primaryColor,
+                        fontBold: FontWeight.w500),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -249,138 +264,145 @@ class HotelCard extends StatelessWidget {
 
 class FlightCard extends StatelessWidget {
   final Map<String, dynamic> bookingData;
-
   const FlightCard({required this.bookingData});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  child: poppinsText(
-                    text: 'Flight Duration',
-                    size: 12.0,
-                    fontBold: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  child: poppinsText(
-                      text: bookingData['flightDuration'],
-                      color: Constants.secondaryColor,
-                      size: 12.0),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                poppinsText(
-                  text: bookingData['fromTime'],
-                  size: 15.0,
-                  fontBold: FontWeight.w400,
-                ),
-                const Expanded(
-                  child: Divider(
-                    color: Constants.secondaryColor,
-                    indent: 20,
-                    endIndent: 10,
-                  ),
-                ),
-                Transform.rotate(
-                  angle: 90 * 3.1415 / 180,
-                  child: const Icon(
-                    Icons.flight,
-                    color: Constants.primaryColor,
-                    size: 25,
-                  ),
-                ),
-                const Expanded(
-                  child: Divider(
-                    color: Constants.secondaryColor,
-                    indent: 10,
-                    endIndent: 20,
-                  ),
-                ),
-                poppinsText(
-                  text: bookingData['toTime'],
-                  size: 15.0,
-                  fontBold: FontWeight.w400,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                poppinsText(
-                  text: bookingData['fromCity'],
-                  color: Constants.secondaryColor,
-                ),
-                poppinsText(
-                  text: bookingData['toCity'],
-                  color: Constants.secondaryColor,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            child: Row(
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.event_seat,
-                      color: Constants.secondaryColor,
-                      size: 15,
-                    ),
-                    const SizedBox(width: 5),
-                    poppinsText(
-                      text: bookingData['cabin'],
-                      color: Constants.secondaryColor,
+    return InkWell(
+      onTap: () {
+        FlightBooking flightBooking = FlightBooking.fromJson(bookingData);
+        Get.to(() => ViewBooking(
+              flightBooking: flightBooking,
+            ));
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: poppinsText(
+                      text: 'Flight Duration',
                       size: 12.0,
                       fontBold: FontWeight.w500,
                     ),
-                  ],
-                ),
-                const Spacer(),
-                const SizedBox(width: 10),
-                poppinsText(
-                  text: "\$" + bookingData['price'],
-                  color: Constants.secondaryColor,
-                  fontBold: FontWeight.w600,
-                  size: 15.0,
-                ),
-              ],
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    child: poppinsText(
+                        text: bookingData['flightDuration'],
+                        color: Constants.secondaryColor,
+                        size: 12.0),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  poppinsText(
+                    text: bookingData['fromTime'],
+                    size: 15.0,
+                    fontBold: FontWeight.w400,
+                  ),
+                  const Expanded(
+                    child: Divider(
+                      color: Constants.secondaryColor,
+                      indent: 20,
+                      endIndent: 10,
+                    ),
+                  ),
+                  Transform.rotate(
+                    angle: 90 * 3.1415 / 180,
+                    child: const Icon(
+                      Icons.flight,
+                      color: Constants.primaryColor,
+                      size: 25,
+                    ),
+                  ),
+                  const Expanded(
+                    child: Divider(
+                      color: Constants.secondaryColor,
+                      indent: 10,
+                      endIndent: 20,
+                    ),
+                  ),
+                  poppinsText(
+                    text: bookingData['toTime'],
+                    size: 15.0,
+                    fontBold: FontWeight.w400,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  poppinsText(
+                    text: bookingData['fromCity'],
+                    color: Constants.secondaryColor,
+                  ),
+                  poppinsText(
+                    text: bookingData['toCity'],
+                    color: Constants.secondaryColor,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              child: Row(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.event_seat,
+                        color: Constants.secondaryColor,
+                        size: 15,
+                      ),
+                      const SizedBox(width: 5),
+                      poppinsText(
+                        text: bookingData['cabin'],
+                        color: Constants.secondaryColor,
+                        size: 12.0,
+                        fontBold: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  const SizedBox(width: 10),
+                  poppinsText(
+                    text: "\$" + bookingData['price'],
+                    color: Constants.secondaryColor,
+                    fontBold: FontWeight.w600,
+                    size: 15.0,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -393,143 +415,151 @@ class FlightReturnCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.only(left: 10, top: 5),
-            child: poppinsText(
-              text: '*Return Flight',
-              size: 12.0,
-              fontBold: FontWeight.w700,
+    return InkWell(
+      onTap: () {
+        FlightBooking flightBooking = FlightBooking.fromJson(bookingData);
+        Get.to(() => ViewBooking(
+              flightBooking: flightBooking,
+            ));
+      },
+      child: bookingData['returnFlightExists'] ? Card(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(left: 10, top: 5),
+              child: poppinsText(
+                text: '*Return Flight',
+                size: 12.0,
+                fontBold: FontWeight.w700,
+              ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  child: poppinsText(
-                    text: 'Flight Duration',
-                    size: 12.0,
-                    fontBold: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  child: poppinsText(
-                      text: bookingData['returnFlightDuration'],
-                      color: Constants.secondaryColor,
-                      size: 12.0),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                poppinsText(
-                  text: bookingData['returnFromTime'],
-                  size: 15.0,
-                  fontBold: FontWeight.w400,
-                ),
-                const Expanded(
-                  child: Divider(
-                    color: Constants.secondaryColor,
-                    indent: 20,
-                    endIndent: 10,
-                  ),
-                ),
-                Transform.rotate(
-                  angle: 90 * 3.1415 / 180,
-                  child: const Icon(
-                    Icons.flight,
-                    color: Constants.primaryColor,
-                    size: 25,
-                  ),
-                ),
-                const Expanded(
-                  child: Divider(
-                    color: Constants.secondaryColor,
-                    indent: 10,
-                    endIndent: 20,
-                  ),
-                ),
-                poppinsText(
-                  text: bookingData['returnToTime'],
-                  size: 15.0,
-                  fontBold: FontWeight.w400,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                poppinsText(
-                  text: bookingData['returnFromCity'],
-                  color: Constants.secondaryColor,
-                ),
-                poppinsText(
-                  text: bookingData['returnToCity'],
-                  color: Constants.secondaryColor,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(
-              horizontal: 10,
-            ),
-            child: Row(
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.event_seat,
-                      color: Constants.secondaryColor,
-                      size: 15,
-                    ),
-                    const SizedBox(width: 5),
-                    poppinsText(
-                      text: bookingData['cabin'],
-                      color: Constants.secondaryColor,
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: poppinsText(
+                      text: 'Flight Duration',
                       size: 12.0,
                       fontBold: FontWeight.w500,
                     ),
-                  ],
-                ),
-                const Spacer(),
-                const SizedBox(width: 10),
-                poppinsText(
-                  text: "\$" + bookingData['price'],
-                  color: Constants.secondaryColor,
-                  fontBold: FontWeight.w600,
-                  size: 15.0,
-                ),
-              ],
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
+                    child: poppinsText(
+                        text: bookingData['returnFlightDuration'],
+                        color: Constants.secondaryColor,
+                        size: 12.0),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+            const SizedBox(height: 10),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  poppinsText(
+                    text: bookingData['returnFromTime'],
+                    size: 15.0,
+                    fontBold: FontWeight.w400,
+                  ),
+                  const Expanded(
+                    child: Divider(
+                      color: Constants.secondaryColor,
+                      indent: 20,
+                      endIndent: 10,
+                    ),
+                  ),
+                  Transform.rotate(
+                    angle: 90 * 3.1415 / 180,
+                    child: const Icon(
+                      Icons.flight,
+                      color: Constants.primaryColor,
+                      size: 25,
+                    ),
+                  ),
+                  const Expanded(
+                    child: Divider(
+                      color: Constants.secondaryColor,
+                      indent: 10,
+                      endIndent: 20,
+                    ),
+                  ),
+                  poppinsText(
+                    text: bookingData['returnToTime'],
+                    size: 15.0,
+                    fontBold: FontWeight.w400,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  poppinsText(
+                    text: bookingData['returnFromCity'],
+                    color: Constants.secondaryColor,
+                  ),
+                  poppinsText(
+                    text: bookingData['returnToCity'],
+                    color: Constants.secondaryColor,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(
+                horizontal: 10,
+              ),
+              child: Row(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.event_seat,
+                        color: Constants.secondaryColor,
+                        size: 15,
+                      ),
+                      const SizedBox(width: 5),
+                      poppinsText(
+                        text: bookingData['cabin'],
+                        color: Constants.secondaryColor,
+                        size: 12.0,
+                        fontBold: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  const SizedBox(width: 10),
+                  poppinsText(
+                    text: "\$" + bookingData['price'],
+                    color: Constants.secondaryColor,
+                    fontBold: FontWeight.w600,
+                    size: 15.0,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ) : Container(),
     );
   }
 }
@@ -545,59 +575,67 @@ class VacationCard extends StatelessWidget {
     final String packageName = bookingData['packageName'];
     final String destination = bookingData['destination'];
 
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Container(
-        margin: EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  height: 80,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    image: DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.fill,
+    return InkWell(
+      onTap: () {
+        PackageBooking packageBooking = PackageBooking.fromJson(bookingData);
+        Get.to(() => ViewBooking(
+              packageBooking: packageBooking,
+            ));
+      },
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Container(
+          margin: EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    height: 80,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      image: DecorationImage(
+                        image: NetworkImage(imageUrl),
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 14),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    poppinsText(
-                      text: packageName,
-                      size: 14.0,
-                      fontBold: FontWeight.w700,
-                    ),
-                    const SizedBox(height: 10),
-                    poppinsText(
-                      text: destination,
-                      size: 12.0,
-                      color: const Color(0xff616161),
-                    ),
-                    const SizedBox(height: 5),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      width: MediaQuery.of(context).size.width * 0.49,
-                      child: poppinsText(
-                          text: "Ends: ${bookingData['vacationEndDate']}",
-                          color: Constants.primaryColor,
-                          fontBold: FontWeight.w500,
-                          size: 12.0),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ],
+                  const SizedBox(width: 14),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      poppinsText(
+                        text: packageName,
+                        size: 14.0,
+                        fontBold: FontWeight.w700,
+                      ),
+                      const SizedBox(height: 10),
+                      poppinsText(
+                        text: destination,
+                        size: 12.0,
+                        color: const Color(0xff616161),
+                      ),
+                      const SizedBox(height: 5),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        width: MediaQuery.of(context).size.width * 0.49,
+                        child: poppinsText(
+                            text: "Ends: ${bookingData['vacationEndDate']}",
+                            color: Constants.primaryColor,
+                            fontBold: FontWeight.w500,
+                            size: 12.0),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

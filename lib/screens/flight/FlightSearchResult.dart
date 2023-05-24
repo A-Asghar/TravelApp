@@ -28,165 +28,167 @@ class _FlightSearchResultState extends State<FlightSearchResult> {
     }
 
     var destProvider = context.watch<FlightSearchProvider>();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 25, color: Constants.primaryColor),
-          onPressed: () {
-            Clear();
-            Navigator.of(context).pop();
-          },
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: context.read<FlightSearchProvider>().flights.isNotEmpty || context.read<FlightSearchProvider>().count == 0 ? IconButton(
+            icon: const Icon(Icons.arrow_back_ios, size: 25, color: Constants.secondaryColor),
+            onPressed: () {
+              Clear();
+              Navigator.of(context).pop();
+            },
+          ) : Container(),
         ),
-      ),
-      body: WillPopScope(
-        onWillPop: () async {
-          Clear();
-          return true;
-        },
-        child: Column(
-          children: [
-
-            // Number of results returned
-            Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                alignment: Alignment.centerLeft,
-                child: poppinsText(
-                  text:context.read<FlightSearchProvider>().flights.isNotEmpty
-                      ? '${context.read<FlightSearchProvider>().count} flights available'
-                      : '',
-                  color: Constants.secondaryColor,
-                )),
-
-
-            Expanded(
-              child: (context.watch<FlightSearchProvider>().flights.isEmpty &&
-                      context.watch<FlightSearchProvider>().count == null)
-                  ? lottieLoader(context)
-                  : context.read<FlightSearchProvider>().count == 0
-                      ? Center(child: poppinsText(text: 'Not Found', size: 30.0))
-                      : ListView.builder(
-                          physics: const ScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: destProvider.flights.length,
-                          itemBuilder: (context, index) {
-                            Itinerary flight = destProvider.flights[index].itineraries[0];
-                            int connectingFlights = flight.segments.length - 1;
-                            return GestureDetector(
-                              onTap: (){
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(
-                                    builder: (context)=> FlightDetails(trip: destProvider.flights[index])));
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: Row(
-                                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                                        children: [
-
-                                          // Flight Carrier
-                                          flightCarrier(destProvider, flight),
-
-                                          // Trip Duration
-                                          tripDuration(flight)
-                                        ],
+        body: WillPopScope(
+          onWillPop: () async {
+            Clear();
+            return true;
+          },
+          child: Column(
+            children: [
+    
+              // Number of results returned
+              Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  alignment: Alignment.centerLeft,
+                  child: poppinsText(
+                    text:context.read<FlightSearchProvider>().flights.isNotEmpty
+                        ? '${context.read<FlightSearchProvider>().count} flights available'
+                        : '',
+                    color: Constants.secondaryColor,
+                  )),
+    
+    
+              Expanded(
+                child: (context.watch<FlightSearchProvider>().flights.isEmpty &&
+                        context.watch<FlightSearchProvider>().count == null)
+                    ? lottieLoader(context)
+                    : context.read<FlightSearchProvider>().count == 0
+                        ? Center(child: poppinsText(text: 'Not Found', size: 30.0))
+                        : ListView.builder(
+                            physics: const ScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: destProvider.flights.length,
+                            itemBuilder: (context, index) {
+                              Itinerary flight = destProvider.flights[index].itineraries[0];
+                              int connectingFlights = flight.segments.length - 1;
+                              return GestureDetector(
+                                onTap: (){
+                                  Navigator.of(context)
+                                      .push(MaterialPageRoute(
+                                      builder: (context)=> FlightDetails(trip: destProvider.flights[index])));
+                                },
+                                child: Card(
+                                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 10),
+                                        child: Row(
+                                          mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                                          children: [
+    
+                                            // Flight Carrier
+                                            flightCarrier(destProvider, flight),
+    
+                                            // Trip Duration
+                                            tripDuration(flight)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-
-                                    const SizedBox(height: 10,),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(horizontal:10),
-                                      child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children:[
-
-
-                                            // Departure Time
-                                            poppinsText(text: Constants.convertTime(flight.segments[0].departure.at),
-                                                size: 22.0,fontBold: FontWeight.w400),
-                                            const Expanded(
-                                                child: Divider(
-                                                  color: Constants.secondaryColor,
-                                                  indent: 20,
-                                                  endIndent: 10,
-                                                ),
-                                            ),
-
-                                            // Airplane Icon
-                                            Transform.rotate(
-                                              angle: 90 * math.pi / 180,
-                                              child: const Icon(Icons.flight,color: Constants.primaryColor,size: 25,),
-                                            ),
-
-                                            const Expanded(
-                                                child: Divider(
-                                                  color: Constants.secondaryColor,
-                                                  indent: 10,
-                                                  endIndent: 20,
-                                                )),
-
-                                            // Arrival Time
-                                            poppinsText(text: Constants.convertTime(flight.segments.last.arrival.at),
-                                                size: 22.0,fontBold: FontWeight.w400),
-                                          ]
+    
+                                      const SizedBox(height: 10,),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal:10),
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children:[
+    
+    
+                                              // Departure Time
+                                              poppinsText(text: Constants.convertTime(flight.segments[0].departure.at),
+                                                  size: 22.0,fontBold: FontWeight.w400),
+                                              const Expanded(
+                                                  child: Divider(
+                                                    color: Constants.secondaryColor,
+                                                    indent: 20,
+                                                    endIndent: 10,
+                                                  ),
+                                              ),
+    
+                                              // Airplane Icon
+                                              Transform.rotate(
+                                                angle: 90 * math.pi / 180,
+                                                child: const Icon(Icons.flight,color: Constants.primaryColor,size: 25,),
+                                              ),
+    
+                                              const Expanded(
+                                                  child: Divider(
+                                                    color: Constants.secondaryColor,
+                                                    indent: 10,
+                                                    endIndent: 20,
+                                                  )),
+    
+                                              // Arrival Time
+                                              poppinsText(text: Constants.convertTime(flight.segments.last.arrival.at),
+                                                  size: 22.0,fontBold: FontWeight.w400),
+                                            ]
+                                        ),
                                       ),
-                                    ),
-
-
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(horizontal:10),
-                                      child: Row(
-                                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          poppinsText(text:'${flight.segments[0].departure.iataCode} (${Constants.iataList[flight.segments[0].departure.iataCode]![1]})',
-                                              color: Constants.secondaryColor),
-                                          poppinsText(text:'${flight.segments.last.arrival.iataCode} (${Constants.iataList[flight.segments.last.arrival.iataCode]![1]})',
-                                              color: Constants.secondaryColor),
-                                        ],
+    
+    
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal:10),
+                                        child: Row(
+                                          mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            poppinsText(text:'${flight.segments[0].departure.iataCode} (${Constants.iataList[flight.segments[0].departure.iataCode]![1]})',
+                                                color: Constants.secondaryColor),
+                                            poppinsText(text:'${flight.segments.last.arrival.iataCode} (${Constants.iataList[flight.segments.last.arrival.iataCode]![1]})',
+                                                color: Constants.secondaryColor),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-
-
-                                    // Number of connecting Flights
-                                    connectingFlightsWidget(connectingFlights),
-                                    const SizedBox(height: 10),
-
-
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      child: Row(
-                                        children: [
-
-                                          // Flight Class
-                                          flightClass(destProvider.flights[index]
-                                              .fareDetailsBySegment[0].cabin),
-
-                                          const Spacer(),
-
-                                          poppinsText(text: 'From',color: Constants.secondaryColor),
-                                          const SizedBox(width: 10,),
-                                          // Trip Price
-                                          tripPrice(destProvider.flights[index].price.total),
-                                        ],
-                                      ),
-                                    )
-                                  ],
+    
+    
+                                      // Number of connecting Flights
+                                      connectingFlightsWidget(connectingFlights),
+                                      const SizedBox(height: 10),
+    
+    
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        child: Row(
+                                          children: [
+    
+                                            // Flight Class
+                                            flightClass(destProvider.flights[index]
+                                                .fareDetailsBySegment[0].cabin),
+    
+                                            const Spacer(),
+    
+                                            poppinsText(text: 'From',color: Constants.secondaryColor),
+                                            const SizedBox(width: 10,),
+                                            // Trip Price
+                                            tripPrice(destProvider.flights[index].price.total),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-            )
-          ],
+                              );
+                            },
+                          ),
+              )
+            ],
+          ),
         ),
       ),
     );

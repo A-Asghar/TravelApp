@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/widgets/poppinsText.dart';
 import 'package:get/get.dart';
 
 import '../../Constants.dart';
@@ -30,12 +31,8 @@ class _CancelBookingScreenState extends State<CancelBookingScreen> {
             size: 25,
           ),
         ),
-        title: Text(
-          "Cancel Hotel Booking",
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-            fontSize: 22,
-          ),
-        ),
+        title: poppinsText(text: "Cancel Hotel Booking", size: 24.0, fontBold: FontWeight.w500),
+        
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),

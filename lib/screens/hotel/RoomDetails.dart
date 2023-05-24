@@ -36,7 +36,7 @@ class RoomDetails extends StatelessWidget {
             },
           ),
           centerTitle: true,
-          title: poppinsText(text: 'Room Details'),
+          title: poppinsText(text: "Room Details", size: 24.0, fontBold: FontWeight.w500),
         ),
         body: ListView(
           children: [
