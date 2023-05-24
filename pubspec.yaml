@@ -48,7 +48,6 @@ dependencies:
   animated_text_kit: ^4.2.2
   collection: ^1.15.0
   easy_stepper:
-  flutter_localization:
   faker: ^2.1.0
   flutter:
     sdk: flutter

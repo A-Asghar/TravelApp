@@ -12,7 +12,6 @@ import 'package:fyp/screens/auth/Login.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +21,6 @@ Future<void> main() async {
       "pk_test_51MygtvITbvfdqJlo9p4ysJUCshKbyGFnSyxNLAuc9WCV9DxRy8Y8HJHd8Q7boeCnWO6M6wvPru2BuhvWW7S5ntE600XK7SK60K";
   Stripe.merchantIdentifier = 'Ali Asghar';
   await Stripe.instance.applySettings();
-
 
   runApp(
     MultiProvider(
@@ -50,14 +48,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en', 'US'), // English
-        // You can add more supported locales here
-      ],
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
