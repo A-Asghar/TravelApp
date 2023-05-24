@@ -12,6 +12,7 @@ import '../../providers/UserProvider.dart';
 import '../../widgets/poppinsText.dart';
 import '../Help.dart';
 import '../Home.dart';
+import '../Notifications.dart';
 import '../Security.dart';
 
 class Profile extends StatefulWidget {
@@ -123,10 +124,10 @@ class _ProfileState extends State<Profile> {
                           Icons.notifications,
                           "Notifications",
                           () {
-                            // Get.to(
-                            //   const NotificationScreen(),
-                            //   transition: Transition.rightToLeft,
-                            // );
+                            Get.to(
+                              NotificationsPage(),
+                              transition: Transition.rightToLeft,
+                            );
                           },
                         ),
                         const SizedBox(height: 30),
