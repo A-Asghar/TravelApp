@@ -295,7 +295,7 @@ class _HotelHomeDetailsState extends State<HotelHomeDetails> {
                           onTap: () {
                             if (homeProvider.hotelReviews.isNotEmpty) {
                               Get.to(
-                                Reviews(
+                                Reviews2(
                                   property: widget.property,
                                 ),
                                 transition: Transition.rightToLeft,

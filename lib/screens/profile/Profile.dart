@@ -22,6 +22,7 @@ class Profile extends StatefulWidget {
 }
 
 final UserProvider controller = Get.put(UserProvider());
+bool isLoggingOut = false;
 
 class _ProfileState extends State<Profile> {
   @override
@@ -65,8 +66,9 @@ class _ProfileState extends State<Profile> {
                                 borderRadius: BorderRadius.circular(100.0),
                                 image: DecorationImage(
                                   image: controller
-                                          .user!.profilePhotoUrl.isEmpty || controller
-                                          .user!.profilePhotoUrl == "assets/images/user.png"
+                                              .user!.profilePhotoUrl.isEmpty ||
+                                          controller.user!.profilePhotoUrl ==
+                                              "assets/images/user.png"
                                       ? const AssetImage(
                                           'assets/images/user.png')
                                       : NetworkImage(
@@ -136,7 +138,7 @@ class _ProfileState extends State<Profile> {
                           Icons.security,
                           "Security",
                           () {
-                             Get.to(
+                            Get.to(
                               SecurityPolicyScreen(),
                               transition: Transition.rightToLeft,
                             );
@@ -194,28 +196,40 @@ class _ProfileState extends State<Profile> {
                                         size: 20.0,
                                       ),
                                       const SizedBox(height: 10),
-                                      TealButton(
-                                        text: "Yes, Logout",
-                                        onPressed: () async {
-                                          Get.offAll(
-                                            const Home(),
-                                            transition: Transition.rightToLeft,
-                                          );
-                                          Get.offAll(
-                                            const Login(),
-                                            transition: Transition.rightToLeft,
-                                          );
-                                          SharedPreferences.getInstance().then(
-                                    (prefs) {
-                                      prefs.setBool("remember_me", false);
-                                    },
-                                  );
-                                          FirebaseAuth.instance.signOut();
-                                          await GoogleSignIn().signOut();
-                                        },
-                                        bgColor: Colors.red,
-                                        txtColor: Colors.white,
-                                      ),
+                                      isLoggingOut
+                                          ? const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Constants.primaryColor,
+                                              ),
+                                            )
+                                          : TealButton(
+                                              text: "Yes, Logout",
+                                              onPressed: () async {
+                                                setState(() => isLoggingOut = true);
+                                                Get.offAll(
+                                                  const Home(),
+                                                  transition:
+                                                      Transition.rightToLeft,
+                                                );
+                                                Get.offAll(
+                                                  const Login(),
+                                                  transition:
+                                                      Transition.rightToLeft,
+                                                );
+                                                SharedPreferences.getInstance()
+                                                    .then(
+                                                  (prefs) {
+                                                    prefs.setBool(
+                                                        "remember_me", false);
+                                                  },
+                                                );
+                                                FirebaseAuth.instance.signOut();
+                                                await GoogleSignIn().signOut();
+                                                setState(() => isLoggingOut = false);
+                                              },
+                                              bgColor: Colors.red,
+                                              txtColor: Colors.white,
+                                            ),
                                       TealButton(
                                         text: "Cancel",
                                         bgColor: Constants.primaryColor,
