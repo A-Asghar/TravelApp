@@ -27,78 +27,80 @@ class _BookingsState extends State<Bookings> {
           child: poppinsText(
               text: 'My Bookings', size: 24.0, fontBold: FontWeight.w500),
         ),
-            backgroundColor: Colors.white,
-            elevation: 0,
-            centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            GetX<DocumentController>(
-              init: documentController,
-              builder: (documentController) => Row(
-                children: [
-                  tapCard(
-                    "Hotels",
-                    documentController.isDocument.value == 0
-                        ? Constants.primaryColor
-                        : Colors.transparent,
-                        () {
-                      documentController.isDocument.value = 0;
-                    },
-                  ),
-                  const SizedBox(width: 14),
-                  tapCard(
-                    "Flights",
-                    documentController.isDocument.value == 1
-                        ? Constants.primaryColor
-                        : Colors.transparent,
-                        () {
-                      documentController.isDocument.value = 1;
-                    },
-                  ),
-                  const SizedBox(width: 14),
-                  tapCard(
-                    "Vacations",
-                    documentController.isDocument.value == 2
-                        ? Constants.primaryColor
-                        : Colors.transparent,
-                        () {
-                      documentController.isDocument.value = 2;
-                    },
-                  ),
-                  const SizedBox(width: 14),
-                  tapCard(
-                    "NewView",
-                    documentController.isDocument.value == 3
-                        ? Constants.primaryColor
-                        : Colors.transparent,
-                        () {
-                      documentController.isDocument.value = 3;
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            GetX<DocumentController>(
-              init: documentController,
-              builder: (documentController) =>
-              documentController.isDocument.value == 0
-                  ? const OnGoingView()
-                  : documentController.isDocument.value == 1
-                  ? const FlightsOnGoingView()
-                  : documentController.isDocument.value == 2
-                  ? const VacationsOnGoingView()
-                  : const NewView(),
-            ),
-          ],
-        ),
-      ),
-
+      body: const NewView(),
+      // Padding(
+      //   padding: const EdgeInsets.only(left: 20, right: 20),
+      //   child: Column(
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     children: [
+      //       const SizedBox(height: 20),
+      //       GetX<DocumentController>(
+      //         init: documentController,
+      //         builder: (documentController) => Row(
+      //           children: [
+      //             // tapCard(
+      //             //   "Hotels",
+      //             //   documentController.isDocument.value == 0
+      //             //       ? Constants.primaryColor
+      //             //       : Colors.transparent,
+      //             //   () {
+      //             //     documentController.isDocument.value = 0;
+      //             //   },
+      //             // ),
+      //             // const SizedBox(width: 14),
+      //             // tapCard(
+      //             //   "Flights",
+      //             //   documentController.isDocument.value == 1
+      //             //       ? Constants.primaryColor
+      //             //       : Colors.transparent,
+      //             //   () {
+      //             //     documentController.isDocument.value = 1;
+      //             //   },
+      //             // ),
+      //             // const SizedBox(width: 14),
+      //             // tapCard(
+      //             //   "Vacations",
+      //             //   documentController.isDocument.value == 2
+      //             //       ? Constants.primaryColor
+      //             //       : Colors.transparent,
+      //             //   () {
+      //             //     documentController.isDocument.value = 2;
+      //             //   },
+      //             // ),
+      //             // const SizedBox(width: 14),
+      //             tapCard(
+      //               "NewView",
+      //               documentController.isDocument.value == 0
+      //                   ? Constants.primaryColor
+      //                   : Colors.transparent,
+      //               () {
+      //                 documentController.isDocument.value = 0;
+      //               },
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       const SizedBox(height: 20),
+      //       GetX<DocumentController>(
+      //         init: documentController,
+      //         builder: (documentController) =>
+      //             documentController.isDocument.value == 0
+      //                 ?
+      //                 // ? const OnGoingView()
+      //                 // : documentController.isDocument.value == 1
+      //                 // ? const FlightsOnGoingView()
+      //                 // : documentController.isDocument.value == 2
+      //                 // ? const VacationsOnGoingView()
+      //                 const NewView()
+      //                 : const NewView(),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 

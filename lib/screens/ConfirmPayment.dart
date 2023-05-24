@@ -62,7 +62,7 @@ class _ConfirmPaymentScreenState extends State<ConfirmPaymentScreen> {
                 child: Icon(
                   Icons.arrow_back_ios,
                   size: 25,
-                  color: Theme.of(context).textTheme.bodyText1!.color,
+                  color: Constants.secondaryColor,
                 ),
               ),
               title: poppinsText(
@@ -102,7 +102,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
   UserProvider controller = Get.put(UserProvider());
   BookingNetwork bn = BookingNetwork();
 
-  double calculateDiscountedPrice(double discountedRate) {
+  double calculateServiceFee(double discountedRate) {
     double discountedAmount =
         (discountedRate / 100) * widget.package.packagePrice;
     return discountedAmount;
@@ -111,7 +111,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
   @override
   void initState() {
     super.initState();
-    serviceFeeAmount = calculateDiscountedPrice(serviceFeeRate);
+    serviceFeeAmount = calculateServiceFee(serviceFeeRate);
   }
 
   @override
@@ -358,7 +358,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                     children: [
                                       const SizedBox(height: 40),
                                       Text(
-                                        "\$${widget.package.packagePrice ?? ""}",
+                                        "\$${widget.package.packagePrice.toStringAsFixed(2) ?? ""}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -382,7 +382,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                                       // ),
                                       const SizedBox(height: 20),
                                       Text(
-                                        "\$${widget.package.packagePrice + serviceFeeAmount}",
+                                        "\$${(widget.package.packagePrice + serviceFeeAmount).toStringAsFixed(2)}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1!
@@ -427,6 +427,9 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                             travelAgencyId: widget.package.travelAgencyId,
                             packageId: widget.package.packageId,
                             price: widget.package.packagePrice.toString(),
+                            rating: widget.package.rating.toString(),
+                            numOfReviews: widget.package.packageReviews!.length
+                                .toString(),
                             adults: widget.package.adults.toString(),
                             destination: widget.package.destination,
                             imageUrl: widget.package.imgUrls[0],
@@ -541,7 +544,7 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
               borderRadius: BorderRadius.circular(24),
             ),
             content: Container(
-              height: 520,
+              height: 400,
               width: Get.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
@@ -648,7 +651,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
   UserProvider controller = Get.put(UserProvider());
   BookingNetwork bn = BookingNetwork();
 
-  double calculateDiscountedPrice(double discountedRate) {
+  double calculateServiceFee(double discountedRate) {
     double discountedAmount = (discountedRate / 100) *
         widget.unit.ratePlans![0].priceDetails![0].price!.lead!.amount;
     return discountedAmount;
@@ -657,7 +660,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
   @override
   void initState() {
     super.initState();
-    discountAmount = calculateDiscountedPrice(discountedRate);
+    discountAmount = calculateServiceFee(discountedRate);
   }
 
   @override
@@ -973,6 +976,11 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                           travelerId: travelerId,
                           hotelId: widget.property.id!,
                           hotelRoomId: widget.unit.id!,
+                          price: totalAmount.toString(),
+                          rating: widget.property.reviews!.score.toString(),
+                          numOfReviews:
+                              hotelProvider.hotelReviews.length.toString(),
+                          adults: hotelProvider.adults.toString(),
                           hotelName: widget.property.name ?? "",
                           hotelLocation:
                               widget.property.neighborhood?.name ?? "",
@@ -984,6 +992,8 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                               context.read<HotelSearchProvider>().checkOut),
                         ),
                       );
+                      hotelProvider.clearHotels();
+                      hotelProvider.clearHotelDetail();
                       setState(() => isLoading = false);
                     },
                     bgColor: Constants.primaryColor,
@@ -1090,7 +1100,7 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
               borderRadius: BorderRadius.circular(24),
             ),
             content: Container(
-              height: 520,
+              height: 400,
               width: Get.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
@@ -1195,7 +1205,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
   UserProvider controller = Get.put(UserProvider());
   BookingNetwork bn = BookingNetwork();
 
-  double calculateDiscountedPrice(double discountedRate) {
+  double calculateServiceFee(double discountedRate) {
     double discountedAmount =
         (discountedRate / 100) * double.parse(widget.flight.price.total);
     return discountedAmount;
@@ -1204,7 +1214,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
   @override
   void initState() {
     super.initState();
-    discountAmount = calculateDiscountedPrice(discountedRate);
+    discountAmount = calculateServiceFee(discountedRate);
   }
 
   @override
@@ -1225,6 +1235,11 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                       flight: widget.flight,
                       flightProvider: flightProvider,
                     ),
+                    widget.flight.itineraries.length > 1
+                        ? ReturnFlightCardView(
+                            flight: widget.flight,
+                            flightProvider: flightProvider)
+                        : Container(),
                     const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
@@ -1448,7 +1463,6 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                                               fontSize: 16,
                                             ),
                                       ),
-
                                       const SizedBox(height: 20),
                                       Text(
                                         "Total",
@@ -1552,15 +1566,61 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                           toTime: Constants.convertTime(widget
                               .flight.itineraries[0].segments[0].arrival.at),
                           price: widget.flight.price.total,
-                          flightDepartureDate: formatDate(context.read<FlightSearchProvider>().departDate),
-                          flightReturnDate: formatDate(context.read<FlightSearchProvider>().returnDate),
-                          returnFlightExists: widget.flight.itineraries.length > 1,
-                          returnFlightDuration: widget.flight.itineraries.length > 1 ? widget.flight.itineraries[1]?.duration?.replaceAll('PT', '')?.replaceAll('H', 'H ')?.toLowerCase() ?? '' : '',
-                          returnFromCity: widget.flight.itineraries.length > 1 ? widget.flight.itineraries[1]?.segments[0]?.departure?.iataCode ?? '' : '',
-                          returnToCity: widget.flight.itineraries.length > 1 ? widget.flight.itineraries[1]?.segments.last?.arrival?.iataCode ?? '' : '',
-                          returnFromTime: widget.flight.itineraries.length > 1 ? Constants.convertTime(widget.flight.itineraries[1]?.segments[0]?.departure?.at) ?? '' : '',
-                          returnToTime: widget.flight.itineraries.length > 1 ? Constants.convertTime(widget.flight.itineraries[1]?.segments.last?.arrival?.at) ?? '' : '',
-
+                          adults: context
+                              .read<FlightSearchProvider>()
+                              .adults
+                              .toString(),
+                          flightDepartureDate: formatDate(
+                              context.read<FlightSearchProvider>().departDate),
+                          flightReturnDate: formatDate(
+                              context.read<FlightSearchProvider>().returnDate),
+                          carrierName: context
+                                  .read<FlightSearchProvider>()
+                                  .dictionary['carriers'][
+                              widget.flight.itineraries[0].segments[0]
+                                  .carrierCode],
+                          connectingFlights:
+                              (widget.flight.itineraries[0].segments.length - 1)
+                                  .toString(),
+                          returnFlightExists:
+                              widget.flight.itineraries.length > 1,
+                          returnFlightDuration:
+                              widget.flight.itineraries.length > 1
+                                  ? widget.flight.itineraries[1]?.duration
+                                          ?.replaceAll('PT', '')
+                                          ?.replaceAll('H', 'H ')
+                                          ?.toLowerCase() ??
+                                      ''
+                                  : '',
+                          returnFromCity: widget.flight.itineraries.length > 1
+                              ? widget.flight.itineraries[1]?.segments[0]
+                                      ?.departure?.iataCode ??
+                                  ''
+                              : '',
+                          returnToCity: widget.flight.itineraries.length > 1
+                              ? widget.flight.itineraries[1]?.segments.last
+                                      ?.arrival?.iataCode ??
+                                  ''
+                              : '',
+                          returnFromTime: widget.flight.itineraries.length > 1
+                              ? Constants.convertTime(widget
+                                      .flight
+                                      .itineraries[1]
+                                      ?.segments[0]
+                                      ?.departure
+                                      ?.at) ??
+                                  ''
+                              : '',
+                          returnToTime: widget.flight.itineraries.length > 1
+                              ? Constants.convertTime(widget
+                                      .flight
+                                      .itineraries[1]
+                                      ?.segments
+                                      .last
+                                      ?.arrival
+                                      ?.at) ??
+                                  ''
+                              : '',
                         ),
                       );
                       setState(() => isLoading = false);
@@ -1666,7 +1726,7 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
               borderRadius: BorderRadius.circular(24),
             ),
             content: Container(
-              height: 520,
+              height: 400,
               width: Get.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
@@ -1773,7 +1833,7 @@ class _SuccessDialogState extends State<SuccessDialog> {
         borderRadius: BorderRadius.circular(24),
       ),
       content: Container(
-        height: 520,
+        height: 400,
         width: Get.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),

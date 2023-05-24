@@ -64,7 +64,7 @@ class _SearchState extends State<Search> {
                 : AppBar(
                     leading: IconButton(
                       icon: const Icon(Icons.arrow_back_ios),
-                      color: Constants.primaryColor,
+                      color: Constants.secondaryColor,
                       iconSize: 25,
                       onPressed: () {
                         clear();
@@ -73,13 +73,12 @@ class _SearchState extends State<Search> {
                     ),
                     backgroundColor: Colors.transparent,
                     elevation: 0,
-                    title: Text(
-                      widget.title == 'hotel'
+                    title: poppinsText(
+                        text: widget.title == 'hotel'
                           ? 'Find your hotel'
                           : 'Find a flight',
-                      style:
-                          GoogleFonts.poppins(color: Constants.secondaryColor),
-                    ),
+                        size: 24.0,
+                        fontBold: FontWeight.w500),
                     centerTitle: true,
                   ),
             body: returnLayout()),
@@ -431,7 +430,7 @@ class _FlightLayoutState extends State<FlightLayout> {
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: 35,
                   child: Wrap(
-                    spacing: 90,
+                    spacing: 60,
                     children: List.generate(flightTrips.length, (index) {
                       return GestureDetector(
                         onTap: () {

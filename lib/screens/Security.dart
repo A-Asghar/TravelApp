@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/widgets/poppinsText.dart';
 
 class SecurityPolicyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ExploreEase Security Page'),
+        title: poppinsText(text: 'ExploreEase Security Page', size: 24.0, fontBold: FontWeight.w500),
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(

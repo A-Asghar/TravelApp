@@ -49,6 +49,7 @@ class FlightSearchProvider extends ChangeNotifier {
 
   clearFlights() {
     _flights = [];
+    _to = Destination(city: '', iata: '');
     notifyListeners();
   }
 

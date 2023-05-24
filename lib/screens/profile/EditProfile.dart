@@ -111,169 +111,171 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(Icons.arrow_back_ios,
-              size: 25, color: Constants.secondaryColor),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back_ios,
+                size: 25, color: Constants.secondaryColor),
+          ),
+          centerTitle: true,
+          title: poppinsText(
+              text: "Edit Your Profile", size: 24.0, fontBold: FontWeight.w500),
         ),
-        centerTitle: true,
-        title: poppinsText(
-            text: "Edit Your Profile", size: 24.0, fontBold: FontWeight.w600),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView(
-                physics: const ClampingScrollPhysics(),
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-
-                      // Profile Picture
-                      Center(
-                        child: InkWell(
-                          onTap: () => _showSelectPhotoOptions(context),
-                          child: Container(
-                            height: 140,
-                            width: 140,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              image: DecorationImage(
-                                image: controller
-                                            .user!.profilePhotoUrl.isEmpty ||
-                                        controller.user!.profilePhotoUrl ==
-                                            "assets/images/user.png"
-                                    ? AssetImage('assets/images/user.png')
-                                    : NetworkImage(
-                                            controller.user!.profilePhotoUrl)
-                                        as ImageProvider<Object>,
-                                fit: BoxFit.fill,
+        body: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ListView(
+                  physics: const ClampingScrollPhysics(),
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+    
+                        // Profile Picture
+                        Center(
+                          child: InkWell(
+                            onTap: () => _showSelectPhotoOptions(context),
+                            child: Container(
+                              height: 140,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                image: DecorationImage(
+                                  image: controller
+                                              .user!.profilePhotoUrl.isEmpty ||
+                                          controller.user!.profilePhotoUrl ==
+                                              "assets/images/user.png"
+                                      ? AssetImage('assets/images/user.png')
+                                      : NetworkImage(
+                                              controller.user!.profilePhotoUrl)
+                                          as ImageProvider<Object>,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Name
-                      CustomTextField(
-                          hintText: "name",
-                          textFieldController: _name,
-                          showError: validateName,
-                          sufix: const SizedBox(),
-                          prefix: Icons.person),
-                      const SizedBox(height: 15),
-
-                      // Address
-                      CustomTextField(
-                          hintText: "address",
-                          textFieldController: _address,
-                          showError: validateAddress,
-                          sufix: const SizedBox(),
-                          prefix: Icons.location_on),
-                      const SizedBox(height: 15),
-
-                      // Date of birth
-                      CustomTextField(
-                          readOnly: true,
-                          onTap: () => _selectDate(context),
-                          keyboardType: TextInputType.datetime,
-                          hintText: "date of birth",
-                          showError: validateDateOfBirth,
-                          textFieldController: _dateOfBirth,
-                          sufix: const SizedBox(),
-                          prefix: Icons.calendar_month_rounded),
-
-                      const SizedBox(height: 20),
-
-                      // Phone number
-                      CustomTextField(
-                          showError: validatePhoneNumber,
-                          keyboardType: TextInputType.phone,
-                          hintText: "phone",
-                          textFieldController: _phoneNumber,
-                          sufix: const SizedBox(),
-                          prefix: Icons.phone),
-                      const SizedBox(height: 20),
-
-                      // Gender
-                      GenderDropdown(
-                        genderController: _gender,
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  )
-                ],
-              ),
-            ),
-            Center(
-              child: isLoading
-                  ? const Padding(
-                      padding: EdgeInsets.only(bottom: 20),
-                      child: CircularProgressIndicator(
-                        color: Colors.teal,
-                      ),
+                        const SizedBox(height: 20),
+    
+                        // Name
+                        CustomTextField(
+                            hintText: "name",
+                            textFieldController: _name,
+                            showError: validateName,
+                            sufix: const SizedBox(),
+                            prefix: Icons.person),
+                        const SizedBox(height: 15),
+    
+                        // Address
+                        CustomTextField(
+                            hintText: "address",
+                            textFieldController: _address,
+                            showError: validateAddress,
+                            sufix: const SizedBox(),
+                            prefix: Icons.location_on),
+                        const SizedBox(height: 15),
+    
+                        // Date of birth
+                        CustomTextField(
+                            readOnly: true,
+                            onTap: () => _selectDate(context),
+                            keyboardType: TextInputType.datetime,
+                            hintText: "date of birth",
+                            showError: validateDateOfBirth,
+                            textFieldController: _dateOfBirth,
+                            sufix: const SizedBox(),
+                            prefix: Icons.calendar_month_rounded),
+    
+                        const SizedBox(height: 20),
+    
+                        // Phone number
+                        CustomTextField(
+                            showError: validatePhoneNumber,
+                            keyboardType: TextInputType.phone,
+                            hintText: "phone",
+                            textFieldController: _phoneNumber,
+                            sufix: const SizedBox(),
+                            prefix: Icons.phone),
+                        const SizedBox(height: 20),
+    
+                        // Gender
+                        GenderDropdown(
+                          genderController: _gender,
+                        ),
+                        const SizedBox(height: 20),
+                      ],
                     )
-                  : TealButton(
-                      text: "Update",
-                      onPressed: () async {
-                        if (validateTextFields()) {
-                          setState(() => isLoading = true);
-
-                          String profilePhotoUrl = '';
-
-                          if (_image != null) {
-                            profilePhotoUrl = await uploadFile(_image!);
-                          } else {
-                            profilePhotoUrl = 'assets/images/user.png';
+                  ],
+                ),
+              ),
+              Center(
+                child: isLoading
+                    ? const Padding(
+                        padding: EdgeInsets.only(bottom: 20),
+                        child: CircularProgressIndicator(
+                          color: Colors.teal,
+                        ),
+                      )
+                    : TealButton(
+                        text: "Update",
+                        onPressed: () async {
+                          if (validateTextFields()) {
+                            setState(() => isLoading = true);
+    
+                            String profilePhotoUrl = '';
+    
+                            if (_image != null) {
+                              profilePhotoUrl = await uploadFile(_image!);
+                            } else {
+                              profilePhotoUrl = 'assets/images/user.png';
+                            }
+    
+                            await AuthNetwork.createUserProfile(
+                              signedInUser: FirebaseAuth.instance.currentUser!,
+                              user: Users(
+                                  email:
+                                      FirebaseAuth.instance.currentUser!.email!,
+                                  name: _name.text,
+                                  address: _address.text,
+                                  dateOfBirth: _dateOfBirth.text,
+                                  phoneNumber: _phoneNumber.text,
+                                  gender: _gender.text,
+                                  profilePhotoUrl:
+                                      controller.user!.profilePhotoUrl,
+                                  searchedCities: controller.user!.searchedCities,
+                                  role: controller.user!.role),
+                            ).then((_) {
+                              setState(() => isLoading = false);
+                              FirebaseAuth.instance.currentUser!.uid.isEmpty
+                                  ? Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => BottomNavBar(),
+                                    ))
+                                  : setState(() {});
+                            });
                           }
-
-                          await AuthNetwork.createUserProfile(
-                            signedInUser: FirebaseAuth.instance.currentUser!,
-                            user: Users(
-                                email:
-                                    FirebaseAuth.instance.currentUser!.email!,
-                                name: _name.text,
-                                address: _address.text,
-                                dateOfBirth: _dateOfBirth.text,
-                                phoneNumber: _phoneNumber.text,
-                                gender: _gender.text,
-                                profilePhotoUrl:
-                                    controller.user!.profilePhotoUrl,
-                                searchedCities: controller.user!.searchedCities,
-                                role: controller.user!.role),
-                          ).then((_) {
-                            setState(() => isLoading = false);
-                            FirebaseAuth.instance.currentUser!.uid.isEmpty
-                                ? Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => BottomNavBar(),
-                                  ))
-                                : setState(() {});
-                          });
-                        }
-
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const BottomNavBar(),
-                        ));
-                        successSnackBar(context, "Profile Updated Sucessfully");
-                      },
-                      bgColor: Constants.primaryColor,
-                      txtColor: Colors.white,
-                    ),
-            ),
-          ],
+    
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const BottomNavBar(),
+                          ));
+                          successSnackBar(context, "Profile Updated Sucessfully");
+                        },
+                        bgColor: Constants.primaryColor,
+                        txtColor: Colors.white,
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

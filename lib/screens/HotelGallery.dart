@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Detail.dart';
+import 'package:fyp/widgets/poppinsText.dart';
 
 import 'FullScreenImagePage.dart';
 
@@ -29,10 +30,10 @@ class _HotelGalleryState extends State<HotelGallery> {
                 size: 25,
               ),
             )),
-        title: Text(
-          "Gallery Hotel Photos",
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18),
-        ),
+        title: poppinsText(
+            text: "Gallery Hotel Photos",
+            size: 24.0,
+            fontBold: FontWeight.w500),
       ),
       body: GridView.builder(
         padding:
@@ -99,10 +100,10 @@ class _PackageGalleryState extends State<PackageGallery> {
                 size: 25,
               ),
             )),
-        title: Text(
-          "Gallery Hotel Photos",
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 18),
-        ),
+        title: poppinsText(
+            text: "Gallery Hotel Photos",
+            size: 24.0,
+            fontBold: FontWeight.w500),
       ),
       body: GridView.builder(
         padding:

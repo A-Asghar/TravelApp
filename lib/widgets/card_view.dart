@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/models/HotelBooking.dart';
 import 'package:fyp/models/Package.dart';
+import 'package:fyp/models/PackageBooking.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
 import 'package:fyp/models/PropertyUnits.dart';
 import 'package:fyp/providers/HotelSearchProvider.dart';
@@ -118,6 +120,133 @@ class CardView extends StatelessWidget {
                         package != null
                             ? "(${package!.packageReviews!.length} reviews)"
                             : "(${hotelProvider.hotelReviews.length} reviews)",
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              fontSize: 14,
+                              color: const Color(0xff757575),
+                            ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CardView2 extends StatelessWidget {
+  CardView2({super.key, this.packageBooking, this.hotelBooking});
+
+  PackageBooking? packageBooking;
+  HotelBooking? hotelBooking;
+
+  @override
+  Widget build(BuildContext context) {
+    var hotelProvider = context.watch<HotelSearchProvider>();
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xff04060F).withOpacity(0.05),
+            blurRadius: 8,
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Row(
+          children: [
+            packageBooking != null
+                ? Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          packageBooking!.imageUrl,
+                        ),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  )
+                : hotelBooking != null
+                    ? Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              hotelBooking!.imageUrl,
+                            ),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        ),
+                      ),
+            const SizedBox(width: 10),
+            Expanded(
+              flex: 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    packageBooking != null
+                        ? packageBooking!.packageName
+                        : hotelBooking!.hotelName,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    packageBooking != null
+                        ? packageBooking!.destination
+                        : hotelBooking!.hotelLocation,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontSize: 14,
+                          color: const Color(0xff757575),
+                        ),
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        color: Color(0xffFFD300),
+                        size: 15,
+                      ),
+                      Text(
+                        packageBooking != null
+                            ? packageBooking!.rating
+                            : hotelBooking!.rating,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                              fontSize: 14,
+                              color: Colors.teal,
+                            ),
+                      ),
+                      Text(
+                        packageBooking != null
+                            ? "(${packageBooking!.numOfReviews} reviews)"
+                            : "(${hotelBooking!.numOfReviews} reviews)",
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
                               fontSize: 14,
                               color: const Color(0xff757575),

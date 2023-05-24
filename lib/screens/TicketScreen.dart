@@ -33,7 +33,7 @@ class _TicketScreenState extends State<TicketScreen> {
             color: Theme.of(context).textTheme.bodyText1!.color!,
           ),
         ),
-        title: poppinsText(text: "Ticket", size: 18.0),
+        title: poppinsText(text: "Ticket", size: 24.0, fontBold: FontWeight.w500),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
