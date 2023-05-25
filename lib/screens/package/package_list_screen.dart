@@ -8,6 +8,7 @@ import 'package:travel_agency/models/package.dart';
 import 'package:travel_agency/network/package_network.dart';
 import 'package:travel_agency/providers/user_provider.dart';
 import 'package:travel_agency/providers/package_provider.dart';
+import 'package:travel_agency/screens/agency_home.dart';
 import 'package:travel_agency/screens/package/add_package.dart';
 import 'package:travel_agency/screens/package/edit_package.dart';
 import 'package:travel_agency/widgets/heart_beat_floating_action_button.dart';
@@ -193,7 +194,7 @@ class _PackageTileState extends State<PackageTile> {
                 width: 10.0,
               ),
               Container(
-                height: 130,
+                height: 150,
                 width: 170,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,7 +306,7 @@ class _PackageTileState extends State<PackageTile> {
                         PackageNetwork packageNetwork = PackageNetwork();
                         Get.bottomSheet(
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.33,
+                            height: MediaQuery.of(context).size.height * 0.35,
                             width: Get.width,
                             decoration: const BoxDecoration(
                               color: Colors.white,
@@ -377,6 +378,13 @@ class _PackageTileState extends State<PackageTile> {
                                                   MaterialPageRoute(
                                                       builder: ((context) =>
                                                           PackageListScreen())));
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: ((context) =>
+                                                          AgencyHome())));
                                               Navigator.pop(context);
                                             } on FirebaseException catch (e) {
                                               ScaffoldMessenger.of(context)

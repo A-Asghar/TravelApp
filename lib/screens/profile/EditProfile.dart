@@ -16,6 +16,7 @@ import 'package:travel_agency/network/auth_network.dart';
 import '../../widgets/imageOptions.dart';
 import '../../widgets/poppinsText.dart';
 import '../../widgets/tealButton.dart';
+import 'package:travel_agency/widgets/successSnackBar.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -32,10 +33,8 @@ class _EditProfileState extends State<EditProfile> {
   final _gender = TextEditingController();
   bool validateName = true;
   bool validateAddress = true;
-  bool validateDateOfBirth = true;
   bool validateEmail = true;
   bool validatePhoneNumber = true;
-  bool validateGender = true;
   bool isLoading = false;
   final UserProvider controller = Get.put(UserProvider());
   File? _image;
@@ -103,8 +102,8 @@ class _EditProfileState extends State<EditProfile> {
     _name.text = controller.user!.name;
     _address.text = controller.user!.address;
     _phoneNumber.text = controller.user!.phoneNumber;
-    _gender.text = controller.user!.gender;
-    _dateOfBirth.text = controller.user!.dateOfBirth;
+    // _gender.text = controller.user!.gender;
+    // _dateOfBirth.text = controller.user!.dateOfBirth;
   }
 
   @override
@@ -169,7 +168,7 @@ class _EditProfileState extends State<EditProfile> {
                           showError: validateName,
                           sufix: const SizedBox(),
                           prefix: Icons.person),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 20),
 
                       // Address
                       CustomTextField(
@@ -178,20 +177,20 @@ class _EditProfileState extends State<EditProfile> {
                           showError: validateAddress,
                           sufix: const SizedBox(),
                           prefix: Icons.location_on),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 20),
 
                       // Date of birth
-                      CustomTextField(
-                          readOnly: true,
-                          onTap: () => _selectDate(context),
-                          keyboardType: TextInputType.datetime,
-                          hintText: "date of birth",
-                          showError: validateDateOfBirth,
-                          textFieldController: _dateOfBirth,
-                          sufix: const SizedBox(),
-                          prefix: Icons.calendar_month_rounded),
+                      // CustomTextField(
+                      //     readOnly: true,
+                      //     onTap: () => _selectDate(context),
+                      //     keyboardType: TextInputType.datetime,
+                      //     hintText: "date of birth",
+                      //     showError: validateDateOfBirth,
+                      //     textFieldController: _dateOfBirth,
+                      //     sufix: const SizedBox(),
+                      //     prefix: Icons.calendar_month_rounded),
 
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
 
                       // Phone number
                       CustomTextField(
@@ -204,10 +203,10 @@ class _EditProfileState extends State<EditProfile> {
                       const SizedBox(height: 20),
 
                       // Gender
-                      GenderDropdown(
-                        genderController: _gender,
-                      ),
-                      const SizedBox(height: 20),
+                      // GenderDropdown(
+                      //   genderController: _gender,
+                      // ),
+                      // const SizedBox(height: 20),
                     ],
                   )
                 ],
@@ -251,7 +250,8 @@ class _EditProfileState extends State<EditProfile> {
                                 role: controller.user!.role),
                           ).then((_) {
                             setState(() => isLoading = false);
-                            FirebaseAuth.instance.currentUser!.uid.isEmpty
+                            successSnackBar(context, "Updated profile successfully");
+                            FirebaseAuth.instance.currentUser!.uid.isNotEmpty
                                 ? Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => const BottomNavBar(),
                                   ))
@@ -326,11 +326,11 @@ class _EditProfileState extends State<EditProfile> {
     }
 
     // Date of birth
-    if (_dateOfBirth.text.isEmpty) {
-      setState(() => validateDateOfBirth = false);
-    } else {
-      setState(() => validateDateOfBirth = true);
-    }
+    // if (_dateOfBirth.text.isEmpty) {
+    //   setState(() => validateDateOfBirth = false);
+    // } else {
+    //   setState(() => validateDateOfBirth = true);
+    // }
 
     // // Email
     // if(_email.text.isEmpty){
@@ -347,19 +347,13 @@ class _EditProfileState extends State<EditProfile> {
     }
 
     // Gender
-    if (_gender.text.isEmpty) {
-      setState(() => validateGender = false);
-    } else {
-      setState(() => validateGender = true);
-    }
+    // if (_gender.text.isEmpty) {
+    //   setState(() => validateGender = false);
+    // } else {
+    //   setState(() => validateGender = true);
+    // }
 
-    if (validateGender &&
-        validatePhoneNumber &&
-        validateEmail &&
-        validateDateOfBirth &&
-        validateDateOfBirth &&
-        validateAddress &&
-        validateName)
+    if (validatePhoneNumber && validateEmail && validateAddress && validateName)
       return true;
     else
       return false;

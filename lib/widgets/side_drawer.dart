@@ -152,9 +152,8 @@ class _SideDrawerState extends State<SideDrawer> {
                                     transition: Transition.rightToLeft,
                                   );
                                   setState(() => isLoggingOut = false);
-                                  FirebaseAuth.instance.signOut();
-                                  await GoogleSignIn(scopes: <String>["email"])
-                                      .signOut();
+                                  await FirebaseAuth.instance.signOut();
+                                  // await GoogleSignIn().signOut();
                                 },
                                 bgColor: Colors.red.withOpacity(0.3),
                                 txtColor: Colors.red,

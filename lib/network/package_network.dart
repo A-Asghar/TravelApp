@@ -87,7 +87,6 @@ class PackageNetwork {
       "hotelPropertyId": package.hotelPropertyId,
       "dayWiseDetails": package.dayWiseDetails,
       "destination": package.destination,
-      "packageReviews": package.packageReviews,
     });
   }
 

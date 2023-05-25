@@ -36,10 +36,8 @@ class _FillYourProfileState extends State<FillYourProfile> {
   final _gender = TextEditingController();
   bool validateName = true;
   bool validateAddress = true;
-  bool validateDateOfBirth = true;
   bool validateEmail = true;
   bool validatePhoneNumber = true;
-  bool validateGender = true;
   bool isLoading = false;
 
   File? _image;
@@ -159,12 +157,12 @@ class _FillYourProfileState extends State<FillYourProfile> {
 
                         // Name
                         CustomTextField(
-                            hintText: "name",
+                            hintText: "agency name",
                             textFieldController: _name,
                             showError: validateName,
                             sufix: const SizedBox(),
                             prefix: Icons.person),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
 
                         // Address
                         CustomTextField(
@@ -173,20 +171,20 @@ class _FillYourProfileState extends State<FillYourProfile> {
                             showError: validateAddress,
                             sufix: const SizedBox(),
                             prefix: Icons.location_on),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
 
                         // Date of birth
-                        CustomTextField(
-                            readOnly: true,
-                            onTap: () => _selectDate(context),
-                            keyboardType: TextInputType.datetime,
-                            hintText: "date of birth",
-                            showError: validateDateOfBirth,
-                            textFieldController: _dateOfBirth,
-                            sufix: const SizedBox(),
-                            prefix: Icons.calendar_month_rounded),
+                        // CustomTextField(
+                        //     readOnly: true,
+                        //     onTap: () => _selectDate(context),
+                        //     keyboardType: TextInputType.datetime,
+                        //     hintText: "date of birth",
+                        //     showError: validateDateOfBirth,
+                        //     textFieldController: _dateOfBirth,
+                        //     sufix: const SizedBox(),
+                        //     prefix: Icons.calendar_month_rounded),
 
-                        const SizedBox(height: 20),
+                        // const SizedBox(height: 20),
 
                         // Phone number
                         CustomTextField(
@@ -199,8 +197,8 @@ class _FillYourProfileState extends State<FillYourProfile> {
                         const SizedBox(height: 20),
 
                         // Gender
-                        GenderDropdown(genderController: _gender),
-                        const SizedBox(height: 20),
+                        // GenderDropdown(genderController: _gender),
+                        // const SizedBox(height: 20),
                       ],
                     )
                   ],
@@ -323,11 +321,11 @@ class _FillYourProfileState extends State<FillYourProfile> {
     }
 
     // Date of birth
-    if (_dateOfBirth.text.isEmpty) {
-      setState(() => validateDateOfBirth = false);
-    } else {
-      setState(() => validateDateOfBirth = true);
-    }
+    // if (_dateOfBirth.text.isEmpty) {
+    //   setState(() => validateDateOfBirth = false);
+    // } else {
+    //   setState(() => validateDateOfBirth = true);
+    // }
 
     // // Email
     // if(_email.text.isEmpty){
@@ -344,17 +342,14 @@ class _FillYourProfileState extends State<FillYourProfile> {
     }
 
     // Gender
-    if (_gender.text.isEmpty) {
-      setState(() => validateGender = false);
-    } else {
-      setState(() => validateGender = true);
-    }
+    // if (_gender.text.isEmpty) {
+    //   setState(() => validateGender = false);
+    // } else {
+    //   setState(() => validateGender = true);
+    // }
 
-    if (validateGender &&
-        validatePhoneNumber &&
+    if ( validatePhoneNumber &&
         validateEmail &&
-        validateDateOfBirth &&
-        validateDateOfBirth &&
         validateAddress &&
         validateName)
       return true;

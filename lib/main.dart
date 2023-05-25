@@ -11,6 +11,7 @@ import 'package:travel_agency/screens/package/add_package.dart';
 import 'package:travel_agency/screens/package/edit_package.dart';
 import 'package:travel_agency/screens/package/itinerary_screen.dart';
 import 'package:travel_agency/screens/package/package_list_screen.dart';
+import 'package:travel_agency/screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +32,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Login(),
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: SplashScreen(),
+        ),
+      ),
       // home: EditPackageForm(
       //   package: Package(
       //       packageId: '024201636',

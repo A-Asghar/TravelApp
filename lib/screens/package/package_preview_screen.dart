@@ -31,7 +31,7 @@ class _PackagePreviewState extends State<PackagePreview> {
             automaticallyImplyLeading: false,
             elevation: 0,
             floating: false,
-            title: PopButton(onTap: () {
+            title: backButton(onTap: () {
               Navigator.pop(context);
             }),
             pinned: true,
@@ -52,7 +52,7 @@ class _PackagePreviewState extends State<PackagePreview> {
                   child: poppinsText(
                       text: widget.package.packageName,
                       // widget.property!.name,
-                      size: 30.0),
+                      size: 30.0, fontBold: FontWeight.w500),
                 ),
                 const SizedBox(height: 15),
 
@@ -90,7 +90,7 @@ class _PackagePreviewState extends State<PackagePreview> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        poppinsText(text: "Gallery Photos", size: 20.0),
+                        poppinsText(text: "Gallery Photos", size: 20.0, fontBold: FontWeight.w500),
                         poppinsText(
                             text: "See All",
                             size: 16.0,
@@ -132,7 +132,7 @@ class _PackagePreviewState extends State<PackagePreview> {
                 // Description
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: poppinsText(text: "Description", size: 20.0),
+                  child: poppinsText(text: "Description", size: 20.0, fontBold: FontWeight.w500),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
@@ -163,7 +163,7 @@ class _PackagePreviewState extends State<PackagePreview> {
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Row(
                       children: [
-                        poppinsText(text: "Reviews", size: 20.0),
+                        poppinsText(text: "Reviews", size: 20.0, fontBold: FontWeight.w500),
                         const SizedBox(width: 14),
                         const Icon(
                           Icons.star,
@@ -279,7 +279,7 @@ class _DayWiseDetailState extends State<DayWiseDetail> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: poppinsText(text: "Day wise Itinerary", size: 20.0),
+          child: poppinsText(text: "Day wise Itinerary", size: 20.0, fontBold: FontWeight.w500),
         ),
         ListView.builder(
             physics: const ScrollPhysics(),

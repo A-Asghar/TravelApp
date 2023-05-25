@@ -4,18 +4,19 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_agency/Constants.dart';
 import 'package:travel_agency/models/package.dart';
 import 'package:travel_agency/network/package_network.dart';
+import 'package:travel_agency/providers/loading_provider.dart';
 import 'package:travel_agency/providers/package_provider.dart';
 import 'package:travel_agency/screens/package/add_package.dart';
 import 'package:travel_agency/screens/package/edit_itinerary_screen.dart';
 import 'package:travel_agency/screens/package/package_list_screen.dart';
 import 'package:travel_agency/widgets/custom_error_dialog.dart';
+import 'package:travel_agency/widgets/lottie_loader.dart';
 import 'package:travel_agency/widgets/pop_button.dart';
 import 'package:travel_agency/widgets/poppinsText.dart';
 import 'package:travel_agency/widgets/tealButton.dart';
@@ -44,9 +45,11 @@ class _EditPackageFormState extends State<EditPackageForm> {
   final _hotelPropertyIdController = TextEditingController();
   final _destinationController = TextEditingController();
   late DateTime _selectedDate;
+  double averageRating = 0.0;
 
   List<String> _imgUrls = <String>[];
   bool isValidated = true;
+  bool isImageLoading = false;
 
   Future<void> _loadAssets() async {
     List<Asset> resultList = <Asset>[];
@@ -78,7 +81,10 @@ class _EditPackageFormState extends State<EditPackageForm> {
     });
 
     if (_images.isNotEmpty) {
+      context.read<LoadingProvider>().loadingUpdate = await "Uploading Images";
+      setState(() => isImageLoading = true);
       await _uploadImagesToFirebase();
+      setState(() => isImageLoading = false);
     }
   }
 
@@ -117,13 +123,16 @@ class _EditPackageFormState extends State<EditPackageForm> {
     _hotelPropertyIdController.text = widget.package.hotelPropertyId;
     _imgUrlsController.text =
         widget.package.imgUrls.toString().replaceAll(RegExp(r'\[.*?\]'), '');
+    averageRating = pak.calculateAverageRating(context);
   }
 
   List<Asset> _images = <Asset>[];
   String _error = 'No Error Dectected';
   @override
   Widget build(BuildContext context) {
-    String to = widget.package.destination;
+    String to = context.watch<PackageProvider>().to.city == ''
+        ? widget.package.destination
+        : context.watch<PackageProvider>().to.city;
     _imgUrls = widget.package.imgUrls;
     return Scaffold(
       appBar: AppBar(
@@ -138,194 +147,158 @@ class _EditPackageFormState extends State<EditPackageForm> {
         leading: PopButton(
           onTap: () {
             Navigator.pop(context);
+            context.read<PackageProvider>().clearDestination();
           },
         ),
         backgroundColor: Colors.teal,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Form(
-            key: _formKey,
-            child: Container(
-              height: isValidated
-                  ? MediaQuery.of(context).size.height * 0.87
-                  : MediaQuery.of(context).size.height,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
+      body: isImageLoading
+          ? lottieLoader(context)
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Form(
+                  key: _formKey,
+                  child: Container(
+                    height: isValidated
+                        ? MediaQuery.of(context).size.height * 0.88
+                        : MediaQuery.of(context).size.height,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 10.0),
-                        PackageField(
-                          controller: _packageNameController,
-                          labelText: 'Package Name',
-                          hintText: 'Enter the package name',
-                          validator: (value) {
-                            if (value?.isEmpty ?? false) {
-                              return 'Please enter the package name';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 16.0),
-                        PackageField(
-                          controller: _packagePriceController,
-                          keyboardType: TextInputType.number,
-                          labelText: 'Package Price',
-                          hintText: 'Enter the package price',
-                          validator: (value) {
-                            if (value?.isEmpty ?? false) {
-                              return 'Please enter the package price';
-                            }
-                            if (double.tryParse(value!) == null) {
-                              return 'Please enter a valid price';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 16.0),
-                        PackageField(
-                          controller: _packageDescriptionController,
-                          labelText: 'Package Description',
-                          hintText: 'Enter the package description',
-                          validator: (value) {
-                            if (value?.isEmpty ?? false) {
-                              return 'Please enter the package description';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 16.0),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: GestureDetector(
-                                onTap: () {
-                                  showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime.now(),
-                                    lastDate:
-                                        DateTime.now().add(Duration(days: 365)),
-                                  ).then((selectedDate) {
-                                    if (selectedDate != null) {
-                                      setState(() {
-                                        _selectedDate = selectedDate;
-                                        _startDateController.text =
-                                            DateFormat('yyyy-MM-dd')
-                                                .format(selectedDate);
-                                      });
-                                    }
-                                  });
+                        Expanded(
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10.0),
+                              PackageField(
+                                controller: _packageNameController,
+                                labelText: 'Package Name',
+                                hintText: 'Enter the package name',
+                                validator: (value) {
+                                  if (value?.isEmpty ?? false) {
+                                    return 'Please enter the package name';
+                                  }
+                                  return null;
                                 },
-                                child: AbsorbPointer(
-                                  child: PackageField(
-                                    controller: _startDateController,
-                                    labelText: 'Start Date',
-                                    hintText: 'Select a start date',
-                                    keyboardType: TextInputType.datetime,
-                                    validator: (value) {
-                                      if (value?.isEmpty ?? false) {
-                                        return 'Please select a start date';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16.0),
-                        PackageField(
-                          controller: _numOfDaysController,
-                          keyboardType: TextInputType.number,
-                          labelText: 'Number of Days',
-                          hintText: 'Enter the number of days',
-                          validator: (value) {
-                            if (value?.isEmpty ?? false) {
-                              return 'Please enter the number of days';
-                            }
-                            if (int.tryParse(value!) == null) {
-                              return 'Please enter a valid number of days';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 16.0),
-                        TealButton(
-                          onPressed: _loadAssets,
-                          text: 'Add images',
-                          bgColor: Constants.primaryColor,
-                          txtColor: Colors.white,
-                        ),
-                        SizedBox(height: 16.0),
-                        PackageField(
-                          controller: _adultsController,
-                          keyboardType: TextInputType.number,
-                          labelText: 'Number of Adults',
-                          hintText: 'Enter the number of adults',
-                          validator: (value) {
-                            if (value?.isEmpty ?? false) {
-                              return 'Please enter the number of adults';
-                            }
-                            if (int.tryParse(value!) == null) {
-                              return 'Please enter a valid number of adults';
-                            }
-                            return null;
-                          },
-                        ),
-                        from_to_textfield(
-                            context, 'Destination', to, 'to', 'package'),
-                      ],
-                    ),
-                  ),
-                  TealButton(
-                      text: 'Edit Itinerary',
-                      onPressed: () {
-                        var editedPackage = Package(
-                          packageId: widget.package.packageId,
-                          packageName: _packageNameController.text,
-                          packagePrice:
-                              double.parse(_packagePriceController.text),
-                          packageDescription:
-                              _packageDescriptionController.text,
-                          startDate: _startDateController.text,
-                          numOfDays: int.parse(_numOfDaysController.text),
-                          rating: 0.0,
-                          numOfSales: 0,
-                          imgUrls: _imgUrlsController.text.split(','),
-                          adults: int.parse(_adultsController.text),
-                          travelAgencyId:
-                              FirebaseAuth.instance.currentUser!.uid,
-                          hotelPropertyId: _hotelPropertyIdController.text,
-                          dayWiseDetails: widget.package.dayWiseDetails,
-                          destination: _destinationController.text,
-                        );
-
-                        Get.to(
-                            EditItineraryScreen(
-                              package: editedPackage,
-                              index: widget.index,
-                            ),
-                            transition: Transition.fade);
-                      },
-                      bgColor: Constants.primaryColor,
-                      txtColor: Colors.white),
-                  isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: Constants.primaryColor,
+                              SizedBox(height: 16.0),
+                              PackageField(
+                                controller: _packagePriceController,
+                                keyboardType: TextInputType.number,
+                                labelText: 'Package Price',
+                                hintText: 'Enter the package price',
+                                validator: (value) {
+                                  if (value?.isEmpty ?? false) {
+                                    return 'Please enter the package price';
+                                  }
+                                  if (double.tryParse(value!) == null) {
+                                    return 'Please enter a valid price';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 16.0),
+                              PackageField(
+                                controller: _packageDescriptionController,
+                                labelText: 'Package Description',
+                                hintText: 'Enter the package description',
+                                validator: (value) {
+                                  if (value?.isEmpty ?? false) {
+                                    return 'Please enter the package description';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 16.0),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime.now()
+                                              .add(Duration(days: 365)),
+                                        ).then((selectedDate) {
+                                          if (selectedDate != null) {
+                                            setState(() {
+                                              _selectedDate = selectedDate;
+                                              _startDateController.text =
+                                                  DateFormat('yyyy-MM-dd')
+                                                      .format(selectedDate);
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: AbsorbPointer(
+                                        child: PackageField(
+                                          controller: _startDateController,
+                                          labelText: 'Start Date',
+                                          hintText: 'Select a start date',
+                                          keyboardType: TextInputType.datetime,
+                                          validator: (value) {
+                                            if (value?.isEmpty ?? false) {
+                                              return 'Please select a start date';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 16.0),
+                              PackageField(
+                                controller: _numOfDaysController,
+                                keyboardType: TextInputType.number,
+                                labelText: 'Number of Days',
+                                hintText: 'Enter the number of days',
+                                validator: (value) {
+                                  if (value?.isEmpty ?? false) {
+                                    return 'Please enter the number of days';
+                                  }
+                                  if (int.tryParse(value!) == null) {
+                                    return 'Please enter a valid number of days';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(height: 16.0),
+                              TealButton(
+                                onPressed: _loadAssets,
+                                text: 'Add images',
+                                bgColor: Constants.primaryColor,
+                                txtColor: Colors.white,
+                              ),
+                              SizedBox(height: 16.0),
+                              PackageField(
+                                controller: _adultsController,
+                                keyboardType: TextInputType.number,
+                                labelText: 'Number of Adults',
+                                hintText: 'Enter the number of adults',
+                                validator: (value) {
+                                  if (value?.isEmpty ?? false) {
+                                    return 'Please enter the number of adults';
+                                  }
+                                  if (int.tryParse(value!) == null) {
+                                    return 'Please enter a valid number of adults';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              from_to_textfield(
+                                  context, 'Destination', to, 'to', 'package'),
+                            ],
                           ),
-                        )
-                      : TealButton(
-                          text: 'Edit Package',
-                          onPressed: () async {
-                            if (_formKey.currentState?.validate() ?? false) {
-                              // Create a new Package object
+                        ),
+                        TealButton(
+                            text: 'Edit Itinerary',
+                            onPressed: () {
                               var editedPackage = Package(
                                 packageId: widget.package.packageId,
                                 packageName: _packageNameController.text,
@@ -335,9 +308,9 @@ class _EditPackageFormState extends State<EditPackageForm> {
                                     _packageDescriptionController.text,
                                 startDate: _startDateController.text,
                                 numOfDays: int.parse(_numOfDaysController.text),
-                                rating: 0.0,
+                                rating: averageRating,
                                 numOfSales: 0,
-                                imgUrls: _imgUrls,
+                                imgUrls: _imgUrlsController.text.split(','),
                                 adults: int.parse(_adultsController.text),
                                 travelAgencyId:
                                     FirebaseAuth.instance.currentUser!.uid,
@@ -345,79 +318,135 @@ class _EditPackageFormState extends State<EditPackageForm> {
                                     _hotelPropertyIdController.text,
                                 dayWiseDetails: widget.package.dayWiseDetails,
                                 destination: _destinationController.text,
+                                packageReviews: widget.package.packageReviews,
                               );
-                              print("edited package: " +
-                                  editedPackage.adults.toString());
 
-                              context
-                                  .read<PackageProvider>()
-                                  .agencyPackages[widget.index] = editedPackage;
-
-                              print("from provider: " +
-                                  context
-                                      .read<PackageProvider>()
-                                      .agencyPackages[widget.index]
-                                      .adults
-                                      .toString());
-
-                              try {
-                                setState(() {
-                                  isLoading = true;
-                                });
-                                await pak.updatePackage(package: editedPackage);
-                                context.read<PackageProvider>().agencyPackages =
-                                    await pak.fetchAgencyPackages(
-                                        FirebaseAuth.instance.currentUser!.uid);
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: ((context) =>
-                                            PackageListScreen())));
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                // Show a snackbar message to indicate success
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: poppinsText(
-                                        text: 'Package updated successfully',
-                                        color: Colors.white,
-                                        size: 16.0,
-                                        fontBold: FontWeight.w400),
-                                    backgroundColor: Constants.primaryColor,
+                              Get.to(
+                                  EditItineraryScreen(
+                                    package: editedPackage,
+                                    index: widget.index,
                                   ),
-                                );
-                                setState(() {});
-                              } on FirebaseException catch (e) {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: poppinsText(
-                                        text: e.message,
-                                        color: Colors.white,
-                                        size: 16.0,
-                                        fontBold: FontWeight.w400),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              }
-                            } else {
-                              setState(() => isValidated = false);
-                            }
-                          },
-                          bgColor: Constants.primaryColor,
-                          txtColor: Colors.white,
-                        ),
-                ],
+                                  transition: Transition.fade);
+                            },
+                            bgColor: Constants.primaryColor,
+                            txtColor: Colors.white),
+                        isLoading
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: Constants.primaryColor,
+                                ),
+                              )
+                            : TealButton(
+                                text: 'Edit Package',
+                                onPressed: () async {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
+                                    // Create a new Package object
+                                    var editedPackage = Package(
+                                      packageId: widget.package.packageId,
+                                      packageName: _packageNameController.text,
+                                      packagePrice: double.parse(
+                                          _packagePriceController.text),
+                                      packageDescription:
+                                          _packageDescriptionController.text,
+                                      startDate: _startDateController.text,
+                                      numOfDays:
+                                          int.parse(_numOfDaysController.text),
+                                      rating: 0.0,
+                                      numOfSales: 0,
+                                      imgUrls: _imgUrls,
+                                      adults: int.parse(_adultsController.text),
+                                      travelAgencyId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      hotelPropertyId:
+                                          _hotelPropertyIdController.text,
+                                      dayWiseDetails:
+                                          widget.package.dayWiseDetails,
+                                      destination: _destinationController.text,
+                                      packageReviews:
+                                          widget.package.packageReviews,
+                                    );
+                                    print("edited package: " +
+                                        editedPackage.adults.toString());
+
+                                    context
+                                            .read<PackageProvider>()
+                                            .agencyPackages[widget.index] =
+                                        editedPackage;
+
+                                    print("from provider: " +
+                                        context
+                                            .read<PackageProvider>()
+                                            .agencyPackages[widget.index]
+                                            .adults
+                                            .toString());
+
+                                    try {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      await pak.updatePackage(
+                                          package: editedPackage);
+                                      context
+                                              .read<PackageProvider>()
+                                              .agencyPackages =
+                                          await pak.fetchAgencyPackages(
+                                              FirebaseAuth
+                                                  .instance.currentUser!.uid);
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  PackageListScreen())));
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      // Show a snackbar message to indicate success
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: poppinsText(
+                                              text:
+                                                  'Package updated successfully',
+                                              color: Colors.white,
+                                              size: 16.0,
+                                              fontBold: FontWeight.w400),
+                                          backgroundColor:
+                                              Constants.primaryColor,
+                                        ),
+                                      );
+                                      setState(() {});
+                                    } on FirebaseException catch (e) {
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: poppinsText(
+                                              text: e.message,
+                                              color: Colors.white,
+                                              size: 16.0,
+                                              fontBold: FontWeight.w400),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    setState(() => isValidated = false);
+                                  }
+                                },
+                                bgColor: Constants.primaryColor,
+                                txtColor: Colors.white,
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

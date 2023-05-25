@@ -98,7 +98,7 @@ class _AgencyHomeState extends State<AgencyHome> {
                   MediaQuery.of(context).size.height * 0.2,
                   'Sales',
                   "\$${totalSales.toString()}",
-                  54),
+                  56),
             ),
             const SizedBox(
               height: 20.0,

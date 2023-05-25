@@ -18,10 +18,15 @@ class PackageProvider extends ChangeNotifier {
     _allPackages = allPackages;
     notifyListeners();
   }
-  
+
   List<Package> get agencyPackages => _agencyPackages;
   set agencyPackages(List<Package> agencyPackages) {
     _agencyPackages = agencyPackages;
+    notifyListeners();
+  }
+
+  clearDestination() {
+    to = Destination(city: '', iata: '');
     notifyListeners();
   }
 }
