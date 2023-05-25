@@ -413,35 +413,35 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                   child: TealButton(
                     text: "Pay Now",
                     onPressed: () async {
-                      var bookingId = Random().nextInt(900000000) + 100000000;
+                      // var bookingId = Random().nextInt(900000000) + 100000000;
                       double totalAmount =
                           widget.package.packagePrice + serviceFeeAmount;
                       setState(() => isLoading = true);
                       await makePayment(totalAmount.toInt().toString());
-                      await bn.bookPackage(
-                        packageBooking: PackageBooking(
-                            packageName: widget.package.packageName,
-                            bookingId: bookingId.toString(),
-                            bookingDate: Constants.convertDate(DateTime.now()),
-                            travelerId: travelerId,
-                            travelAgencyId: widget.package.travelAgencyId,
-                            packageId: widget.package.packageId,
-                            price: widget.package.packagePrice.toString(),
-                            rating: widget.package.rating.toString(),
-                            numOfReviews: widget.package.packageReviews!.length
-                                .toString(),
-                            adults: widget.package.adults.toString(),
-                            destination: widget.package.destination,
-                            imageUrl: widget.package.imgUrls[0],
-                            vacationStartDate:
-                                formatDate(widget.package.startDate),
-                            vacationEndDate: DateFormat('MMM dd, yyyy')
-                                .format(DateTime.parse(widget.package.startDate)
-                                    .add(Duration(
-                                        days: widget.package.numOfDays)))
-                                .toString()),
-                      );
-                      setState(() => isLoading = false);
+                      // await bn.bookPackage(
+                      //   packageBooking: PackageBooking(
+                      //       packageName: widget.package.packageName,
+                      //       bookingId: bookingId.toString(),
+                      //       bookingDate: Constants.convertDate(DateTime.now()),
+                      //       travelerId: travelerId,
+                      //       travelAgencyId: widget.package.travelAgencyId,
+                      //       packageId: widget.package.packageId,
+                      //       price: widget.package.packagePrice.toString(),
+                      //       rating: widget.package.rating.toString(),
+                      //       numOfReviews: widget.package.packageReviews!.length
+                      //           .toString(),
+                      //       adults: widget.package.adults.toString(),
+                      //       destination: widget.package.destination,
+                      //       imageUrl: widget.package.imgUrls[0],
+                      //       vacationStartDate:
+                      //           formatDate(widget.package.startDate),
+                      //       vacationEndDate: DateFormat('MMM dd, yyyy')
+                      //           .format(DateTime.parse(widget.package.startDate)
+                      //               .add(Duration(
+                      //                   days: widget.package.numOfDays)))
+                      //           .toString()),
+                      // );
+                      // setState(() => isLoading = false);
                     },
                     bgColor: Constants.primaryColor,
                     txtColor: Colors.white,
@@ -486,7 +486,19 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
                   ),
                   customFlow: true,
                   merchantDisplayName: 'Ali Asghar'))
-          .then((value) {});
+          .then((value) async {})
+          .catchError((e) {
+        setState(() => isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Something went wrong!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+      });
 
       //STEP 3: Display Payment sheet
       displayPaymentSheet();
@@ -531,7 +543,30 @@ class _PackagePaymentLayoutState extends State<PackagePaymentLayout> {
 
   displayPaymentSheet() async {
     try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        var bookingId = Random().nextInt(900000000) + 100000000;
+        await bn.bookPackage(
+          packageBooking: PackageBooking(
+              packageName: widget.package.packageName,
+              bookingId: bookingId.toString(),
+              bookingDate: Constants.convertDate(DateTime.now()),
+              travelerId: travelerId,
+              travelAgencyId: widget.package.travelAgencyId,
+              packageId: widget.package.packageId,
+              price: widget.package.packagePrice.toString(),
+              rating: widget.package.rating.toString(),
+              numOfReviews: widget.package.packageReviews!.length.toString(),
+              adults: widget.package.adults.toString(),
+              destination: widget.package.destination,
+              imageUrl: widget.package.imgUrls[0],
+              vacationStartDate: formatDate(widget.package.startDate),
+              vacationEndDate: DateFormat('MMM dd, yyyy')
+                  .format(DateTime.parse(widget.package.startDate)
+                      .add(Duration(days: widget.package.numOfDays)))
+                  .toString()),
+        );
+        setState(() => isLoading = false);
+
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
@@ -965,36 +1000,33 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                   child: TealButton(
                     text: "Pay Now",
                     onPressed: () async {
-                      var bookingId = Random().nextInt(900000000) + 100000000;
+                      // var bookingId = Random().nextInt(900000000) + 100000000;
                       double totalAmount = hotelCharges - discountAmount;
                       setState(() => isLoading = true);
                       await makePayment(totalAmount.toInt().toString());
-                      await bn.bookHotelRoom(
-                        hotelBooking: HotelBooking(
-                          bookingId: bookingId.toString(),
-                          bookingDate: Constants.convertDate(DateTime.now()),
-                          travelerId: travelerId,
-                          hotelId: widget.property.id!,
-                          hotelRoomId: widget.unit.id!,
-                          price: totalAmount.toString(),
-                          rating: widget.property.reviews!.score.toString(),
-                          numOfReviews:
-                              hotelProvider.hotelReviews.length.toString(),
-                          adults: hotelProvider.adults.toString(),
-                          hotelName: widget.property.name ?? "",
-                          hotelLocation:
-                              widget.property.neighborhood?.name ?? "",
-                          imageUrl:
-                              widget.property.propertyImage?.image?.url ?? "",
-                          hotelCheckInDate: formatDate(
-                              context.read<HotelSearchProvider>().checkIn),
-                          hotelCheckOutDate: formatDate(
-                              context.read<HotelSearchProvider>().checkOut),
-                        ),
-                      );
-                      hotelProvider.clearHotels();
-                      hotelProvider.clearHotelDetail();
-                      setState(() => isLoading = false);
+                      // await bn.bookHotelRoom(
+                      //   hotelBooking: HotelBooking(
+                      //     bookingId: bookingId.toString(),
+                      //     bookingDate: Constants.convertDate(DateTime.now()),
+                      //     travelerId: travelerId,
+                      //     hotelId: widget.property.id!,
+                      //     hotelRoomId: widget.unit.id!,
+                      //     price: totalAmount.toString(),
+                      //     rating: widget.property.reviews!.score.toString(),
+                      //     numOfReviews:
+                      //         hotelProvider.hotelReviews.length.toString(),
+                      //     adults: hotelProvider.adults.toString(),
+                      //     hotelName: widget.property.name ?? "",
+                      //     hotelLocation:
+                      //         widget.property.neighborhood?.name ?? "",
+                      //     imageUrl:
+                      //         widget.property.propertyImage?.image?.url ?? "",
+                      //     hotelCheckInDate: formatDate(
+                      //         context.read<HotelSearchProvider>().checkIn),
+                      //     hotelCheckOutDate: formatDate(
+                      //         context.read<HotelSearchProvider>().checkOut),
+                      //   ),
+                      // );
                     },
                     bgColor: Constants.primaryColor,
                     txtColor: Colors.white,
@@ -1039,7 +1071,19 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
                   ),
                   customFlow: true,
                   merchantDisplayName: 'ExploreEase'))
-          .then((value) {});
+          .then((value) async {})
+          .catchError((e) {
+        setState(() => isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "Something went wrong!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+      });
 
       //STEP 3: Display Payment sheet
       displayPaymentSheet();
@@ -1087,7 +1131,34 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
 
   displayPaymentSheet() async {
     try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        var hotelProvider = context.watch<HotelSearchProvider>();
+        var bookingId = Random().nextInt(900000000) + 100000000;
+        double hotelCharges =
+            widget.unit.ratePlans![0].priceDetails![0].price!.lead!.amount;
+        double totalAmount = hotelCharges - discountAmount;
+        await bn.bookHotelRoom(
+          hotelBooking: HotelBooking(
+            bookingId: bookingId.toString(),
+            bookingDate: Constants.convertDate(DateTime.now()),
+            travelerId: travelerId,
+            hotelId: widget.property.id!,
+            hotelRoomId: widget.unit.id!,
+            price: totalAmount.toString(),
+            rating: widget.property.reviews!.score.toString(),
+            numOfReviews: hotelProvider.hotelReviews.length.toString(),
+            adults: hotelProvider.adults.toString(),
+            hotelName: widget.property.name ?? "",
+            hotelLocation: widget.property.neighborhood?.name ?? "",
+            imageUrl: widget.property.propertyImage?.image?.url ?? "",
+            hotelCheckInDate:
+                formatDate(context.read<HotelSearchProvider>().checkIn),
+            hotelCheckOutDate:
+                formatDate(context.read<HotelSearchProvider>().checkOut),
+          ),
+        );
+        setState(() => isLoading = false);
+
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
@@ -1154,6 +1225,9 @@ class _HotelPaymentLayoutState extends State<HotelPaymentLayout> {
             ),
           ),
         );
+
+        hotelProvider.clearHotels();
+        hotelProvider.clearHotelDetail();
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
@@ -1546,84 +1620,84 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                               discountAmount;
                       setState(() => isLoading = true);
                       await makePayment(totalAmount.toInt().toString());
-                      await bn.bookFlight(
-                        flightBooking: FlightBooking(
-                          bookingId: bookingId.toString(),
-                          bookingDate: Constants.convertDate(DateTime.now()),
-                          travelerId: travelerId,
-                          flightId: flightId.toString(),
-                          cabin: widget.flight.fareDetailsBySegment[0].cabin,
-                          flightDuration: widget.flight.itineraries[0].duration
-                              .replaceAll('PT', '')
-                              .replaceAll('H', 'H ')
-                              .toLowerCase(),
-                          fromCity: widget.flight.itineraries[0].segments[0]
-                              .departure.iataCode,
-                          toCity: widget.flight.itineraries[0].segments.last
-                              .arrival.iataCode,
-                          fromTime: Constants.convertTime(widget
-                              .flight.itineraries[0].segments[0].departure.at),
-                          toTime: Constants.convertTime(widget
-                              .flight.itineraries[0].segments[0].arrival.at),
-                          price: widget.flight.price.total,
-                          adults: context
-                              .read<FlightSearchProvider>()
-                              .adults
-                              .toString(),
-                          flightDepartureDate: formatDate(
-                              context.read<FlightSearchProvider>().departDate),
-                          flightReturnDate: formatDate(
-                              context.read<FlightSearchProvider>().returnDate),
-                          carrierName: context
-                                  .read<FlightSearchProvider>()
-                                  .dictionary['carriers'][
-                              widget.flight.itineraries[0].segments[0]
-                                  .carrierCode],
-                          connectingFlights:
-                              (widget.flight.itineraries[0].segments.length - 1)
-                                  .toString(),
-                          returnFlightExists:
-                              widget.flight.itineraries.length > 1,
-                          returnFlightDuration:
-                              widget.flight.itineraries.length > 1
-                                  ? widget.flight.itineraries[1]?.duration
-                                          ?.replaceAll('PT', '')
-                                          ?.replaceAll('H', 'H ')
-                                          ?.toLowerCase() ??
-                                      ''
-                                  : '',
-                          returnFromCity: widget.flight.itineraries.length > 1
-                              ? widget.flight.itineraries[1]?.segments[0]
-                                      ?.departure?.iataCode ??
-                                  ''
-                              : '',
-                          returnToCity: widget.flight.itineraries.length > 1
-                              ? widget.flight.itineraries[1]?.segments.last
-                                      ?.arrival?.iataCode ??
-                                  ''
-                              : '',
-                          returnFromTime: widget.flight.itineraries.length > 1
-                              ? Constants.convertTime(widget
-                                      .flight
-                                      .itineraries[1]
-                                      ?.segments[0]
-                                      ?.departure
-                                      ?.at) ??
-                                  ''
-                              : '',
-                          returnToTime: widget.flight.itineraries.length > 1
-                              ? Constants.convertTime(widget
-                                      .flight
-                                      .itineraries[1]
-                                      ?.segments
-                                      .last
-                                      ?.arrival
-                                      ?.at) ??
-                                  ''
-                              : '',
-                        ),
-                      );
-                      setState(() => isLoading = false);
+                      // await bn.bookFlight(
+                      //   flightBooking: FlightBooking(
+                      //     bookingId: bookingId.toString(),
+                      //     bookingDate: Constants.convertDate(DateTime.now()),
+                      //     travelerId: travelerId,
+                      //     flightId: flightId.toString(),
+                      //     cabin: widget.flight.fareDetailsBySegment[0].cabin,
+                      //     flightDuration: widget.flight.itineraries[0].duration
+                      //         .replaceAll('PT', '')
+                      //         .replaceAll('H', 'H ')
+                      //         .toLowerCase(),
+                      //     fromCity: widget.flight.itineraries[0].segments[0]
+                      //         .departure.iataCode,
+                      //     toCity: widget.flight.itineraries[0].segments.last
+                      //         .arrival.iataCode,
+                      //     fromTime: Constants.convertTime(widget
+                      //         .flight.itineraries[0].segments[0].departure.at),
+                      //     toTime: Constants.convertTime(widget
+                      //         .flight.itineraries[0].segments[0].arrival.at),
+                      //     price: widget.flight.price.total,
+                      //     adults: context
+                      //         .read<FlightSearchProvider>()
+                      //         .adults
+                      //         .toString(),
+                      //     flightDepartureDate: formatDate(
+                      //         context.read<FlightSearchProvider>().departDate),
+                      //     flightReturnDate: formatDate(
+                      //         context.read<FlightSearchProvider>().returnDate),
+                      //     carrierName: context
+                      //             .read<FlightSearchProvider>()
+                      //             .dictionary['carriers'][
+                      //         widget.flight.itineraries[0].segments[0]
+                      //             .carrierCode],
+                      //     connectingFlights:
+                      //         (widget.flight.itineraries[0].segments.length - 1)
+                      //             .toString(),
+                      //     returnFlightExists:
+                      //         widget.flight.itineraries.length > 1,
+                      //     returnFlightDuration:
+                      //         widget.flight.itineraries.length > 1
+                      //             ? widget.flight.itineraries[1]?.duration
+                      //                     ?.replaceAll('PT', '')
+                      //                     ?.replaceAll('H', 'H ')
+                      //                     ?.toLowerCase() ??
+                      //                 ''
+                      //             : '',
+                      //     returnFromCity: widget.flight.itineraries.length > 1
+                      //         ? widget.flight.itineraries[1]?.segments[0]
+                      //                 ?.departure?.iataCode ??
+                      //             ''
+                      //         : '',
+                      //     returnToCity: widget.flight.itineraries.length > 1
+                      //         ? widget.flight.itineraries[1]?.segments.last
+                      //                 ?.arrival?.iataCode ??
+                      //             ''
+                      //         : '',
+                      //     returnFromTime: widget.flight.itineraries.length > 1
+                      //         ? Constants.convertTime(widget
+                      //                 .flight
+                      //                 .itineraries[1]
+                      //                 ?.segments[0]
+                      //                 ?.departure
+                      //                 ?.at) ??
+                      //             ''
+                      //         : '',
+                      //     returnToTime: widget.flight.itineraries.length > 1
+                      //         ? Constants.convertTime(widget
+                      //                 .flight
+                      //                 .itineraries[1]
+                      //                 ?.segments
+                      //                 .last
+                      //                 ?.arrival
+                      //                 ?.at) ??
+                      //             ''
+                      //         : '',
+                      //   ),
+                      // );
+                      // setState(() => isLoading = false);
                     },
                     bgColor: Constants.primaryColor,
                     txtColor: Colors.white,
@@ -1668,7 +1742,19 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
                   ),
                   customFlow: true,
                   merchantDisplayName: 'Ali Asghar'))
-          .then((value) {});
+          .then((value) async {})
+          .catchError((e) {
+        setState(() => isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "Something went wrong!",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.red,
+        ));
+      });
 
       //STEP 3: Display Payment sheet
       displayPaymentSheet();
@@ -1713,7 +1799,70 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
 
   displayPaymentSheet() async {
     try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
+      await Stripe.instance.presentPaymentSheet().then((value) async {
+        var bookingId = Random().nextInt(900000000) + 100000000;
+        var flightId = Random().nextInt(900000000) + 100000000;
+        await bn.bookFlight(
+          flightBooking: FlightBooking(
+            bookingId: bookingId.toString(),
+            bookingDate: Constants.convertDate(DateTime.now()),
+            travelerId: travelerId,
+            flightId: flightId.toString(),
+            cabin: widget.flight.fareDetailsBySegment[0].cabin,
+            flightDuration: widget.flight.itineraries[0].duration
+                .replaceAll('PT', '')
+                .replaceAll('H', 'H ')
+                .toLowerCase(),
+            fromCity:
+                widget.flight.itineraries[0].segments[0].departure.iataCode,
+            toCity: widget.flight.itineraries[0].segments.last.arrival.iataCode,
+            fromTime: Constants.convertTime(
+                widget.flight.itineraries[0].segments[0].departure.at),
+            toTime: Constants.convertTime(
+                widget.flight.itineraries[0].segments[0].arrival.at),
+            price: widget.flight.price.total,
+            adults: context.read<FlightSearchProvider>().adults.toString(),
+            flightDepartureDate:
+                formatDate(context.read<FlightSearchProvider>().departDate),
+            flightReturnDate:
+                formatDate(context.read<FlightSearchProvider>().returnDate),
+            carrierName:
+                context.read<FlightSearchProvider>().dictionary['carriers']
+                    [widget.flight.itineraries[0].segments[0].carrierCode],
+            connectingFlights:
+                (widget.flight.itineraries[0].segments.length - 1).toString(),
+            returnFlightExists: widget.flight.itineraries.length > 1,
+            returnFlightDuration: widget.flight.itineraries.length > 1
+                ? widget.flight.itineraries[1]?.duration
+                        ?.replaceAll('PT', '')
+                        ?.replaceAll('H', 'H ')
+                        ?.toLowerCase() ??
+                    ''
+                : '',
+            returnFromCity: widget.flight.itineraries.length > 1
+                ? widget.flight.itineraries[1]?.segments[0]?.departure
+                        ?.iataCode ??
+                    ''
+                : '',
+            returnToCity: widget.flight.itineraries.length > 1
+                ? widget.flight.itineraries[1]?.segments.last?.arrival
+                        ?.iataCode ??
+                    ''
+                : '',
+            returnFromTime: widget.flight.itineraries.length > 1
+                ? Constants.convertTime(widget
+                        .flight.itineraries[1]?.segments[0]?.departure?.at) ??
+                    ''
+                : '',
+            returnToTime: widget.flight.itineraries.length > 1
+                ? Constants.convertTime(widget
+                        .flight.itineraries[1]?.segments.last?.arrival?.at) ??
+                    ''
+                : '',
+          ),
+        );
+        setState(() => isLoading = false);
+
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
@@ -1780,6 +1929,8 @@ class _FlightPaymentLayoutState extends State<FlightPaymentLayout> {
             ),
           ),
         );
+
+        context.read<FlightSearchProvider>().clearFlights();
 
         paymentIntent = null;
       }).onError((error, stackTrace) {
