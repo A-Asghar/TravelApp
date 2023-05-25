@@ -352,8 +352,8 @@ class _EditPackageFormState extends State<EditPackageForm> {
                                       startDate: _startDateController.text,
                                       numOfDays:
                                           int.parse(_numOfDaysController.text),
-                                      rating: 0.0,
-                                      numOfSales: 0,
+                                      rating: widget.package.rating,
+                                      numOfSales: widget.package.numOfSales,
                                       imgUrls: _imgUrls,
                                       adults: int.parse(_adultsController.text),
                                       travelAgencyId: FirebaseAuth
