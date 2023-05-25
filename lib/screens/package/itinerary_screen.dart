@@ -112,6 +112,12 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
                                   itineraryDetails.add(controller.text);
                                 }
 
+                                for (int index = 0; index < _controllers.length; index++) {
+                                  final controller = _controllers[index];
+                                  itineraryDetails.add("Day $index: ${controller.text}");
+                                }
+
+
                                 widget.package.dayWiseDetails =
                                     itineraryDetails;
 
