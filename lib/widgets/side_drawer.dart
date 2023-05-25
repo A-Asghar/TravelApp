@@ -54,46 +54,63 @@ class _SideDrawerState extends State<SideDrawer> {
                         size: 20.0,
                         color: Colors.white,
                         fontBold: FontWeight.w500))
-                : StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('users')
-                        .where('uid',
-                            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Something went wrong');
-                      }
+                : !isLoggingOut
+                    ? StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .where('uid',
+                                isEqualTo:
+                                    FirebaseAuth.instance.currentUser!.uid)
+                            .snapshots(),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            return Text('Something went wrong');
+                          }
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator(); // show loading spinner
-                      }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator(); // show loading spinner
+                          }
 
-                      var userDocument = snapshot.data?.docs.first;
-                      var profilePhotoUrl = userDocument?['profilePhotoUrl'] ??
-                          'assets/images/user.png';
+                          var userDocument = snapshot.data?.docs.first;
+                          var profilePhotoUrl =
+                              userDocument?['profilePhotoUrl'] ??
+                                  'assets/images/user.png';
 
-                      return snapshot.connectionState == ConnectionState.waiting
-                          ? CircularProgressIndicator(
-                              color: Constants.primaryColor,
-                            )
-                          : Container(
-                              height: 140,
-                              width: 140,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  image: profilePhotoUrl ==
-                                          "assets/images/user.png"
-                                      ? AssetImage(profilePhotoUrl)
-                                      : NetworkImage(profilePhotoUrl)
-                                          as ImageProvider<Object>,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            );
-                    },
-                  ),
+                          return snapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? CircularProgressIndicator(
+                                  color: Constants.primaryColor,
+                                )
+                              : Container(
+                                  height: 140,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    image: DecorationImage(
+                                      image: profilePhotoUrl ==
+                                              "assets/images/user.png"
+                                          ? AssetImage(profilePhotoUrl)
+                                          : NetworkImage(profilePhotoUrl)
+                                              as ImageProvider<Object>,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                );
+                        },
+                      )
+                    : Container(
+                        height: 140,
+                        width: 140,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/user.png"),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
             currentAccountPictureSize: Size.square(60.0),
             arrowColor: Colors.transparent,
             decoration: const BoxDecoration(
@@ -121,8 +138,8 @@ class _SideDrawerState extends State<SideDrawer> {
           ListTile(
             leading: Icon(Icons.notifications, color: Constants.primaryColor),
             title: poppinsText(text: 'Notifications', size: 20.0),
-            onTap: () =>
-                Get.to(TravelAgencyNotificationsPage(), transition: Transition.fade),
+            onTap: () => Get.to(TravelAgencyNotificationsPage(),
+                transition: Transition.fade),
           ),
           ListTile(
             leading: Icon(Icons.security, color: Constants.primaryColor),
