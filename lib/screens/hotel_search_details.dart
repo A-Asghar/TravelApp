@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fyp/Constants.dart';
 import 'package:fyp/models/PropertySearchListings.dart';
@@ -211,7 +212,10 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                poppinsText(text: "Gallery Photos", size: 20.0, fontBold: FontWeight.w500),
+                                poppinsText(
+                                    text: "Gallery Photos",
+                                    size: 20.0,
+                                    fontBold: FontWeight.w500),
                                 poppinsText(
                                     text: "See All",
                                     size: 16.0,
@@ -255,7 +259,10 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         // Description
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Description", size: 20.0, fontBold: FontWeight.w500),
+                          child: poppinsText(
+                              text: "Description",
+                              size: 20.0,
+                              fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 20),
                         Padding(
@@ -268,7 +275,10 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         // Facilities
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Facilities", size: 20.0, fontBold: FontWeight.w500),
+                          child: poppinsText(
+                              text: "Facilities",
+                              size: 20.0,
+                              fontBold: FontWeight.w500),
                         ),
 
                         Container(
@@ -301,7 +311,10 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                         // Location Map
                         Padding(
                           padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: poppinsText(text: "Location", size: 20.0, fontBold: FontWeight.w500),
+                          child: poppinsText(
+                              text: "Location",
+                              size: 20.0,
+                              fontBold: FontWeight.w500),
                         ),
                         const SizedBox(height: 20),
                         InkWell(
@@ -359,7 +372,10 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: Row(
                               children: [
-                                poppinsText(text: "Reviews", size: 20.0, fontBold: FontWeight.w500),
+                                poppinsText(
+                                    text: "Reviews",
+                                    size: 20.0,
+                                    fontBold: FontWeight.w500),
                                 const SizedBox(width: 14),
                                 const Icon(
                                   Icons.star,
@@ -477,7 +493,7 @@ class _HotelSearchDetailsState extends State<HotelSearchDetails> {
                 ],
               ),
               onWillPop: () async {
-                hotelProvider.clearHotelDetail();
+                SystemNavigator.pop();
                 return true;
               },
             ),
@@ -492,7 +508,8 @@ Widget hotelRooms2(
     children: [
       Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
-        child: poppinsText(text: "Rooms", size: 20.0, fontBold: FontWeight.w500),
+        child:
+            poppinsText(text: "Rooms", size: 20.0, fontBold: FontWeight.w500),
       ),
       hotelProvider.hotelRooms.isEmpty
           ? Container(
@@ -622,7 +639,8 @@ Widget hotelRooms2(
                                             )
                                           : Container(),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10.0),
                                         child: Row(
                                           children: [
                                             poppinsText(
@@ -664,7 +682,8 @@ Widget hotelRooms2(
                                                   child: poppinsText(
                                                       text: 'Book Now',
                                                       color: Colors.white,
-                                                      fontBold: FontWeight.w500),
+                                                      fontBold:
+                                                          FontWeight.w500),
                                                 ),
                                               ),
                                             )
