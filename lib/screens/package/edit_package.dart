@@ -135,23 +135,25 @@ class _EditPackageFormState extends State<EditPackageForm> {
         : context.watch<PackageProvider>().to.city;
     _imgUrls = widget.package.imgUrls;
     return Scaffold(
-      appBar: AppBar(
-        title: poppinsText(
-            text: 'Edit Package',
-            color: Colors.white,
-            size: 24.0,
-            fontBold: FontWeight.w600),
-        centerTitle: true,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        leading: PopButton(
-          onTap: () {
-            Navigator.pop(context);
-            context.read<PackageProvider>().clearDestination();
-          },
-        ),
-        backgroundColor: Colors.teal,
-      ),
+      appBar: isImageLoading
+          ? null
+          : AppBar(
+              title: poppinsText(
+                  text: 'Edit Package',
+                  color: Colors.white,
+                  size: 24.0,
+                  fontBold: FontWeight.w600),
+              centerTitle: true,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              leading: PopButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  context.read<PackageProvider>().clearDestination();
+                },
+              ),
+              backgroundColor: Colors.teal,
+            ),
       body: isImageLoading
           ? lottieLoader(context)
           : SingleChildScrollView(
@@ -218,12 +220,31 @@ class _EditPackageFormState extends State<EditPackageForm> {
                                     child: GestureDetector(
                                       onTap: () {
                                         showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime.now(),
-                                          lastDate: DateTime.now()
-                                              .add(Duration(days: 365)),
-                                        ).then((selectedDate) {
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime.now()
+                                                .add(Duration(days: 365)),
+                                            builder: (BuildContext context,
+                                                Widget? child) {
+                                              return Theme(
+                                                data: ThemeData(
+                                                  dialogTheme: DialogTheme(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
+                                                    ),
+                                                  ),
+                                                  primarySwatch: Colors.teal,
+                                                  colorScheme:
+                                                      ColorScheme.light(
+                                                          primary: Colors.teal),
+                                                ),
+                                                child: child ?? Container(),
+                                              );
+                                            }).then((selectedDate) {
                                           if (selectedDate != null) {
                                             setState(() {
                                               _selectedDate = selectedDate;
@@ -296,40 +317,47 @@ class _EditPackageFormState extends State<EditPackageForm> {
                             ],
                           ),
                         ),
-                        TealButton(
-                            text: 'Edit Itinerary',
-                            onPressed: () {
-                              var editedPackage = Package(
-                                packageId: widget.package.packageId,
-                                packageName: _packageNameController.text,
-                                packagePrice:
-                                    double.parse(_packagePriceController.text),
-                                packageDescription:
-                                    _packageDescriptionController.text,
-                                startDate: _startDateController.text,
-                                numOfDays: int.parse(_numOfDaysController.text),
-                                rating: averageRating,
-                                numOfSales: 0,
-                                imgUrls: _imgUrlsController.text.split(','),
-                                adults: int.parse(_adultsController.text),
-                                travelAgencyId:
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                hotelPropertyId:
-                                    _hotelPropertyIdController.text,
-                                dayWiseDetails: widget.package.dayWiseDetails,
-                                destination: _destinationController.text,
-                                packageReviews: widget.package.packageReviews,
-                              );
+                        isImageLoading
+                            ? Container(
+                                height: 10,
+                              )
+                            : TealButton(
+                                text: 'Edit Itinerary',
+                                onPressed: () {
+                                  var editedPackage = Package(
+                                    packageId: widget.package.packageId,
+                                    packageName: _packageNameController.text,
+                                    packagePrice: double.parse(
+                                        _packagePriceController.text),
+                                    packageDescription:
+                                        _packageDescriptionController.text,
+                                    startDate: _startDateController.text,
+                                    numOfDays:
+                                        int.parse(_numOfDaysController.text),
+                                    rating: averageRating,
+                                    numOfSales: 0,
+                                    imgUrls: _imgUrls,
+                                    adults: int.parse(_adultsController.text),
+                                    travelAgencyId:
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                    hotelPropertyId:
+                                        _hotelPropertyIdController.text,
+                                    dayWiseDetails:
+                                        widget.package.dayWiseDetails,
+                                    destination: _destinationController.text,
+                                    packageReviews:
+                                        widget.package.packageReviews,
+                                  );
 
-                              Get.to(
-                                  EditItineraryScreen(
-                                    package: editedPackage,
-                                    index: widget.index,
-                                  ),
-                                  transition: Transition.fade);
-                            },
-                            bgColor: Constants.primaryColor,
-                            txtColor: Colors.white),
+                                  Get.to(
+                                      EditItineraryScreen(
+                                        package: editedPackage,
+                                        index: widget.index,
+                                      ),
+                                      transition: Transition.fade);
+                                },
+                                bgColor: Constants.primaryColor,
+                                txtColor: Colors.white),
                         isLoading
                             ? const Center(
                                 child: CircularProgressIndicator(

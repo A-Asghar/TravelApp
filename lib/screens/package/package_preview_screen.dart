@@ -288,7 +288,7 @@ class _DayWiseDetailState extends State<DayWiseDetail> {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: poppinsText(text: 'Day ${index + 1}: ${widget.daywise![index]} \n', size: 16.0)
+                child: poppinsText(text: '${widget.daywise![index]} \n', size: 16.0)
               );
             }),
         GestureDetector(

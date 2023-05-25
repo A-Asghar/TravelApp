@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,21 +40,56 @@ class _SideDrawerState extends State<SideDrawer> {
                 size: 16.0,
                 color: Colors.white,
                 fontBold: FontWeight.w400),
-            currentAccountPicture:
-                controller.user!.profilePhotoUrl == "assets/images/user.png" ||
-                        controller.user!.profilePhotoUrl.isEmpty
-                    ? CircleAvatar(
-                        backgroundColor: Constants.primaryColor,
-                        child: poppinsText(
-                            text: controller.user!.name.substring(0, 1),
-                            size: 20.0,
-                            color: Colors.white,
-                            fontBold: FontWeight.w500))
-                    : CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          controller.user!.profilePhotoUrl,
-                        ),
-                      ),
+            currentAccountPicture: controller.user!.profilePhotoUrl ==
+                        "assets/images/user.png" ||
+                    controller.user!.profilePhotoUrl.isEmpty
+                ? CircleAvatar(
+                    backgroundColor: Constants.primaryColor,
+                    child: poppinsText(
+                        text: controller.user!.name.substring(0, 1),
+                        size: 20.0,
+                        color: Colors.white,
+                        fontBold: FontWeight.w500))
+                : StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .where('uid',
+                            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(); // show loading spinner
+                      }
+
+                      var userDocument = snapshot.data?.docs.first;
+                      var profilePhotoUrl = userDocument?['profilePhotoUrl'] ??
+                          'assets/images/user.png';
+
+                      return snapshot.connectionState == ConnectionState.waiting
+                          ? CircularProgressIndicator(
+                              color: Constants.primaryColor,
+                            )
+                          : Container(
+                              height: 140,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                image: DecorationImage(
+                                  image: profilePhotoUrl ==
+                                          "assets/images/user.png"
+                                      ? AssetImage(profilePhotoUrl)
+                                      : NetworkImage(profilePhotoUrl)
+                                          as ImageProvider<Object>,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            );
+                    },
+                  ),
             currentAccountPictureSize: Size.square(60.0),
             arrowColor: Colors.transparent,
             decoration: const BoxDecoration(

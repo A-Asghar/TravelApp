@@ -76,7 +76,6 @@ class _AddPackageFormState extends State<AddPackageForm> {
     });
 
     if (_images.isNotEmpty) {
-      context.read<LoadingProvider>().loadingUpdate = await "Uploading Images";
       setState(() => isImageLoading = true);
       await _uploadImagesToFirebase();
       setState(() => isImageLoading = false);
@@ -113,21 +112,23 @@ class _AddPackageFormState extends State<AddPackageForm> {
         : context.watch<PackageProvider>().to.city;
     var packageProvider = context.watch<PackageProvider>();
     return Scaffold(
-        appBar: AppBar(
-          title: poppinsText(
-              text: 'Add Package',
-              color: Colors.white,
-              size: 24.0,
-              fontBold: FontWeight.w600),
-          centerTitle: true,
-          leading: PopButton(
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          elevation: 0,
-          backgroundColor: Colors.teal,
-        ),
+        appBar: isImageLoading
+            ? null
+            : AppBar(
+                title: poppinsText(
+                    text: 'Add Package',
+                    color: Colors.white,
+                    size: 24.0,
+                    fontBold: FontWeight.w600),
+                centerTitle: true,
+                leading: PopButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                elevation: 0,
+                backgroundColor: Colors.teal,
+              ),
         body: isImageLoading
             ? lottieLoader(context)
             : SingleChildScrollView(
@@ -139,7 +140,7 @@ class _AddPackageFormState extends State<AddPackageForm> {
                     key: _formKey,
                     child: Container(
                       height: isValidated
-                          ? MediaQuery.of(context).size.height * 0.86
+                          ? MediaQuery.of(context).size.height
                           : MediaQuery.of(context).size.height,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -205,6 +206,14 @@ class _AddPackageFormState extends State<AddPackageForm> {
                                                 Widget? child) {
                                               return Theme(
                                                 data: ThemeData(
+                                                  dialogTheme: DialogTheme(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15.0),
+                                                    ),
+                                                  ),
                                                   primarySwatch: Colors.teal,
                                                   colorScheme:
                                                       ColorScheme.light(
@@ -296,54 +305,59 @@ class _AddPackageFormState extends State<AddPackageForm> {
         bottomSheet: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TealButton(
-                text: 'Add Itinerary',
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    if (context.read<PackageProvider>().to.city == '') {
-                      customErrorDialog(
-                          context, "You haven\'t selected a destination");
-                      return;
-                    }
+            isImageLoading
+                ? Container(height: 10,)
+                : TealButton(
+                    text: 'Add Itinerary',
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        if (context.read<PackageProvider>().to.city == '') {
+                          customErrorDialog(
+                              context, "You haven\'t selected a destination");
+                          return;
+                        }
 
-                    if (_imgUrls.isEmpty) {
-                      customErrorDialog(context, "You haven\'t selected any image");
-                      return;
-                    }
+                        if (_imgUrls.isEmpty) {
+                          customErrorDialog(
+                              context, "You haven\'t selected any image");
+                          return;
+                        }
 
-                    // Generate packageId as a 9-digit random number
-                    var packageId = Random().nextInt(900000000) + 100000000;
+                        // Generate packageId as a 9-digit random number
+                        var packageId = Random().nextInt(900000000) + 100000000;
 
-                    // Create a new Package object
-                    var newPackage = Package(
-                      packageId: packageId.toString(),
-                      packageName: _packageNameController.text,
-                      packagePrice: double.parse(_packagePriceController.text),
-                      packageDescription: _packageDescriptionController.text,
-                      startDate: _startDateController.text,
-                      numOfDays: int.parse(_numOfDaysController.text),
-                      rating: 0.0,
-                      numOfSales: 0,
-                      imgUrls: _imgUrls,
-                      adults: int.parse(_adultsController.text),
-                      travelAgencyId: FirebaseAuth.instance.currentUser!.uid,
-                      hotelPropertyId: _hotelPropertyIdController.text,
-                      dayWiseDetails: [],
-                      destination: to,
-                      packageReviews: []
-                    );
+                        // Create a new Package object
+                        var newPackage = Package(
+                            packageId: packageId.toString(),
+                            packageName: _packageNameController.text,
+                            packagePrice:
+                                double.parse(_packagePriceController.text),
+                            packageDescription:
+                                _packageDescriptionController.text,
+                            startDate: _startDateController.text,
+                            numOfDays: int.parse(_numOfDaysController.text),
+                            rating: 0.0,
+                            numOfSales: 0,
+                            imgUrls: _imgUrls,
+                            adults: int.parse(_adultsController.text),
+                            travelAgencyId:
+                                FirebaseAuth.instance.currentUser!.uid,
+                            hotelPropertyId: _hotelPropertyIdController.text,
+                            dayWiseDetails: [],
+                            destination: to,
+                            packageReviews: []);
 
-                    Get.to(
-                      ItineraryScreen(
-                        package: newPackage,
-                      ),
-                    );
-                  } else {
-                    setState(() => isValidated = false);
-                  }
-                },
-                bgColor: Constants.primaryColor,
-                txtColor: Colors.white),
+                        Get.to(
+                          ItineraryScreen(
+                            package: newPackage,
+                          ),
+                        );
+                      } else {
+                        setState(() => isValidated = false);
+                      }
+                    },
+                    bgColor: Constants.primaryColor,
+                    txtColor: Colors.white),
           ],
         ));
   }

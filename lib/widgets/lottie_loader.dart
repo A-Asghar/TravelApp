@@ -5,7 +5,6 @@ import 'package:travel_agency/providers/loading_provider.dart';
 import 'package:travel_agency/widgets/custom_animated_text.dart';
 
 Widget lottieLoader(BuildContext context) {
-  print("lottie load" + context.read<LoadingProvider>().loadingUpdate);
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,

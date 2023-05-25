@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class LoadingProvider extends ChangeNotifier {
-  String _loadingUpdate = '';
+  String _loadingUpdate = 'Uploading Images';
   String get loadingUpdate => _loadingUpdate;
   set loadingUpdate(loadingUpdate) {
     _loadingUpdate = loadingUpdate;
