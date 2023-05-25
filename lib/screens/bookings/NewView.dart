@@ -87,7 +87,7 @@ class _NewViewState extends State<NewView> {
   Widget build(BuildContext context) {
     return isLoading
         ? const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: Constants.primaryColor,),
           )
         : (hotelBookings.isEmpty &&
                 flightBookings.isEmpty &&

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -146,24 +147,52 @@ class _EditProfileState extends State<EditProfile> {
                         Center(
                           child: InkWell(
                             onTap: () => _showSelectPhotoOptions(context),
-                            child: Container(
-                              height: 140,
-                              width: 140,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  image: controller
-                                              .user!.profilePhotoUrl.isEmpty ||
-                                          controller.user!.profilePhotoUrl ==
-                                              "assets/images/user.png"
-                                      ? AssetImage('assets/images/user.png')
-                                      : NetworkImage(
-                                              controller.user!.profilePhotoUrl)
-                                          as ImageProvider<Object>,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
+                            child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('users')
+                                .where('uid',
+                                    isEqualTo:
+                                        FirebaseAuth.instance.currentUser!.uid)
+                                .snapshots(),
+                            builder: (context,
+                                AsyncSnapshot<QuerySnapshot> snapshot) {
+                              if (snapshot.hasError) {
+                                return Text('Something went wrong');
+                              }
+
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator(); // show loading spinner
+                              }
+
+                              var userDocument = snapshot.data?.docs.first;
+                              var profilePhotoUrl =
+                                  userDocument?['profilePhotoUrl'] ??
+                                      'assets/images/user.png';
+
+                              return snapshot.connectionState ==
+                                      ConnectionState.waiting
+                                  ? CircularProgressIndicator(
+                                      color: Constants.primaryColor,
+                                    )
+                                  : Container(
+                                      height: 140,
+                                      width: 140,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        image: DecorationImage(
+                                          image: profilePhotoUrl ==
+                                                  "assets/images/user.png"
+                                              ? AssetImage(profilePhotoUrl)
+                                              : NetworkImage(profilePhotoUrl)
+                                                  as ImageProvider<Object>,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    );
+                            },
+                          ),
                           ),
                         ),
                         const SizedBox(height: 20),
