@@ -264,7 +264,7 @@ class _PackageTileState extends State<PackageTile> {
                     Row(
                       children: [
                         poppinsText(
-                            text: '\S${widget.package.packagePrice.toString()}',
+                            text: '\$${widget.package.packagePrice.toString()}',
                             color: Constants.primaryColor,
                             fontBold: FontWeight.w600,
                             size: 18.0),
