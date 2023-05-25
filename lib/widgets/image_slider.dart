@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Constants.dart';
 import 'package:fyp/models/Detail.dart';
 import 'package:fyp/widgets/poppinsText.dart';
 
@@ -28,6 +29,16 @@ class _HotelImageSliderState extends State<HotelImageSlider> {
                   fit: BoxFit.cover,
                   width: double.maxFinite,
                   height: 370,
+                  loadingBuilder: ((context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Constants.primaryColor,
+                      ),
+                    );
+                  }),
                 ),
                 Positioned(
                   right: 10,

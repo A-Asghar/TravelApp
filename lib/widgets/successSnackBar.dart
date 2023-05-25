@@ -4,7 +4,7 @@ successSnackBar(BuildContext context, error) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(error),
-      backgroundColor: Colors.greenAccent,
+      backgroundColor: Colors.teal,
       duration: const Duration(seconds: 5),
     ),
   );
