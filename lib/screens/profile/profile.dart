@@ -170,7 +170,6 @@ class _ProfileState extends State<Profile> {
                                           size: 24.0,
                                           color: const Color(0xffF75555),
                                           fontBold: FontWeight.w500),
-                                      const SizedBox(height: 20),
                                       const Divider(
                                           color: Constants.secondaryColor),
                                       const SizedBox(height: 20),

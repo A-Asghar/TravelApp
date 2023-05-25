@@ -6,11 +6,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travel_agency/Constants.dart';
 import 'package:travel_agency/providers/user_provider.dart';
+import 'package:travel_agency/screens/HelpScreen.dart';
+import 'package:travel_agency/screens/Security.dart';
 import 'package:travel_agency/screens/agency_home.dart';
 import 'package:travel_agency/screens/auth/Login.dart';
 import 'package:travel_agency/screens/profile/EditProfile.dart';
 import 'package:travel_agency/widgets/poppinsText.dart';
 import 'package:travel_agency/widgets/tealButton.dart';
+
+import '../screens/Notifications.dart';
 
 class SideDrawer extends StatefulWidget {
   const SideDrawer({super.key});
@@ -117,16 +121,19 @@ class _SideDrawerState extends State<SideDrawer> {
           ListTile(
             leading: Icon(Icons.notifications, color: Constants.primaryColor),
             title: poppinsText(text: 'Notifications', size: 20.0),
-            onTap: () => null,
+            onTap: () =>
+                Get.to(TravelAgencyNotificationsPage(), transition: Transition.fade),
           ),
           ListTile(
             leading: Icon(Icons.security, color: Constants.primaryColor),
             title: poppinsText(text: 'Security', size: 20.0),
+            onTap: () =>
+                Get.to(SecurityPolicyScreen(), transition: Transition.fade),
           ),
           ListTile(
             leading: Icon(Icons.help, color: Constants.primaryColor),
             title: poppinsText(text: 'Help', size: 20.0),
-            onTap: () => null,
+            onTap: () => Get.to(HelpScreen(), transition: Transition.fade),
           ),
           Divider(),
           ListTile(
@@ -157,7 +164,6 @@ class _SideDrawerState extends State<SideDrawer> {
                             size: 24.0,
                             color: const Color(0xffF75555),
                             fontBold: FontWeight.w500),
-                        const SizedBox(height: 20),
                         const Divider(color: Constants.secondaryColor),
                         poppinsText(
                           text: "Are you sure you want to log out?",
