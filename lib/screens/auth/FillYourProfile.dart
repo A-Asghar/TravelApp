@@ -232,7 +232,7 @@ class _FillYourProfileState extends State<FillYourProfile> {
                                 phoneNumber: _phoneNumber.text,
                                 gender: _gender.text,
                                 profilePhotoUrl: controller.user!.profilePhotoUrl.isEmpty
-                                    ? ''
+                                    ? 'assets/images/user.png'
                                     : controller.user!.profilePhotoUrl,
                                 searchedCities: [],
                               ),

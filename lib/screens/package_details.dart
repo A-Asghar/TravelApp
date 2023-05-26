@@ -56,7 +56,8 @@ class _PackageDetailsState extends State<PackageDetails> {
                   child: poppinsText(
                       text: widget.package.packageName,
                       // widget.property!.name,
-                      size: 30.0,fontBold: FontWeight.w500),
+                      size: 30.0,
+                      fontBold: FontWeight.w500),
                 ),
                 const SizedBox(height: 5),
 
@@ -94,7 +95,10 @@ class _PackageDetailsState extends State<PackageDetails> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        poppinsText(text: "Gallery Photos", size: 20.0,fontBold: FontWeight.w500),
+                        poppinsText(
+                            text: "Gallery Photos",
+                            size: 20.0,
+                            fontBold: FontWeight.w500),
                         poppinsText(
                             text: "See All",
                             size: 16.0,
@@ -136,7 +140,10 @@ class _PackageDetailsState extends State<PackageDetails> {
                 // Description
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: poppinsText(text: "Description", size: 20.0,fontBold: FontWeight.w500),
+                  child: poppinsText(
+                      text: "Description",
+                      size: 20.0,
+                      fontBold: FontWeight.w500),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
@@ -170,7 +177,10 @@ class _PackageDetailsState extends State<PackageDetails> {
                           padding: const EdgeInsets.only(left: 20, right: 20),
                           child: Row(
                             children: [
-                              poppinsText(text: "Reviews", size: 20.0,fontBold: FontWeight.w500),
+                              poppinsText(
+                                  text: "Reviews",
+                                  size: 20.0,
+                                  fontBold: FontWeight.w500),
                               const SizedBox(width: 10),
                               const Icon(
                                 Icons.star,
@@ -204,7 +214,10 @@ class _PackageDetailsState extends State<PackageDetails> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            for (var i = 0; i < 3; i++)
+                            for (var i = 0;
+                                i < 3 &&
+                                    i < widget.package.packageReviews!.length;
+                                i++)
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: Container(
@@ -230,10 +243,11 @@ class _PackageDetailsState extends State<PackageDetails> {
                                                         .package
                                                         .packageReviews![i]
                                                         .reviewerName,
-                                                    size: 16.0,fontBold: FontWeight.w500),
+                                                    size: 16.0,
+                                                    fontBold: FontWeight.w500),
                                                 const SizedBox(height: 5),
                                                 poppinsText(
-                                                fontBold: FontWeight.w400,
+                                                    fontBold: FontWeight.w400,
                                                     text: DateFormat(
                                                             'MMM dd, yyyy')
                                                         .format(DateTime.parse(
@@ -329,11 +343,14 @@ class _DayWiseDetailState extends State<DayWiseDetail> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
-          child: poppinsText(text: "Day wise Itinerary", size: 20.0,fontBold: FontWeight.w500),
+          child: poppinsText(
+              text: "Day wise Itinerary",
+              size: 20.0,
+              fontBold: FontWeight.w500),
         ),
         const SizedBox(height: 10),
         ListView.builder(
-          padding: EdgeInsets.zero,
+            padding: EdgeInsets.zero,
             physics: const ScrollPhysics(),
             shrinkWrap: true,
             itemCount: showAllItems ? widget.daywise!.length : 1,

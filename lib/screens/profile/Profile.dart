@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/screens/auth/Login.dart';
@@ -60,24 +61,62 @@ class _ProfileState extends State<Profile> {
                               Get.to(const EditProfile(),
                                   transition: Transition.fade);
                             },
-                            child: Container(
-                              height: 120,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100.0),
-                                image: DecorationImage(
-                                  image: controller
-                                              .user!.profilePhotoUrl.isEmpty ||
-                                          controller.user!.profilePhotoUrl ==
-                                              "assets/images/user.png"
-                                      ? const AssetImage(
-                                          'assets/images/user.png')
-                                      : NetworkImage(
-                                              controller.user!.profilePhotoUrl)
-                                          as ImageProvider<Object>,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
+                            child: !isLoggingOut ? StreamBuilder<QuerySnapshot>(
+                              stream: FirebaseFirestore.instance
+                                  .collection('users')
+                                  .where('uid',
+                                      isEqualTo: FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                  .snapshots(),
+                              builder: (context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Something went wrong');
+                                }
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return CircularProgressIndicator(); // show loading spinner
+                                }
+
+                                var userDocument = snapshot.data?.docs.first;
+                                var profilePhotoUrl =
+                                    userDocument?['profilePhotoUrl'] ??
+                                        'assets/images/user.png';
+
+                                return snapshot.connectionState ==
+                                        ConnectionState.waiting
+                                    ? CircularProgressIndicator(
+                                        color: Constants.primaryColor,
+                                      )
+                                    : Container(
+                                        height: 140,
+                                        width: 140,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          image: DecorationImage(
+                                            image: profilePhotoUrl ==
+                                                    "assets/images/user.png"
+                                                ? AssetImage(profilePhotoUrl)
+                                                : NetworkImage(profilePhotoUrl)
+                                                    as ImageProvider<Object>,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      );
+                              },
+                            ) : Container(
+                                        height: 140,
+                                        width: 140,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          image: DecorationImage(
+                                            image: AssetImage("assets/images/user.png"),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
                             ),
                           ),
                         ),
@@ -206,7 +245,8 @@ class _ProfileState extends State<Profile> {
                                           : TealButton(
                                               text: "Yes, Logout",
                                               onPressed: () async {
-                                                setState(() => isLoggingOut = true);
+                                                setState(
+                                                    () => isLoggingOut = true);
                                                 Get.offAll(
                                                   const Home(),
                                                   transition:
@@ -226,7 +266,8 @@ class _ProfileState extends State<Profile> {
                                                 );
                                                 FirebaseAuth.instance.signOut();
                                                 await GoogleSignIn().signOut();
-                                                setState(() => isLoggingOut = false);
+                                                setState(
+                                                    () => isLoggingOut = false);
                                               },
                                               bgColor: Colors.red,
                                               txtColor: Colors.white,
